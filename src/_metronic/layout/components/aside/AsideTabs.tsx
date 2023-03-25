@@ -6,11 +6,6 @@ import {KTSVG} from '../../../helpers'
 
 const tabs: ReadonlyArray<{link: string; icon: string; tooltip: string}> = [
   {
-    link: 'games',
-    icon: '/media/icons/duotune/abstract/abs049.svg',
-    tooltip: 'Games',
-  },
-  {
     link: 'projects',
     icon: '/media/icons/duotune/general/gen025.svg',
     tooltip: 'Projects',
@@ -24,21 +19,6 @@ const tabs: ReadonlyArray<{link: string; icon: string; tooltip: string}> = [
     link: 'subscription',
     icon: '/media/icons/duotune/general/gen032.svg',
     tooltip: 'Subscription',
-  },
-  {
-    link: 'tasks',
-    icon: '/media/icons/duotune/general/gen048.svg',
-    tooltip: 'Tasks',
-  },
-  {
-    link: 'notifications',
-    icon: '/media/icons/duotune/abstract/abs027.svg',
-    tooltip: 'Notifications',
-  },
-  {
-    link: 'authors',
-    icon: '/media/icons/duotune/files/fil005.svg',
-    tooltip: 'Authors',
   },
 ]
 

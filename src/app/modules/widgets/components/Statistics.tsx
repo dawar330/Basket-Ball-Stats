@@ -150,7 +150,6 @@ const Statistics: FC = () => {
           <StatisticsWidget5
             className='card-xl-stretch mb-xl-8'
             svgIcon='/media/icons/duotune/ecommerce/ecm002.svg'
-            color='danger'
             iconColor='white'
             title='Shopping Cart'
             description='Lands, Houses, Ranchos, Farms'
@@ -161,7 +160,6 @@ const Statistics: FC = () => {
           <StatisticsWidget5
             className='card-xl-stretch mb-xl-8'
             svgIcon='/media/icons/duotune/ecommerce/ecm008.svg'
-            color='primary'
             iconColor='white'
             title='Appartments'
             description='Flats, Shared Rooms, Duplex'
@@ -172,7 +170,6 @@ const Statistics: FC = () => {
           <StatisticsWidget5
             className='card-xl-stretch mb-5 mb-xl-8'
             svgIcon='/media/icons/duotune/graphs/gra005.svg'
-            color='success'
             iconColor='white'
             title='Sales Stats'
             description='50% Increased for FY20'
@@ -187,7 +184,6 @@ const Statistics: FC = () => {
           <StatisticsWidget5
             className='card-xl-stretch mb-xl-8'
             svgIcon='/media/icons/duotune/general/gen032.svg'
-            color='white'
             iconColor='primary'
             title='500M$'
             description='SAP UI Progress'
@@ -198,7 +194,6 @@ const Statistics: FC = () => {
           <StatisticsWidget5
             className='card-xl-stretch mb-xl-8'
             svgIcon='/media/icons/duotune/ecommerce/ecm008.svg'
-            color='dark'
             iconColor='white'
             title='+3000'
             description='New Customers'
@@ -209,7 +204,6 @@ const Statistics: FC = () => {
           <StatisticsWidget5
             className='card-xl-stretch mb-xl-8'
             svgIcon='/media/icons/duotune/finance/fin006.svg'
-            color='warning'
             iconColor='white'
             title='$50,000'
             description='Milestone Reached'
@@ -220,7 +214,6 @@ const Statistics: FC = () => {
           <StatisticsWidget5
             className='card-xl-stretch mb-5 mb-xl-8'
             svgIcon='/media/icons/duotune/graphs/gra007.svg'
-            color='info'
             iconColor='white'
             title='$50,000'
             description='Milestone Reached'

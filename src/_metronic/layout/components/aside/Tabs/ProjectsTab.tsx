@@ -2,81 +2,40 @@ import {Link} from 'react-router-dom'
 import {KTSVG, toAbsoluteUrl} from '../../../../helpers'
 import {Dropdown1, Search} from '../../../../partials'
 
-const projects: ReadonlyArray<{image: string; title: string; link: string}> = [
+const games: ReadonlyArray<{image: string; home: string; away: string}> = [
   {
     image: '/media/svg/brand-logos/bebo.svg',
-    title: 'Briviba SaaS',
-    link: 'By James',
+    home: 'Michigan',
+    away: 'Ohio',
   },
   {
     image: '/media/svg/brand-logos/vimeo.svg',
-    title: 'Vine Quick Reports',
-    link: 'By Andres',
+    home: 'Colorado',
+    away: 'Ohio',
   },
   {
     image: '/media/svg/brand-logos/kickstarter.svg',
-    title: 'KC Account CRM',
-    link: 'By Keenthemes',
-  },
-  {
-    image: '/media/svg/brand-logos/balloon.svg',
-    title: 'Baloon SaaS',
-    link: 'By SIA Team',
-  },
-  {
-    image: '/media/svg/brand-logos/infography.svg',
-    title: 'Most Cloudy UMC',
-    link: 'By Andrei',
-  },
-  {
-    image: '/media/svg/brand-logos/disqus.svg',
-    title: 'Disqus Forum',
-    link: 'By Disqus Inc.',
-  },
-  {
-    image: '/media/svg/brand-logos/plurk.svg',
-    title: 'Proove Quick CRM',
-    link: 'By Proove Limited',
+    home: 'Michigan',
+    away: 'Ohio',
   },
 ]
 
 const ProjectsTab = () => {
   return (
     <div className='m-0'>
-      {/* begin::Toolbar */}
-      <div className='d-flex mb-10'>
-        <Search />
-        {/* begin::Filter */}
-        <div className='flex-shrink-0 ms-2'>
-          {/* begin::Menu toggle */}
-          <button
-            type='button'
-            className='btn btn-icon btn-bg-light btn-active-icon-primary btn-color-gray-400'
-            data-kt-menu-trigger='click'
-            data-kt-menu-placement='bottom-end'
-          >
-            <KTSVG path='/media/icons/duotune/general/gen031.svg' className='svg-icon-2' />
-          </button>
-          {/* end::Menu toggle */}
-
-          <Dropdown1 />
-        </div>
-        {/* end::Filter */}
-      </div>
-      {/* end::Toolbar */}
-
       {/*begin::Projects*/}
       <div className='m-0'>
         {/*begin::Heading*/}
-        <h1 className='text-gray-800 fw-bold mb-6 mx-5'>Projects</h1>
+        <h1 className='text-gray-800 fw-bold mb-6 mx-5'>Games</h1>
         {/*end::Heading*/}
 
         {/*begin::Items*/}
         <div className='mb-10'>
-          {projects.map((p) => (
+          {games.map((p, index) => (
             <Link
-              key={p.link}
-              to='/crafted/pages/profile/projects'
+              key={index}
+              to='game/overview'
+              state={{Home: p.home, Away: p.away}}
               className='custom-list d-flex align-items-center px-5 py-4'
             >
               {/*begin::Symbol*/}
@@ -84,7 +43,7 @@ const ProjectsTab = () => {
                 <span className='symbol-label'>
                   <img
                     src={toAbsoluteUrl(p.image)}
-                    alt={p.title}
+                    alt={p.home}
                     className='h-50 align-self-center'
                   />
                 </span>
@@ -94,11 +53,11 @@ const ProjectsTab = () => {
               {/*begin::Description*/}
               <div className='d-flex flex-column flex-grow-1'>
                 {/*begin::Title*/}
-                <h5 className='custom-list-title fw-bold text-gray-800 mb-1'>{p.title}</h5>
+                <h5 className='custom-list-title fw-bold text-gray-800 mb-1'>{p.home}</h5>
                 {/*end::Title*/}
 
                 {/*begin::Link*/}
-                <span className='text-gray-400 fw-bold'>{p.link}</span>
+                <span className='text-gray-400 fw-bold'>VS {p.away}</span>
                 {/*end::Link*/}
               </div>
               {/*begin::Description*/}

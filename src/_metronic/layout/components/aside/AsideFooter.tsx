@@ -8,8 +8,8 @@ const AsideFooter = () => {
       id='kt_aside_footer'
     >
       {/* begin::Quick links */}
-      <div className='d-flex align-items-center mb-2'>
-        {/* begin::Menu wrapper */}
+      {/* <div className='d-flex align-items-center mb-2'>
+         begin::Menu wrapper 
         <div
           className='btn btn-icon btn-active-color-primary btn-color-gray-400 btn-active-light'
           data-kt-menu-trigger='click'
@@ -25,14 +25,14 @@ const AsideFooter = () => {
             className='svg-icon-2 svg-icon-lg-1'
           />
         </div>
-        {/* end::Menu wrapper */}
+       end::Menu wrapper 
         <QuickLinks backgroundUrl='/media/misc/pattern-1.jpg' />
-      </div>
+      </div> */}
       {/* end::Quick links */}
 
       {/* begin::Activities */}
-      <div className='d-flex align-items-center mb-3'>
-        {/* begin::Drawer toggle */}
+      {/* <div className='d-flex align-items-center mb-3'>
+        begin::Drawer toggle 
         <div
           className='btn btn-icon btn-active-color-primary btn-color-gray-400 btn-active-light'
           data-kt-menu-trigger='click'
@@ -49,13 +49,13 @@ const AsideFooter = () => {
             className='svg-icon-2 svg-icon-lg-1'
           />
         </div>
-        {/* end::drawer toggle */}
-      </div>
+        end::drawer toggle 
+      </div> */}
       {/* end::Activities */}
 
       {/* begin::Notifications */}
-      <div className='d-flex align-items-center mb-2'>
-        {/* begin::Menu wrapper */}
+      {/* <div className='d-flex align-items-center mb-2'>
+         begin::Menu wrapper 
         <div
           className='btn btn-icon btn-active-color-primary btn-color-gray-400 btn-active-light'
           data-kt-menu-trigger='click'
@@ -71,9 +71,9 @@ const AsideFooter = () => {
             className='svg-icon-2 svg-icon-lg-1'
           />
         </div>
-        {/* end::Menu wrapper */}
+        end::Menu wrapper
         <HeaderNotificationsMenu backgrounUrl='/media/misc/pattern-1.jpg' />
-      </div>
+      </div> */}
       {/* end::Notifications */}
 
       {/* begin::User */}

@@ -1,8 +1,8 @@
 {
-  "name": "demo7",
+  "name": "Basket_Ball_Dashboard",
   "version": "8.1.7",
   "private": true,
-  "homepage": "/metronic8/react/demo7",
+  "homepage": "/",
   "dependencies": {
     "@formatjs/intl-pluralrules": "4.3.3",
     "@formatjs/intl-relativetimeformat": "10.0.1",

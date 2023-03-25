@@ -28,8 +28,6 @@ export function Overview() {
       <div className='col-xl-6'>
         <ChartsWidget1 className='mb-5 mb-xxl-8' />
 
-        <ListsWidget5 className='mb-5 mb-xxl-8' />
-
         <ListsWidget2 className='mb-5 mb-xxl-8' />
       </div>
     </div>

@@ -6,7 +6,6 @@ import {
   MixedWidget8,
   MixedWidget3,
   ListsWidget9,
-  TablesWidget9,
   ListsWidget3,
   StatisticsWidget4,
   ListsWidget2,
@@ -47,9 +46,7 @@ const DashboardPage = () => {
         {/* end::Col */}
 
         {/* begin::Col */}
-        <div className='col-xxl-8'>
-          <TablesWidget9 className='card-xxl-stretch mb-5 mb-xl-8' />
-        </div>
+        <div className='col-xxl-8'></div>
         {/* end::Col */}
       </div>
       {/* end::Row */}
@@ -93,15 +90,11 @@ const DashboardPage = () => {
       {/* begin::Row */}
       <div className='row gy-5 g-xl-8'>
         {/* begin::Col */}
-        <div className='col-xxl-4'>
-          <ListsWidget3 className='card-xxl-stretch mb-xl-3' />
-        </div>
+
         {/* end::Col */}
 
         {/* begin::Col */}
-        <div className='col-xxl-8'>
-          <TablesWidget9 className='card-xxl-stretch mb-5 mb-xl-8' />
-        </div>
+        <div className='col-xxl-8'></div>
         {/* end::Col */}
       </div>
       {/* end::Row */}
