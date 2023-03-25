@@ -4,6 +4,7 @@ import {KTSVG} from '../../../helpers'
 
 type Props = {
   className: string
+  color: string
   svgIcon: string
   iconColor: string
   title: string
@@ -14,6 +15,7 @@ type Props = {
 
 const StatisticsWidget5: React.FC<Props> = ({
   className,
+  color,
   svgIcon,
   iconColor,
   title,
@@ -22,7 +24,7 @@ const StatisticsWidget5: React.FC<Props> = ({
   descriptionColor,
 }) => {
   return (
-    <div className={`card ${className}`}>
+    <a href='#' className={`card bg-${color} hoverable ${className}`}>
       <div className='card-body'>
         <KTSVG path={svgIcon} className={`svg-icon-${iconColor} svg-icon-3x ms-n1`} />
 
@@ -30,7 +32,7 @@ const StatisticsWidget5: React.FC<Props> = ({
 
         <div className={`fw-semibold text-${descriptionColor}`}>{description}</div>
       </div>
-    </div>
+    </a>
   )
 }
 
