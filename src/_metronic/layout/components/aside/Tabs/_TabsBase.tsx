@@ -1,55 +1,55 @@
 /* eslint-disable react/jsx-no-target-blank */
-import {FC} from 'react'
-import {KTSVG} from '../../../../helpers'
-import {AuthorsTab} from './AuthorsTab'
-import {MenuTab} from './MenuTab'
-import {NotificationsTab} from './NotificationsTab'
-import {ProjectsTab} from './ProjectsTab'
-import {SubscriptionsTab} from './SubscriptionsTab'
-import {TasksTab} from './TasksTab'
+import { FC } from "react";
+import { KTSVG } from "../../../../helpers";
+import { AuthorsTab } from "./AuthorsTab";
+import { MenuTab } from "./MenuTab";
+import { NotificationsTab } from "./NotificationsTab";
+import { GamesTab } from "./GamesTab";
+import { SubscriptionsTab } from "./SubscriptionsTab";
+import { TasksTab } from "./TasksTab";
 
 type Props = {
-  link: string
-}
+  link: string;
+};
 
-const SelectedTab: FC<Props> = ({link}) => {
+const SelectedTab: FC<Props> = ({ link }) => {
   switch (link) {
-    case 'projects':
-      return <ProjectsTab />
-    case 'menu':
-      return <MenuTab />
-    case 'subscription':
-      return <SubscriptionsTab />
-    case 'tasks':
-      return <TasksTab />
-    case 'notifications':
-      return <NotificationsTab />
-    case 'authors':
-      return <AuthorsTab />
+    case "projects":
+      return <GamesTab />;
+    case "menu":
+      return <MenuTab />;
+    case "subscription":
+      return <SubscriptionsTab />;
+    case "tasks":
+      return <TasksTab />;
+    case "notifications":
+      return <NotificationsTab />;
+    case "authors":
+      return <AuthorsTab />;
     default:
-      return <ProjectsTab />
+      return <GamesTab />;
   }
-}
+};
 
-const TabsBase: FC<Props> = ({link}) => {
+const TabsBase: FC<Props> = ({ link }) => {
   return (
-    <div className='d-flex h-100 flex-column'>
+    <div className="d-flex h-100 flex-column">
       {/* begin::Wrapper */}
       <div
-        className='flex-column-fluid hover-scroll-y'
-        data-kt-scroll='true'
-        data-kt-scroll-activate='true'
-        data-kt-scroll-height='auto'
-        data-kt-scroll-wrappers='#kt_aside_wordspace'
-        data-kt-scroll-dependencies='#kt_aside_secondary_footer'
-        data-kt-scroll-offset='0px'
+        className="flex-column-fluid hover-scroll-y"
+        data-kt-scroll="true"
+        data-kt-scroll-activate="true"
+        data-kt-scroll-height="auto"
+        data-kt-scroll-wrappers="#kt_aside_wordspace"
+        data-kt-scroll-dependencies="#kt_aside_secondary_footer"
+        data-kt-scroll-offset="0px"
       >
         {/* begin::Tab content */}
-        <div className='tab-content'>
+        <div className="tab-content">
           <div
-            className='tab-pane fade active show'
+            className="tab-pane fade active show"
             id={`kt_aside_nav_tab_${link}`}
-            role='tabpanel'
+            role="tabpanel"
           >
             <SelectedTab link={link} />
           </div>
@@ -58,10 +58,13 @@ const TabsBase: FC<Props> = ({link}) => {
       </div>
       {/* end::Wrapper */}
       {/* begin::Footer */}
-      <div className='flex-column-auto pt-10 px-5' id='kt_aside_secondary_footer'></div>
+      <div
+        className="flex-column-auto pt-10 px-5"
+        id="kt_aside_secondary_footer"
+      ></div>
       {/* end::Footer */}
     </div>
-  )
-}
+  );
+};
 
-export {TabsBase}
+export { TabsBase };
