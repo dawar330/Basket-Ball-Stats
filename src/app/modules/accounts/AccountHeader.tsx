@@ -175,6 +175,17 @@ const AccountHeader: React.FC = () => {
               <Link
                 className={
                   `nav-link text-active-primary me-6 ` +
+                  (location.pathname === "/account/teams" && "active")
+                }
+                to="/account/teams"
+              >
+                Teams
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className={
+                  `nav-link text-active-primary me-6 ` +
                   (location.pathname === "/account/settings" && "active")
                 }
                 to="/account/settings"

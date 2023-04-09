@@ -2,12 +2,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { KTSVG } from "../../../../_metronic/helpers";
-import {
-  ChartsWidget1,
-  TablesWidget1,
-  ListsWidget5,
-  TablesWidget5,
-} from "../../../../_metronic/partials/widgets";
+import { ChartsWidget1 } from "../../../../_metronic/partials/widgets";
 
 export function Overview() {
   const [PaymentMethodAdded, setPaymentMethodAdded] = useState(false);

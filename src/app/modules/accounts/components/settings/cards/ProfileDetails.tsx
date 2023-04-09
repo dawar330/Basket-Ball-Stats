@@ -425,7 +425,7 @@ const ProfileDetails: React.FC = () => {
               </div>
             </div>
 
-            <div className="row mb-6">
+            {/* <div className="row mb-6">
               <label className="col-lg-4 col-form-label required fw-bold fs-6">
                 Language
               </label>
@@ -495,7 +495,7 @@ const ProfileDetails: React.FC = () => {
                   number formatting.
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="row mb-6">
               <label className="col-lg-4 col-form-label required fw-bold fs-6">
@@ -684,35 +684,6 @@ const ProfileDetails: React.FC = () => {
                   <div className="fv-plugins-message-container">
                     <div className="fv-help-block">
                       {formik.errors.timeZone}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="row mb-6">
-              <label className="col-lg-4 col-form-label required fw-bold fs-6">
-                Currency
-              </label>
-
-              <div className="col-lg-8 fv-row">
-                <select
-                  className="form-select form-select-solid form-select-lg"
-                  {...formik.getFieldProps("currency")}
-                >
-                  <option value="">Select a currency..</option>
-                  <option value="USD">USD - USA dollar</option>
-                  <option value="GBP">GBP - British pound</option>
-                  <option value="AUD">AUD - Australian dollar</option>
-                  <option value="JPY">JPY - Japanese yen</option>
-                  <option value="SEK">SEK - Swedish krona</option>
-                  <option value="CAD">CAD - Canadian dollar</option>
-                  <option value="CHF">CHF - Swiss franc</option>
-                </select>
-                {formik.touched.currency && formik.errors.currency && (
-                  <div className="fv-plugins-message-container">
-                    <div className="fv-help-block">
-                      {formik.errors.currency}
                     </div>
                   </div>
                 )}
