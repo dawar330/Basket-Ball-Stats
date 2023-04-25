@@ -452,7 +452,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
         <div className="card-header border-0 pt-3">
           <h3 className="card-title align-items-start flex-column">
             <span className="card-label fw-bold fs-3 mb-1">
-              Players / Game Statistics
+              Game Statistics
             </span>
           </h3>
           <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
@@ -461,7 +461,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                 !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
               }`}
             >
-              {Home}
+              {Home}HOME
             </label>
             <input
               className="form-check-input"
@@ -477,7 +477,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                 TeamCheckBox ? "fw-bold text-primary" : " text-muted"
               }`}
             >
-              {Away}
+              {Away}AWAY
             </label>
           </div>
         </div>

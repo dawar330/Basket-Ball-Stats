@@ -13,6 +13,9 @@ import { Settings } from "../accounts/components/settings/Settings";
 import { GameOverview } from "./components/GameOverview";
 import { GameHeader } from "./GameHeader";
 import { PlayerStats } from "./PlayerStats";
+import { GameLeaders } from "./GameLeaders";
+import { TeamStats } from "./TeamStats";
+import { CommentsPage } from "./CommentsPage";
 
 const GamePage: React.FC = () => {
   debugger;
@@ -66,12 +69,31 @@ const GamePage: React.FC = () => {
             </>
           }
         />
+
+        <Route
+          path="teamStats"
+          element={
+            <>
+              <PageTitle breadcrumbs={gameBreadCrumbs}>Team Stats</PageTitle>
+              <TeamStats />
+            </>
+          }
+        />
+        <Route
+          path="leaders"
+          element={
+            <>
+              <PageTitle breadcrumbs={gameBreadCrumbs}>Leaders</PageTitle>
+              <GameLeaders />
+            </>
+          }
+        />
         <Route
           path="comments"
           element={
             <>
               <PageTitle breadcrumbs={gameBreadCrumbs}>Comments</PageTitle>
-              <GameOverview Home={"Home"} Away={"Away"} />
+              <CommentsPage />
             </>
           }
         />

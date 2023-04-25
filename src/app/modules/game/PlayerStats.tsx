@@ -22,13 +22,13 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
     <>
       {SelectedPlayer == "" ? (
         <>
-          <div className={`card`}>
+          <div className={className}>
             <div className="d-flex w-100 justify-content-center my-5"> </div>
             {/* begin::Header */}
-            <div className="card-header border-0 pt-3">
+            <div className="d-flex justify-content-between border-0 pt-3 mb-5">
               <h3 className="card-title align-items-start flex-column">
                 <span className="card-label fw-bold fs-3 mb-1">
-                  Players / Game Statistics
+                  Players Statistics
                 </span>
               </h3>
               <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
@@ -37,7 +37,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
                     !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
                   }`}
                 >
-                  {Home}
+                  {Home}HOME
                 </label>
                 <input
                   className="form-check-input"
@@ -53,7 +53,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
                     TeamCheckBox ? "fw-bold text-primary" : " text-muted"
                   }`}
                 >
-                  {Away}
+                  {Away}AWAY
                 </label>
               </div>
             </div>
@@ -61,7 +61,37 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
 
             {/* begin::Body */}
 
-            <div className="row g-6 g-xl-9">
+            <div className="card-body row g-6 g-xl-9">
+              <div className="col-md-6 col-xl-4">
+                <Card2
+                  icon="\media\icons\duotune\general\james.png"
+                  badgeColor="primary"
+                  status="In Progress"
+                  statusColor="primary"
+                  title="JAMES"
+                  description="CRM App application to HR efficiency"
+                  date="November 10, 2021"
+                  budget="$284,900.00"
+                  progress={50}
+                  users={users1}
+                  setSelectedPlayer={setSelectedPlayer}
+                />
+              </div>
+              <div className="col-md-6 col-xl-4">
+                <Card2
+                  icon="\media\icons\duotune\general\james.png"
+                  badgeColor="primary"
+                  status="In Progress"
+                  statusColor="primary"
+                  title="JAMES"
+                  description="CRM App application to HR efficiency"
+                  date="November 10, 2021"
+                  budget="$284,900.00"
+                  progress={50}
+                  users={users1}
+                  setSelectedPlayer={setSelectedPlayer}
+                />
+              </div>
               <div className="col-md-6 col-xl-4">
                 <Card2
                   icon="\media\icons\duotune\general\james.png"

@@ -1,40 +1,58 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react'
+import React, { useState } from "react";
 
 type Props = {
-  className: string
-  color: string
-  title: string
-  description: string
-  progress: string
-}
+  className: string;
+  description: string;
+  Home: String;
+  Away: String;
+  homeStat: number;
+  awayStat: number;
+};
 
-const StatisticsWidget6: React.FC<Props> = ({className, color, title, description, progress}) => {
+const StatisticsWidget6: React.FC<Props> = ({
+  className,
+  Home,
+  Away,
+  description,
+  homeStat,
+  awayStat,
+}) => {
+  let totalPercentage = homeStat + awayStat;
   return (
-    <div className={`card bg-light-${color} ${className}`}>
+    <div className={`card  ${className}`}>
       {/* begin::Body */}
-      <div className='card-body my-3'>
-        <a href='#' className={`card-title fw-bold text-${color} fs-5 mb-3 d-block`}>
+      <div className="card-body my-3">
+        <a
+          href="#"
+          className={`card-title fw-bold text-primary fs-5 mb-3 d-block`}
+        >
           {description}
         </a>
 
-        <div className='py-1'>
-          <span className='text-dark fs-1 fw-bold me-2'>{progress}</span>
+        <div className="d-flex py-1 justify-content-between">
+          <div>
+            <span className="text-dark fs-1 fw-bold me-2">{homeStat}</span>
+            <span className="fw-semibold text-muted fs-7">{Home}</span>
+          </div>
 
-          <span className='fw-semibold text-muted fs-7'>{title}</span>
+          <div>
+            <span className="fw-semibold text-muted fs-7">{Away}</span>
+            <span className="text-dark fs-1 fw-bold ms-2">{awayStat}</span>
+          </div>
         </div>
 
-        <div className={`progress h-7px bg-${color} bg-opacity-50 mt-7`}>
+        <div className={`progress h-7px bg-info  mt-7`}>
           <div
-            className={`progress-bar bg-${color}`}
-            role='progressbar'
-            style={{width: progress}}
+            className={`progress-bar bg-primary`}
+            role="progressbar"
+            style={{ width: `${(homeStat * 100) / totalPercentage}%` }}
           />
         </div>
       </div>
       {/* end:: Body */}
     </div>
-  )
-}
+  );
+};
 
-export {StatisticsWidget6}
+export { StatisticsWidget6 };

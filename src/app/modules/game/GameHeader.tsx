@@ -39,7 +39,6 @@ const games: ReadonlyArray<{
 
 const GameHeader: React.FC<Props> = ({ Home, Away }) => {
   const { id: game_ID } = useParams<GameRouteParams>();
-  console.log(parseInt(game_ID!));
 
   const location = useLocation();
   return (
@@ -154,6 +153,31 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                 state={{ Home, Away }}
               >
                 Game Sheet
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className={
+                  `nav-link text-active-primary me-6 ` +
+                  (location.pathname === `/game/${game_ID}/teamStats` &&
+                    "active")
+                }
+                to={`/game/${game_ID}/teamStats`}
+                state={{ Home, Away }}
+              >
+                Team Stats
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className={
+                  `nav-link text-active-primary me-6 ` +
+                  (location.pathname === `/game/${game_ID}/leaders` && "active")
+                }
+                to={`/game/${game_ID}/leaders`}
+                state={{ Home, Away }}
+              >
+                Leaders
               </Link>
             </li>
             <li className="nav-item">
