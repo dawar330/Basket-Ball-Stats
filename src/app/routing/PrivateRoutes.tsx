@@ -6,6 +6,8 @@ import { DashboardWrapper } from "../pages/dashboard/DashboardWrapper";
 import { getCSSVariableValue } from "../../_metronic/assets/ts/_utils";
 import { WithChildren } from "../../_metronic/helpers";
 import AccountPage from "../modules/accounts/AccountPage";
+import { CreateTeamStepper } from "../modules/accounts/components/teams/CreateTeamStepper";
+import { CreateGameStepper } from "../modules/game/CreateGameStepper";
 
 const PrivateRoutes = () => {
   const GamePage = lazy(() => import("../modules/game/GamePage"));
@@ -31,6 +33,14 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <AccountPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="createGame"
+          element={
+            <SuspensedView>
+              <CreateGameStepper />
             </SuspensedView>
           }
         />

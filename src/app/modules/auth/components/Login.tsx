@@ -4,9 +4,10 @@ import * as Yup from "yup";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
-import { getUserByToken, login } from "../core/_requests";
 import { toAbsoluteUrl } from "../../../../_metronic/helpers";
 import { useAuth } from "../core/Auth";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { getUserByToken, login } from "../core/requests";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -34,6 +35,17 @@ const initialValues = {
 export function Login() {
   const [loading, setLoading] = useState(false);
   const { saveAuth, setCurrentUser } = useAuth();
+  const [getUser] = useLazyQuery(getUserByToken, {
+    onCompleted: ({ getUserByToken }) => {
+      setCurrentUser(getUserByToken);
+    },
+  });
+  const [loginF] = useMutation(login, {
+    onCompleted: ({ login }) => {
+      saveAuth(login);
+      getUser({ variables: { token: login.api_token } });
+    },
+  });
 
   const formik = useFormik({
     initialValues,
@@ -41,11 +53,13 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       try {
-        const { data: auth } = await login(values.email, values.password);
-        debugger;
-        saveAuth(auth);
-        const { data: user } = await getUserByToken(auth.api_token);
-        setCurrentUser(user);
+        console.log(values);
+
+        await loginF({
+          variables: {
+            loginInput: { ...values },
+          },
+        });
       } catch (error) {
         console.error(error);
         saveAuth(undefined);

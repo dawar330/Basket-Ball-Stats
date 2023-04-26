@@ -7,6 +7,7 @@ import { NotificationsTab } from "./NotificationsTab";
 import { GamesTab } from "./GamesTab";
 import { SubscriptionsTab } from "./SubscriptionsTab";
 import { TasksTab } from "./TasksTab";
+import { Link } from "react-router-dom";
 
 type Props = {
   link: string;
@@ -61,7 +62,23 @@ const TabsBase: FC<Props> = ({ link }) => {
       <div
         className="flex-column-auto pt-10 px-5"
         id="kt_aside_secondary_footer"
-      ></div>
+      >
+        <Link
+          to="createGame"
+          className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+          data-bs-toggle="tooltip"
+          data-bs-custom-class="tooltip-dark"
+          data-bs-trigger="hover"
+          data-bs-offset="0,5"
+          data-bs-dismiss-="click"
+        >
+          <KTSVG
+            path="/media/icons/duotune/general/gen041.svg"
+            className="svg-icon-muted svg-icon-2hx"
+          />
+          <span className="btn-label">Create Game</span>
+        </Link>
+      </div>
       {/* end::Footer */}
     </div>
   );

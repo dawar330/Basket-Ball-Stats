@@ -4,11 +4,15 @@ import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link } from "react-router-dom";
 import { Dropdown1 } from "../../../_metronic/partials";
 import { useLocation } from "react-router";
+import { useAuth } from "../auth";
 
 const AccountHeader: React.FC = () => {
   const location = useLocation();
   const [Victories, setVictories] = useState(25);
   const [Defeats, setDefeats] = useState(2);
+  const { currentUser } = useAuth();
+  console.log(currentUser);
+
   return (
     <div className="card mb-5 mb-xl-10">
       <div className="card-body pt-9 pb-0">
@@ -30,7 +34,7 @@ const AccountHeader: React.FC = () => {
                     href="#"
                     className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
                   >
-                    Max Smith
+                    {currentUser?.fname} {currentUser?.lname}
                   </a>
                   <a href="#">
                     <KTSVG
@@ -67,7 +71,7 @@ const AccountHeader: React.FC = () => {
                       path="/media/icons/duotune/communication/com011.svg"
                       className="svg-icon-4 me-1"
                     />
-                    max@kt.com
+                    {currentUser?.email}
                   </a>
                 </div>
               </div>

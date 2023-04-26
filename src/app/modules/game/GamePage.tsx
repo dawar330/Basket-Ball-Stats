@@ -1,15 +1,7 @@
-import React, { useEffect, useState } from "react";
-import {
-  Navigate,
-  Route,
-  Routes,
-  Outlet,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import React, { useState } from "react";
+import { Navigate, Route, Routes, Outlet, useParams } from "react-router-dom";
 import { PageLink, PageTitle } from "../../../_metronic/layout/core";
 import { GameTable } from "../../../_metronic/partials/widgets/tables/GameTable";
-import { Settings } from "../accounts/components/settings/Settings";
 import { GameOverview } from "./components/GameOverview";
 import { GameHeader } from "./GameHeader";
 import { PlayerStats } from "./PlayerStats";
@@ -18,7 +10,6 @@ import { TeamStats } from "./TeamStats";
 import { CommentsPage } from "./CommentsPage";
 
 const GamePage: React.FC = () => {
-  debugger;
   const [Home, setHome] = useState("");
   const [Away, setAway] = useState("");
   const { id: game_ID } = useParams();
@@ -35,7 +26,7 @@ const GamePage: React.FC = () => {
       <Route
         element={
           <>
-            <GameHeader Home={Home} Away={Away} />
+            <GameHeader />
             <Outlet />
           </>
         }
@@ -45,7 +36,7 @@ const GamePage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={gameBreadCrumbs}>Overview</PageTitle>
-              <GameOverview Home={Home} Away={Away} />
+              <GameOverview />
             </>
           }
         />

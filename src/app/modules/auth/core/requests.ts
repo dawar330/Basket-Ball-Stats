@@ -20,3 +20,13 @@ export const getUserByToken = gql`
     }
   }
 `;
+export const login = gql`
+  mutation ($loginInput: loginInput!) {
+    login(loginInput: $loginInput) {
+      api_token
+      email
+      first_name
+      last_name
+    }
+  }
+`;

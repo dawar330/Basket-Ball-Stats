@@ -63,7 +63,6 @@ export function Registration() {
     onCompleted: ({ register }) => {
       saveAuth(register);
 
-      debugger;
       getUser({ variables: { token: register.api_token } });
     },
   });

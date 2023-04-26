@@ -1,32 +1,32 @@
 import { useEffect, useRef, useState } from "react";
-import { KTSVG } from "../../../../../_metronic/helpers";
-
-import { StepperComponent } from "../../../../../_metronic/assets/ts/components";
+import { KTSVG } from "../../../_metronic/helpers";
+import { CreateGameStep1 } from "./steps/CreateGameStep1";
+import { StepperComponent } from "../../../_metronic/assets/ts/components";
 import { Formik, Form, FormikValues } from "formik";
 import {
-  ICreatePlayer,
-  createPlayerSchemas,
+  ICreateGame,
+  createGameSchemas,
   inits,
-} from "./CreatePlayerWizardHelper";
+} from "./CreateTeamWizardHelper";
 import { useNavigate } from "react-router-dom";
-import { CreatePlayerStep1 } from "./steps/CreatePlayerStep1";
-import { CreatePlayerStep2 } from "./steps/CreatePlayerStep2";
-import { CreatePlayerCompleted } from "./steps/CreatePlayerCompleted";
-import { CreatePlayerStep3 } from "./steps/CreatePlayerStep3";
-import { log } from "console";
+import { CreateGameCompleted } from "./steps/CreateGameCompleted";
+import { createGame } from "./core/request";
+import { useMutation } from "@apollo/client";
 
-const CreatePlayerStepper = () => {
+const CreateGameStepper = () => {
   const stepperRef = useRef<HTMLDivElement | null>(null);
   const stepper = useRef<StepperComponent | null>(null);
-  const [currentSchema, setCurrentSchema] = useState(createPlayerSchemas[0]);
-  const [initValues] = useState<ICreatePlayer>(inits);
+  const [currentSchema, setCurrentSchema] = useState(createGameSchemas[0]);
+  const [initValues] = useState<ICreateGame>(inits);
   const navigate = useNavigate();
   const loadStepper = () => {
     stepper.current = StepperComponent.createInsance(
       stepperRef.current as HTMLDivElement
     );
   };
-
+  const [createGameF] = useMutation(createGame, {
+    onCompleted: ({ createGame }) => {},
+  });
   const prevStep = () => {
     if (!stepper.current) {
       return;
@@ -34,11 +34,10 @@ const CreatePlayerStepper = () => {
 
     stepper.current.goPrev();
 
-    setCurrentSchema(createPlayerSchemas[stepper.current.currentStepIndex - 1]);
+    setCurrentSchema(createGameSchemas[stepper.current.currentStepIndex - 1]);
   };
 
-  const submitStep = (values: ICreatePlayer, actions: FormikValues) => {
-    console.log(stepper);
+  const submitStep = async (values: ICreateGame, actions: FormikValues) => {
     if (!stepper.current) {
       return;
     }
@@ -46,11 +45,15 @@ const CreatePlayerStepper = () => {
     if (stepper.current.currentStepIndex !== stepper.current.totatStepsNumber) {
       stepper.current.goNext();
     } else {
+      await createGameF({
+        variables: { CreateGameInput: { ...values } },
+      });
+      //TODO NAVIGATE TO GAME
       navigate("/account/teams");
       // actions.resetForm();
     }
 
-    setCurrentSchema(createPlayerSchemas[stepper.current.currentStepIndex - 1]);
+    setCurrentSchema(createGameSchemas[stepper.current.currentStepIndex - 1]);
   };
 
   useEffect(() => {
@@ -86,7 +89,7 @@ const CreatePlayerStepper = () => {
 
                 {/* begin::Label*/}
                 <div className="stepper-label">
-                  <h3 className="stepper-title">Player Details</h3>
+                  <h3 className="stepper-title">Team Details</h3>
 
                   <div className="stepper-desc fw-semibold">
                     Setup Your Team Details
@@ -102,61 +105,6 @@ const CreatePlayerStepper = () => {
             </div>
             {/* end::Step 1*/}
 
-            {/* begin::Step 2*/}
-            <div className="stepper-item" data-kt-stepper-element="nav">
-              {/* begin::Wrapper*/}
-              <div className="stepper-wrapper">
-                {/* begin::Icon*/}
-                <div className="stepper-icon w-40px h-40px">
-                  <i className="stepper-check fas fa-check"></i>
-                  <span className="stepper-number">2</span>
-                </div>
-                {/* end::Icon*/}
-
-                {/* begin::Label*/}
-                <div className="stepper-label">
-                  <h3 className="stepper-title">Player Display Image</h3>
-                  <div className="stepper-desc fw-semibold">
-                    Setup Your Display Image
-                  </div>
-                </div>
-                {/* end::Label*/}
-              </div>
-              {/* end::Wrapper*/}
-
-              {/* begin::Line*/}
-              <div className="stepper-line h-40px"></div>
-              {/* end::Line*/}
-            </div>
-            {/* end::Step 2*/}
-
-            {/* begin::Step 3*/}
-            <div className="stepper-item" data-kt-stepper-element="nav">
-              {/* begin::Wrapper*/}
-              <div className="stepper-wrapper">
-                {/* begin::Icon*/}
-                <div className="stepper-icon w-40px h-40px">
-                  <i className="stepper-check fas fa-check"></i>
-                  <span className="stepper-number">2</span>
-                </div>
-                {/* end::Icon*/}
-
-                {/* begin::Label*/}
-                <div className="stepper-label">
-                  <h3 className="stepper-title">Player Team Info</h3>
-                  <div className="stepper-desc fw-semibold">
-                    Setup Your Player Team Info
-                  </div>
-                </div>
-                {/* end::Label*/}
-              </div>
-              {/* end::Wrapper*/}
-
-              {/* begin::Line*/}
-              <div className="stepper-line h-40px"></div>
-              {/* end::Line*/}
-            </div>
-            {/* end::Step 3*/}
             {/* begin::Step 5*/}
             <div className="stepper-item" data-kt-stepper-element="nav">
               {/* begin::Wrapper*/}
@@ -164,7 +112,7 @@ const CreatePlayerStepper = () => {
                 {/* begin::Icon*/}
                 <div className="stepper-icon w-40px h-40px">
                   <i className="stepper-check fas fa-check"></i>
-                  <span className="stepper-number">3</span>
+                  <span className="stepper-number">2</span>
                 </div>
                 {/* end::Icon*/}
 
@@ -200,17 +148,11 @@ const CreatePlayerStepper = () => {
               id="kt_create_account_form"
             >
               <div className="current" data-kt-stepper-element="content">
-                <CreatePlayerStep1 />
+                <CreateGameStep1 />
               </div>
 
               <div data-kt-stepper-element="content">
-                <CreatePlayerStep2 />
-              </div>
-              <div data-kt-stepper-element="content">
-                <CreatePlayerStep3 />
-              </div>
-              <div data-kt-stepper-element="content">
-                <CreatePlayerCompleted />
+                <CreateGameCompleted />
               </div>
 
               <div className="d-flex flex-stack pt-10">
@@ -252,4 +194,4 @@ const CreatePlayerStepper = () => {
   );
 };
 
-export { CreatePlayerStepper };
+export { CreateGameStepper };

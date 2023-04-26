@@ -1,34 +1,26 @@
 import { Link } from "react-router-dom";
 import { KTSVG, toAbsoluteUrl } from "../../../../helpers";
 import { Dropdown1, Search } from "../../../../partials";
-
-const games: ReadonlyArray<{
-  image: string;
-  game_ID: Number;
-  home: string;
-  away: string;
-}> = [
-  {
-    image: "/media/svg/brand-logos/bebo.svg",
-    game_ID: 1,
-    home: "Michigan",
-    away: "Ohio",
-  },
-  {
-    image: "/media/svg/brand-logos/vimeo.svg",
-    game_ID: 2,
-    home: "Colorado",
-    away: "Ohio",
-  },
-  {
-    image: "/media/svg/brand-logos/kickstarter.svg",
-    game_ID: 3,
-    home: "Michigan",
-    away: "Ohio",
-  },
-];
+import { getGames } from "../../../../../app/modules/game/core/request";
+import { useQuery } from "@apollo/client";
+import { useState } from "react";
 
 const GamesTab = () => {
+  const [games, setgames] = useState<
+    [
+      {
+        image: string;
+        _id: string;
+        homeTeam: string;
+        awayTeam: string;
+      }
+    ]
+  >();
+  useQuery(getGames, {
+    onCompleted: ({ getGames }) => {
+      setgames(getGames);
+    },
+  });
   return (
     <div className="m-0">
       {/*begin::Projects*/}
@@ -39,10 +31,10 @@ const GamesTab = () => {
 
         {/*begin::Items*/}
         <div className="mb-10">
-          {games.map((p, index) => (
+          {games?.map((p, index) => (
             <Link
               key={index}
-              to={`game/${p.game_ID}/overview`}
+              to={`game/${p._id}/overview`}
               className="custom-list d-flex align-items-center px-5 py-4"
             >
               {/*begin::Symbol*/}
@@ -50,7 +42,7 @@ const GamesTab = () => {
                 <span className="symbol-label">
                   <img
                     src={toAbsoluteUrl(p.image)}
-                    alt={p.home}
+                    alt={p.homeTeam}
                     className="h-50 align-self-center"
                   />
                 </span>
@@ -61,12 +53,12 @@ const GamesTab = () => {
               <div className="d-flex flex-column flex-grow-1">
                 {/*begin::Title*/}
                 <h5 className="custom-list-title fw-bold text-gray-800 mb-1">
-                  {p.home}
+                  {p.homeTeam}
                 </h5>
                 {/*end::Title*/}
 
                 {/*begin::Link*/}
-                <span className="text-gray-400 fw-bold">VS {p.away}</span>
+                <span className="text-gray-400 fw-bold">VS {p.awayTeam}</span>
                 {/*end::Link*/}
               </div>
               {/*begin::Description*/}

@@ -11,8 +11,9 @@ import {
 import { LayoutSplashScreen } from "../../../../_metronic/layout/core";
 import { AuthModel, UserModel } from "./_models";
 import * as authHelper from "./AuthHelpers";
-import { getUserByToken } from "./_requests";
 import { WithChildren } from "../../../../_metronic/helpers";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { getUserByToken } from "./requests";
 
 type AuthContextProps = {
   auth: AuthModel | undefined;
@@ -66,15 +67,19 @@ const AuthInit: FC<WithChildren> = ({ children }) => {
   const { auth, logout, setCurrentUser } = useAuth();
   const didRequest = useRef(false);
   const [showSplashScreen, setShowSplashScreen] = useState(true);
+  const [getUser] = useLazyQuery(getUserByToken, {
+    onCompleted: ({ getUserByToken }) => {
+      setCurrentUser(getUserByToken);
+    },
+  });
   // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
   useEffect(() => {
     const requestUser = async (apiToken: string) => {
       try {
         if (!didRequest.current) {
-          const { data } = await getUserByToken(apiToken);
-          if (data) {
-            setCurrentUser(data);
-          }
+          const { data } = await getUser({
+            variables: { token: auth?.api_token },
+          });
         }
       } catch (error) {
         console.error(error);
@@ -89,7 +94,6 @@ const AuthInit: FC<WithChildren> = ({ children }) => {
     };
 
     if (auth && auth.api_token) {
-      debugger;
       requestUser(auth.api_token);
     } else {
       logout();

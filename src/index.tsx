@@ -16,13 +16,16 @@ import "./_metronic/assets/sass/style.scss";
 import "./_metronic/assets/sass/style.react.scss";
 
 import { AppRoutes } from "./app/routing/AppRoutes";
-import { AuthProvider, setupAxios } from "./app/modules/auth";
+import { AuthProvider, getAuth, setupAxios } from "./app/modules/auth";
 import { ThemeModeProvider } from "./_metronic/partials/layout/theme-mode/ThemeModeProvider";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-
+const auth = getAuth();
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
+  headers: {
+    bearer: auth ? auth?.api_token : "",
+  },
 });
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add

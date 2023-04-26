@@ -1,44 +1,32 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
+import { getGame } from "./core/request";
+import { useQuery } from "@apollo/client";
 
 interface GameRouteParams extends Params {
   id: string;
 }
 
-type Props = {
-  Home: string;
-  Away: string;
-};
-const games: ReadonlyArray<{
-  image: string;
-  game_ID: Number;
-  home: string;
-  away: string;
-}> = [
-  {
-    image: "/media/svg/brand-logos/bebo.svg",
-    game_ID: 1,
-    home: "Michigan",
-    away: "Ohio",
-  },
-  {
-    image: "/media/svg/brand-logos/vimeo.svg",
-    game_ID: 2,
-    home: "Colorado",
-    away: "Ohio",
-  },
-  {
-    image: "/media/svg/brand-logos/kickstarter.svg",
-    game_ID: 3,
-    home: "Michigan",
-    away: "Ohio",
-  },
-];
-
-const GameHeader: React.FC<Props> = ({ Home, Away }) => {
+const GameHeader: React.FC = () => {
   const { id: game_ID } = useParams<GameRouteParams>();
+  const [game, setgame] = useState<{
+    image: string;
+    _id: string;
+    homeTeam: string;
+    awayTeam: string;
+  }>();
+
+  useQuery(getGame, {
+    variables: {
+      gameID: game_ID,
+    },
+
+    onCompleted: ({ getGame }) => {
+      setgame(getGame);
+    },
+  });
 
   const location = useLocation();
   return (
@@ -64,7 +52,7 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                       href="#"
                       className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
                     >
-                      {games[parseInt(game_ID!) - 1].home}
+                      {game?.homeTeam}
                     </a>
                   </div>
                 </div>
@@ -105,7 +93,7 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                       href="#"
                       className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
                     >
-                      {games[parseInt(game_ID!) - 1].away}
+                      {game?.awayTeam}
                     </a>
                   </div>
                 </div>
@@ -137,7 +125,6 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                     "active")
                 }
                 to={`/game/${game_ID}/overview`}
-                state={{ Home, Away }}
               >
                 Overview
               </Link>
@@ -150,7 +137,7 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                     "active")
                 }
                 to={`/game/${game_ID}/gamesheet`}
-                state={{ Home, Away }}
+                state={{ Home: game?.homeTeam, Away: game?.awayTeam }}
               >
                 Game Sheet
               </Link>
@@ -163,7 +150,6 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                     "active")
                 }
                 to={`/game/${game_ID}/teamStats`}
-                state={{ Home, Away }}
               >
                 Team Stats
               </Link>
@@ -175,7 +161,7 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                   (location.pathname === `/game/${game_ID}/leaders` && "active")
                 }
                 to={`/game/${game_ID}/leaders`}
-                state={{ Home, Away }}
+                state={{ Home: game?.homeTeam, Away: game?.awayTeam }}
               >
                 Leaders
               </Link>
@@ -188,7 +174,7 @@ const GameHeader: React.FC<Props> = ({ Home, Away }) => {
                     "active")
                 }
                 to={`/game/${game_ID}/playerstats`}
-                state={{ Home, Away }}
+                state={{ Home: game?.homeTeam, Away: game?.awayTeam }}
               >
                 Player Statistics
               </Link>

@@ -9,12 +9,7 @@ import {
   StatisticsWidget5,
 } from "../../../../_metronic/partials/widgets";
 
-type Props = {
-  Home: string;
-  Away: string;
-};
-
-const GameOverview: React.FC<Props> = ({ Home, Away }) => {
+const GameOverview: React.FC = () => {
   return (
     <>
       <div className="row g-5 g-xl-8">
@@ -62,19 +57,15 @@ const GameOverview: React.FC<Props> = ({ Home, Away }) => {
           />
         </div>
       </div>
-      <GameOverViewTable Home={Home} Away={Away} className="mb-5 mb-xl-8" />
+      <GameOverViewTable className="mb-5 mb-xl-8" />
       <div className="row ">
         <div className="col-xl-6">
-          <ListsWidget5
-            Home={Home}
-            Away={Away}
-            className="card-xxl-stretch mb-5 mb-xl-10"
-          />
+          <ListsWidget5 className="card-xxl-stretch mb-5 mb-xl-10" />
         </div>
         <div className="col-xl-6">
           <ListsWidget3
-            Home={Home}
-            Away={Away}
+            Home={"asd"}
+            Away={"Away"}
             className="card-xl-stretch mb-5 mb-xl-8"
           />
         </div>
