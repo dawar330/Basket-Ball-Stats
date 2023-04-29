@@ -14,8 +14,20 @@ const GameHeader: React.FC = () => {
   const [game, setgame] = useState<{
     image: string;
     _id: string;
-    homeTeam: string;
-    awayTeam: string;
+    homeTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
+    awayTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
   }>();
 
   useQuery(getGame, {
@@ -52,7 +64,7 @@ const GameHeader: React.FC = () => {
                       href="#"
                       className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
                     >
-                      {game?.homeTeam}
+                      {game?.homeTeam.teamName}
                     </a>
                   </div>
                 </div>
@@ -93,7 +105,7 @@ const GameHeader: React.FC = () => {
                       href="#"
                       className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
                     >
-                      {game?.awayTeam}
+                      {game?.awayTeam.teamName}
                     </a>
                   </div>
                 </div>

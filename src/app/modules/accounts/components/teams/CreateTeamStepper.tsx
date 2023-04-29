@@ -11,6 +11,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CreateTeamStep2 } from "./steps/CreateTeamStep2";
 import { CreateTeamCompleted } from "./steps/CreateTeamCompleted";
+import { useMutation } from "@apollo/client";
+import { createTeam } from "../../../game/core/request";
 
 const CreateTeamStepper = () => {
   const stepperRef = useRef<HTMLDivElement | null>(null);
@@ -23,6 +25,12 @@ const CreateTeamStepper = () => {
       stepperRef.current as HTMLDivElement
     );
   };
+  const [createTeamF] = useMutation(createTeam, {
+    onCompleted: ({ createTeam }) => {
+      debugger;
+      navigate("/account/teams");
+    },
+  });
 
   const prevStep = () => {
     if (!stepper.current) {
@@ -34,7 +42,8 @@ const CreateTeamStepper = () => {
     setCurrentSchema(createTeamSchemas[stepper.current.currentStepIndex - 1]);
   };
 
-  const submitStep = (values: ICreateTeam, actions: FormikValues) => {
+  const submitStep = async (values: ICreateTeam, actions: FormikValues) => {
+    debugger;
     if (!stepper.current) {
       return;
     }
@@ -42,7 +51,15 @@ const CreateTeamStepper = () => {
     if (stepper.current.currentStepIndex !== stepper.current.totatStepsNumber) {
       stepper.current.goNext();
     } else {
-      navigate("/account/teams");
+      debugger;
+      await createTeamF({
+        variables: {
+          teamName: values.teamName,
+          teamCity: values.homeTown,
+          Image: "/media/avatars/300-6.jpg",
+        },
+      });
+
       // actions.resetForm();
     }
 

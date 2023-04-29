@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Card2 } from "../../../_metronic/partials/content/cards/Card2";
 import { PlayerStatsTable } from "../../../_metronic/partials/widgets/tables/PlayerStatsTable";
 import { IconUserModel } from "../profile/ProfileModels";
+import { useQuery } from "@apollo/client";
+import { getTeamPlayers } from "./core/request";
 
 type Props = {
   className: string;
@@ -13,11 +15,26 @@ type Props = {
 const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const [SelectedPlayer, setSelectedPlayer] = useState("");
-  const users1: Array<IconUserModel> = [
-    { name: "Emma Smith", avatar: "/media/avatars/300-6.jpg" },
-    { name: "Rudy Stone", avatar: "/media/avatars/300-1.jpg" },
-    { name: "Susan Redwood", initials: "S", color: "primary" },
-  ];
+
+  const [Players, setPlayers] = useState<
+    [
+      {
+        fname: string;
+        lname: string;
+      }
+    ]
+  >();
+  useQuery(getTeamPlayers, {
+    variables: {
+      teamID: "644d07dfc119700da7bdd54c",
+    },
+
+    onCompleted: ({ getTeamPlayers }) => {
+      setPlayers(getTeamPlayers);
+    },
+  });
+  console.log(Home);
+
   return (
     <>
       {SelectedPlayer == "" ? (
@@ -62,51 +79,24 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
             {/* begin::Body */}
 
             <div className="card-body row g-6 g-xl-9">
-              <div className="col-md-6 col-xl-4">
-                <Card2
-                  icon="\media\icons\duotune\general\james.png"
-                  badgeColor="primary"
-                  status="In Progress"
-                  statusColor="primary"
-                  title="JAMES"
-                  description="CRM App application to HR efficiency"
-                  date="November 10, 2021"
-                  budget="$284,900.00"
-                  progress={50}
-                  users={users1}
-                  setSelectedPlayer={setSelectedPlayer}
-                />
-              </div>
-              <div className="col-md-6 col-xl-4">
-                <Card2
-                  icon="\media\icons\duotune\general\james.png"
-                  badgeColor="primary"
-                  status="In Progress"
-                  statusColor="primary"
-                  title="JAMES"
-                  description="CRM App application to HR efficiency"
-                  date="November 10, 2021"
-                  budget="$284,900.00"
-                  progress={50}
-                  users={users1}
-                  setSelectedPlayer={setSelectedPlayer}
-                />
-              </div>
-              <div className="col-md-6 col-xl-4">
-                <Card2
-                  icon="\media\icons\duotune\general\james.png"
-                  badgeColor="primary"
-                  status="In Progress"
-                  statusColor="primary"
-                  title="JAMES"
-                  description="CRM App application to HR efficiency"
-                  date="November 10, 2021"
-                  budget="$284,900.00"
-                  progress={50}
-                  users={users1}
-                  setSelectedPlayer={setSelectedPlayer}
-                />
-              </div>
+              {Players?.map((Player, index) => {
+                return (
+                  <div className="col-md-6 col-xl-4" key={index}>
+                    <Card2
+                      icon="\media\icons\duotune\general\james.png"
+                      badgeColor="primary"
+                      status="In Progress"
+                      statusColor="primary"
+                      title={Player.fname + " " + Player.lname}
+                      description="CRM App application to HR efficiency"
+                      date="November 10, 2021"
+                      budget="$284,900.00"
+                      progress={50}
+                      setSelectedPlayer={setSelectedPlayer}
+                    />
+                  </div>
+                );
+              })}
             </div>
             {/* begin::Body */}
           </div>

@@ -11,7 +11,6 @@ const AccountHeader: React.FC = () => {
   const [Victories, setVictories] = useState(25);
   const [Defeats, setDefeats] = useState(2);
   const { currentUser } = useAuth();
-  console.log(currentUser);
 
   return (
     <div className="card mb-5 mb-xl-10">

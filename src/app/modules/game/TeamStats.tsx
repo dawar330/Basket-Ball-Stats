@@ -15,8 +15,20 @@ export function TeamStats() {
   const [game, setgame] = useState<{
     image: string;
     _id: string;
-    homeTeam: string;
-    awayTeam: string;
+    homeTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
+    awayTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
   }>();
 
   useQuery(getGame, {
@@ -34,8 +46,8 @@ export function TeamStats() {
         <div className="col-xl-4">
           <StatisticsWidget6
             className="card-xl-stretch mb-xl-8"
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             description="Points"
             homeStat={20}
             awayStat={25}
@@ -44,8 +56,8 @@ export function TeamStats() {
 
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="FG"
             homeStat={10}
@@ -55,8 +67,8 @@ export function TeamStats() {
 
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="FG%"
             homeStat={11}
@@ -66,8 +78,8 @@ export function TeamStats() {
 
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="3P"
             homeStat={1}
@@ -76,8 +88,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="3P%"
             homeStat={10}
@@ -86,8 +98,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="FT"
             homeStat={10}
@@ -96,8 +108,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="FT%"
             homeStat={10}
@@ -106,8 +118,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="REBOUNDS"
             homeStat={10}
@@ -116,8 +128,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="OFFENSIVE REBOUNDS"
             homeStat={10}
@@ -126,8 +138,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="DEFENSIVE REBOUNDS"
             homeStat={10}
@@ -136,8 +148,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="TIES"
             homeStat={10}
@@ -146,8 +158,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="LEAD CHANGES"
             homeStat={10}
@@ -156,8 +168,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="TIME WITH LEAD"
             homeStat={10}
@@ -166,8 +178,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="LEAD % OF GAME"
             homeStat={10}
@@ -176,8 +188,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="LAST LEAD"
             homeStat={10}
@@ -186,8 +198,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="LAST LEAD: TIME"
             homeStat={10}
@@ -196,8 +208,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="LARGEST LEAD"
             homeStat={10}
@@ -206,8 +218,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="LARGEST LEAD: SCORE"
             homeStat={10}
@@ -216,8 +228,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="LARGEST LEAD: TIME"
             homeStat={10}
@@ -226,8 +238,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="ASSISTS"
             homeStat={10}
@@ -236,8 +248,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="TURNOVERS"
             homeStat={10}
@@ -246,8 +258,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="BENCH POINTS"
             homeStat={10}
@@ -256,8 +268,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="BLOCKS"
             homeStat={10}
@@ -266,8 +278,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="ON COURT POINTS"
             homeStat={10}
@@ -276,8 +288,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="FASTBREAK POINTS"
             homeStat={10}
@@ -286,8 +298,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="STEALS"
             homeStat={10}
@@ -296,8 +308,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="POINTS OFF TURNOVERS"
             homeStat={10}
@@ -306,8 +318,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="POINTS IN THE PAINT"
             homeStat={10}
@@ -316,8 +328,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="SECOND CHANCE POINTS"
             homeStat={10}
@@ -326,8 +338,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="PERSONAL FOULS"
             homeStat={10}
@@ -336,8 +348,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="TECHNICAL FOULS"
             homeStat={10}
@@ -346,8 +358,8 @@ export function TeamStats() {
         </div>
         <div className="col-xl-4">
           <StatisticsWidget6
-            Home={game?.homeTeam ? game?.homeTeam : ""}
-            Away={game?.awayTeam ? game?.awayTeam : ""}
+            Home={game?.homeTeam.teamName ? game?.homeTeam.teamName : ""}
+            Away={game?.awayTeam.teamName ? game?.awayTeam.teamName : ""}
             className="card-xl-stretch mb-xl-8"
             description="POSSESSIONS"
             homeStat={10}

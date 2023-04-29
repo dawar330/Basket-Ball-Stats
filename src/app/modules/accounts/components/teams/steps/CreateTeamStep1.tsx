@@ -40,11 +40,11 @@ const CreateTeamStep1: FC = () => {
               className="form-select form-select-lg form-select-solid"
             >
               <option></option>
-              <option value="1">New York, NY</option>
-              <option value="2">Los Angeles, CA</option>
-              <option value="3">Chicago, IL</option>
-              <option value="4">Houston, TX</option>
-              <option value="5">Phoenix, AZ</option>
+              <option value="New York, NY">New York, NY</option>
+              <option value="Los Angeles, CA">Los Angeles, CA</option>
+              <option value="Chicago, IL">Chicago, IL</option>
+              <option value="Houston, TX">Houston, TX</option>
+              <option value="Phoenix, AZ">Phoenix, AZ</option>
             </Field>
             <div className="text-danger mt-2">
               <ErrorMessage name="homeTown" />

@@ -11,8 +11,20 @@ const GamesTab = () => {
       {
         image: string;
         _id: string;
-        homeTeam: string;
-        awayTeam: string;
+        homeTeam: {
+          _id: string;
+          teamName: string;
+          teamCity: string;
+          Image: string;
+          Players: [string];
+        };
+        awayTeam: {
+          _id: string;
+          teamName: string;
+          teamCity: string;
+          Image: string;
+          Players: [string];
+        };
       }
     ]
   >();
@@ -30,40 +42,49 @@ const GamesTab = () => {
         {/*end::Heading*/}
 
         {/*begin::Items*/}
-        <div className="mb-10">
-          {games?.map((p, index) => (
-            <Link
-              key={index}
-              to={`game/${p._id}/overview`}
-              className="custom-list d-flex align-items-center px-5 py-4"
-            >
-              {/*begin::Symbol*/}
-              <div className="symbol symbol-40px me-5">
-                <span className="symbol-label">
-                  <img
-                    src={toAbsoluteUrl(p.image)}
-                    alt={p.homeTeam}
-                    className="h-50 align-self-center"
+        <div className="mb-10 ">
+          {games?.length ? (
+            games?.map((p, index) => (
+              <Link
+                key={index}
+                to={`game/${p._id}/overview`}
+                className="custom-list d-flex align-items-center px-5 py-4 border-bottom "
+              >
+                {/*begin::Symbol*/}
+                <div className="symbol symbol-40px me-5">
+                  <KTSVG
+                    path="/media/icons/duotune/communication/com001.svg"
+                    className="svg-icon-primary svg-icon-2hx"
                   />
-                </span>
-              </div>
-              {/*end::Symbol*/}
+                </div>
+                {/*end::Symbol*/}
 
-              {/*begin::Description*/}
-              <div className="d-flex flex-column flex-grow-1">
-                {/*begin::Title*/}
-                <h5 className="custom-list-title fw-bold text-gray-800 mb-1">
-                  {p.homeTeam}
-                </h5>
-                {/*end::Title*/}
+                {/*begin::Description*/}
+                <div className="d-flex flex-column flex-grow-1">
+                  {/*begin::Title*/}
+                  <h5 className="custom-list-title fw-bold text-gray-800 mb-1">
+                    {p.homeTeam.teamName}
+                  </h5>
+                  {/*end::Title*/}
 
-                {/*begin::Link*/}
-                <span className="text-gray-400 fw-bold">VS {p.awayTeam}</span>
-                {/*end::Link*/}
-              </div>
-              {/*begin::Description*/}
-            </Link>
-          ))}
+                  {/*begin::Link*/}
+                  <span className="text-gray-400 fw-bold">
+                    VS {p.awayTeam.teamName}
+                  </span>
+                  {/*end::Link*/}
+                </div>
+                {/*begin::Description*/}
+              </Link>
+            ))
+          ) : (
+            <div className="d-flex flex-column flex-grow-1">
+              {/*begin::Title*/}
+              <h5 className="custom-list-title fw-bold text-gray-800 mb-1">
+                No Games Yet
+              </h5>
+              {/*end::Title*/}
+            </div>
+          )}
         </div>
         {/*end::Items*/}
       </div>

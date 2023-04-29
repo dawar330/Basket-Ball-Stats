@@ -20,6 +20,14 @@ export const getUserByToken = gql`
     }
   }
 `;
+export const getUser = gql`
+  query ($id: String!) {
+    getUser(id: $id) {
+      fname
+      lname
+    }
+  }
+`;
 export const login = gql`
   mutation ($loginInput: loginInput!) {
     login(loginInput: $loginInput) {

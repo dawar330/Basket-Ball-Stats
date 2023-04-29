@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { toAbsoluteUrl } from "../../../../../../_metronic/helpers";
-import {
-  IProfileDetails,
-  profileDetailsInitValues as initialValues,
-} from "../SettingsModel";
+import { IProfileDetails } from "../SettingsModel";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useAuth } from "../../../../auth";
 
 const profileDetailsSchema = Yup.object().shape({
   fName: Yup.string().required("First name is required"),
@@ -19,6 +17,24 @@ const profileDetailsSchema = Yup.object().shape({
 });
 
 const ProfileDetails: React.FC = () => {
+  const { currentUser } = useAuth();
+  const initialValues: IProfileDetails = {
+    avatar: "/media/avatars/300-1.jpg",
+    fName: currentUser ? currentUser.fname : "",
+    lName: currentUser ? currentUser.lname : "",
+    company: "Keenthemes",
+    contactPhone: "044 3276 454 935",
+    companySite: "keenthemes.com",
+    country: "",
+    language: "",
+    timeZone: "",
+    currency: "",
+    communications: {
+      email: false,
+      phone: false,
+    },
+    allowMarketing: false,
+  };
   const [data, setData] = useState<IProfileDetails>(initialValues);
   const updateData = (fieldsToUpdate: Partial<IProfileDetails>): void => {
     const updatedData = Object.assign(data, fieldsToUpdate);

@@ -16,8 +16,20 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
   const [game, setgame] = useState<{
     image: string;
     _id: string;
-    homeTeam: string;
-    awayTeam: string;
+    homeTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
+    awayTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
   }>();
 
   useQuery(getGame, {
@@ -74,7 +86,7 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
                 <td>
                   <div className="d-flex align-items-center">
                     <div className="d-flex justify-content-start flex-column">
-                      {game?.homeTeam}
+                      {game?.homeTeam.teamName}
                     </div>
                   </div>
                 </td>
@@ -118,7 +130,7 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
                 <td>
                   <div className="d-flex align-items-center">
                     <div className="d-flex justify-content-start flex-column">
-                      {game?.awayTeam}
+                      {game?.awayTeam.teamName}
                     </div>
                   </div>
                 </td>

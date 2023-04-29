@@ -1,11 +1,34 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
-import { Field, ErrorMessage } from "formik";
+import { Field, ErrorMessage, useField } from "formik";
+import { getTeams } from "../core/request";
+import { useQuery } from "@apollo/client";
 
 const CreateGameStep1: FC = () => {
+  const [teams, setteams] = useState<
+    [
+      {
+        _id: string;
+        teamName: string;
+        teamCity: string;
+        Image: string;
+        Players: [string];
+      }
+    ]
+  >();
+  useQuery(getTeams, {
+    onCompleted: ({ getTeams }) => {
+      setteams(getTeams);
+    },
+  });
+  const [selectedHome, setselectedHome] = useState<string>();
+  const [selectedAway, setselectedAway] = useState<string>();
+  const [homeTeam] = useField("homeTeam");
+  const [awayTeam] = useField("awayTeam");
   return (
     <div className="w-100">
+      {" "}
       <div className="pb-10 pb-lg-15">
         <h2 className="fw-bolder d-flex align-items-center text-dark">
           Add Team Details
@@ -15,7 +38,6 @@ const CreateGameStep1: FC = () => {
           Please provide basic information for your team.
         </div>
       </div>
-
       <div className="fv-row">
         <div className="row">
           <div className="fv-row mb-10">
@@ -25,13 +47,20 @@ const CreateGameStep1: FC = () => {
               as="select"
               name="homeTeam"
               className="form-select form-select-lg form-select-solid"
+              onChange={(e: any) => {
+                setselectedHome(e.target.value);
+                homeTeam.onChange(e);
+              }}
             >
               <option></option>
-              <option value="New York, N">New York, NY</option>
-              <option value="Los Angeles, CA">Los Angeles, CA</option>
-              <option value="Chicago, IL">Chicago, IL</option>
-              <option value="Houston, TX">Houston, TX</option>
-              <option value="Phoenix, AZ">Phoenix, AZ</option>
+              {teams?.map((team) => {
+                if (team._id !== selectedAway)
+                  return (
+                    <option key={team._id} value={team._id}>
+                      {team.teamName}
+                    </option>
+                  );
+              })}
             </Field>
             <div className="text-danger mt-2">
               <ErrorMessage name="homeTeam" />
@@ -45,13 +74,21 @@ const CreateGameStep1: FC = () => {
               as="select"
               name="awayTeam"
               className="form-select form-select-lg form-select-solid"
+              onChange={(e: any) => {
+                debugger;
+                setselectedAway(e.target.value);
+                awayTeam.onChange(e);
+              }}
             >
               <option></option>
-              <option value="New York, N">New York, NY</option>
-              <option value="Los Angeles, CA">Los Angeles, CA</option>
-              <option value="Chicago, IL">Chicago, IL</option>
-              <option value="Houston, TX">Houston, TX</option>
-              <option value="Phoenix, AZ">Phoenix, AZ</option>
+              {teams?.map((team) => {
+                if (team._id !== selectedHome)
+                  return (
+                    <option key={team._id} value={team._id}>
+                      {team.teamName}
+                    </option>
+                  );
+              })}
             </Field>
             <div className="text-danger mt-2">
               <ErrorMessage name="awayTeam" />

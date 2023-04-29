@@ -1,7 +1,26 @@
 import { Link } from "react-router-dom";
 import { TeamCard } from "./cards/TeamCard";
+import { useQuery } from "@apollo/client";
+import { useState } from "react";
+import { getTeams } from "../../../game/core/request";
 
 export function Teams() {
+  const [teams, setteams] = useState<
+    [
+      {
+        teamName: string;
+        teamCity: string;
+        Image: string;
+        Players: [string];
+      }
+    ]
+  >();
+  useQuery(getTeams, {
+    onCompleted: ({ getTeams }) => {
+      debugger;
+      setteams(getTeams);
+    },
+  });
   return (
     <>
       <div className="d-flex flex-wrap flex-stack mb-6">
@@ -28,17 +47,19 @@ export function Teams() {
         </div>
       </div>
       <div className="row g-6 g-xl-9">
-        <div className="col-md-6 col-xxl-4">
-          <TeamCard
-            avatar="/media/avatars/300-6.jpg"
-            name="Emma Smith"
-            position="Center"
-            points="$14,560"
-            assists="$236,400"
-            rebounds="70"
-            steals="2"
-          />
-        </div>
+        {teams?.map((team, index) => (
+          <div className="col-md-6 col-xxl-4" key={index}>
+            <TeamCard
+              avatar="/media/avatars/300-6.jpg"
+              name={team.teamName}
+              position="Center"
+              points="$14,560"
+              assists="$236,400"
+              rebounds="70"
+              steals="2"
+            />
+          </div>
+        ))}
       </div>
     </>
   );

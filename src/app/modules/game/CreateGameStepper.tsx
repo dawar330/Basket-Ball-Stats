@@ -24,9 +24,7 @@ const CreateGameStepper = () => {
       stepperRef.current as HTMLDivElement
     );
   };
-  const [createGameF] = useMutation(createGame, {
-    onCompleted: ({ createGame }) => {},
-  });
+  const [createGameF] = useMutation(createGame);
   const prevStep = () => {
     if (!stepper.current) {
       return;
