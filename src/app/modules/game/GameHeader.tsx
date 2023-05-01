@@ -4,6 +4,12 @@ import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
 import { getGame } from "./core/request";
 import { useQuery } from "@apollo/client";
+import { ErrorMessage, Field, Form, Formik, FormikValues } from "formik";
+import {
+  ICreateGame,
+  createGameSchemas,
+  inits,
+} from "./CreateTeamWizardHelper";
 
 interface GameRouteParams extends Params {
   id: string;
@@ -11,6 +17,7 @@ interface GameRouteParams extends Params {
 
 const GameHeader: React.FC = () => {
   const { id: game_ID } = useParams<GameRouteParams>();
+  const [currentSchema, setCurrentSchema] = useState(createGameSchemas[0]);
   const [game, setgame] = useState<{
     image: string;
     _id: string;
@@ -28,6 +35,7 @@ const GameHeader: React.FC = () => {
       Image: string;
       Players: [string];
     };
+    startTime: string;
   }>();
 
   useQuery(getGame, {
@@ -39,7 +47,23 @@ const GameHeader: React.FC = () => {
       setgame(getGame);
     },
   });
-
+  const submitStep = async (values: ICreateGame, actions: FormikValues) => {
+    // if (!stepper.current) {
+    //   return;
+    // }
+    // if (stepper.current.currentStepIndex !== stepper.current.totatStepsNumber) {
+    //   stepper.current.goNext();
+    // } else {
+    //   await createGameF({
+    //     variables: { CreateGameInput: { ...values } },
+    //   });
+    //   //TODO NAVIGATE TO GAME
+    //   navigate("/account/teams");
+    //   // actions.resetForm();
+    // }
+    // setCurrentSchema(createGameSchemas[stepper.current.currentStepIndex - 1]);
+  };
+  const [initValues] = useState<ICreateGame>(inits);
   const location = useLocation();
   return (
     <div className="card mb-5 mb-xl-10">
@@ -123,6 +147,183 @@ const GameHeader: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="flex-column-auto pt-10 px-5"
+          id="kt_aside_secondary_footer"
+        >
+          <div
+            className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+            data-bs-toggle="modal"
+            data-bs-target="#kt_modal_1"
+          >
+            <KTSVG
+              path="/media/icons/duotune/general/gen041.svg"
+              className="svg-icon-muted svg-icon-2hx"
+            />
+            <span className="btn-label">Create Play</span>
+          </div>
+        </div>
+        <div className="modal fade" tabIndex={-1} id="kt_modal_1">
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Create Play</h5>
+                <div
+                  className="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <KTSVG
+                    path="/media/icons/duotune/arrows/arr061.svg"
+                    className="svg-icon svg-icon-2x"
+                  />
+                </div>
+              </div>
+              <div className="modal-body">
+                <Formik
+                  validationSchema={currentSchema}
+                  initialValues={initValues}
+                  onSubmit={submitStep}
+                >
+                  {() => (
+                    <Form
+                      className="py-20 w-100"
+                      noValidate
+                      id="kt_create_account_form"
+                    >
+                      <div className="row">
+                        <div className="fv-row mb-10">
+                          <label className="form-label required">
+                            Scoring Team
+                          </label>
+
+                          <Field
+                            as="select"
+                            name="scoringTeam"
+                            className="form-select form-select-solid"
+                          >
+                            <option></option>
+
+                            <option
+                              key={game?.homeTeam._id}
+                              value={game?.homeTeam._id}
+                            >
+                              {game?.homeTeam.teamName}
+                            </option>
+                            <option
+                              key={game?.awayTeam._id}
+                              value={game?.awayTeam._id}
+                            >
+                              {game?.awayTeam.teamName}
+                            </option>
+                          </Field>
+                          <div className="text-danger mt-2">
+                            <ErrorMessage name="homeTeam" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="fv-row mb-10">
+                          <label className="form-label required">
+                            Scoring Player
+                          </label>
+
+                          <Field
+                            as="select"
+                            name="scoringTeam"
+                            className="form-select form-select-solid"
+                          >
+                            <option></option>
+
+                            <option
+                              key={game?.homeTeam._id}
+                              value={game?.homeTeam._id}
+                            >
+                              {game?.homeTeam.teamName}
+                            </option>
+                            <option
+                              key={game?.awayTeam._id}
+                              value={game?.awayTeam._id}
+                            >
+                              {game?.awayTeam.teamName}
+                            </option>
+                          </Field>
+                          <div className="text-danger mt-2">
+                            <ErrorMessage name="homeTeam" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="fv-row mb-10">
+                          <label className="form-label required">Score</label>
+
+                          <Field
+                            as="select"
+                            name="scoringTeam"
+                            className="form-select form-select-solid"
+                          >
+                            <option></option>
+
+                            <option
+                              key={game?.homeTeam._id}
+                              value={game?.homeTeam._id}
+                            >
+                              {game?.homeTeam.teamName}
+                            </option>
+                            <option
+                              key={game?.awayTeam._id}
+                              value={game?.awayTeam._id}
+                            >
+                              {game?.awayTeam.teamName}
+                            </option>
+                          </Field>
+                          <div className="text-danger mt-2">
+                            <ErrorMessage name="homeTeam" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row mb-6">
+                        <div className="col-lg-8 fv-row">
+                          <div className="d-flex align-items-center mt-3">
+                            <label className="form-check form-check-inline form-check-solid me-5">
+                              <input
+                                className="form-check-input"
+                                name="communication[]"
+                                type="checkbox"
+                                defaultChecked={false}
+                                onChange={() => {
+                                  // updateData({
+                                  //   communications: {
+                                  //     email: !data.communications?.email,
+                                  //     phone: data.communications?.phone,
+                                  //   },
+                                  // });
+                                }}
+                              />
+                              <span className="fw-bold ps-2 fs-6">Missed</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-light"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" className="btn btn-primary">
+                  Save Play
+                </button>
               </div>
             </div>
           </div>

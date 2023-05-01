@@ -101,7 +101,7 @@ export const getGame = gql`
         Image
         Players
       }
-
+      startTime
       coach
     }
   }

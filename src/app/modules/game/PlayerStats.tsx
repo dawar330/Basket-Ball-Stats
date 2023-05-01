@@ -4,7 +4,11 @@ import { Card2 } from "../../../_metronic/partials/content/cards/Card2";
 import { PlayerStatsTable } from "../../../_metronic/partials/widgets/tables/PlayerStatsTable";
 import { IconUserModel } from "../profile/ProfileModels";
 import { useQuery } from "@apollo/client";
-import { getTeamPlayers } from "./core/request";
+import { getGame, getTeamPlayers } from "./core/request";
+import { useParams, Params } from "react-router-dom";
+interface GameRouteParams extends Params {
+  id: string;
+}
 
 type Props = {
   className: string;
@@ -24,9 +28,38 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
       }
     ]
   >();
+  const { id: game_ID } = useParams<GameRouteParams>();
+  const [game, setgame] = useState<{
+    image: string;
+    _id: string;
+    homeTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
+    awayTeam: {
+      _id: string;
+      teamName: string;
+      teamCity: string;
+      Image: string;
+      Players: [string];
+    };
+  }>();
+
+  useQuery(getGame, {
+    variables: {
+      gameID: game_ID,
+    },
+
+    onCompleted: ({ getGame }) => {
+      setgame(getGame);
+    },
+  });
   useQuery(getTeamPlayers, {
     variables: {
-      teamID: "644d07dfc119700da7bdd54c",
+      teamID: TeamCheckBox ? game?.homeTeam._id : game?.awayTeam._id,
     },
 
     onCompleted: ({ getTeamPlayers }) => {
@@ -54,7 +87,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
                     !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
                   }`}
                 >
-                  {Home}HOME
+                  {game?.homeTeam.teamName}
                 </label>
                 <input
                   className="form-check-input"
@@ -70,7 +103,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
                     TeamCheckBox ? "fw-bold text-primary" : " text-muted"
                   }`}
                 >
-                  {Away}AWAY
+                  {game?.awayTeam.teamName}
                 </label>
               </div>
             </div>
