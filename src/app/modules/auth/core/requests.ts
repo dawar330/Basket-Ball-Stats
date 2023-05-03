@@ -23,6 +23,7 @@ export const getUserByToken = gql`
 export const getUser = gql`
   query ($id: String!) {
     getUser(id: $id) {
+      _id
       fname
       lname
     }

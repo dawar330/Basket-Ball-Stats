@@ -45,7 +45,6 @@ const FeedsWidget2: React.FC<Props> = ({
     },
     onCompleted: ({ getUser }) => {
       setuserName(getUser.fname + " " + getUser.lname);
-      debugger;
     },
   });
   return (

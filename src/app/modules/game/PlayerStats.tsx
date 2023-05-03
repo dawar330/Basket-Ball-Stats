@@ -59,7 +59,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
   });
   useQuery(getTeamPlayers, {
     variables: {
-      teamID: TeamCheckBox ? game?.homeTeam._id : game?.awayTeam._id,
+      teamID: !TeamCheckBox ? game?.homeTeam._id : game?.awayTeam._id,
     },
 
     onCompleted: ({ getTeamPlayers }) => {

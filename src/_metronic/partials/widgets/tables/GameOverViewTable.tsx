@@ -114,7 +114,7 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
                 <td>
                   <div className="text-end text-muted">
                     <div className="d-flex justify-content-start flex-column">
-                      3
+                      5
                     </div>
                   </div>
                 </td>

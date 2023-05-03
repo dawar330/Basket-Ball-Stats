@@ -3,21 +3,22 @@ import React, { useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
 import { getGame } from "./core/request";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { ErrorMessage, Field, Form, Formik, FormikValues } from "formik";
-import {
-  ICreateGame,
-  createGameSchemas,
-  inits,
-} from "./CreateTeamWizardHelper";
+import { ICreatePlay, createPlaySchemas, inits } from "./CreatePlayHelper";
+import { getUser } from "../auth/core/requests";
 
 interface GameRouteParams extends Params {
   id: string;
 }
-
+interface Player {
+  _id: string;
+  fname: string;
+  lname: string;
+}
 const GameHeader: React.FC = () => {
   const { id: game_ID } = useParams<GameRouteParams>();
-  const [currentSchema, setCurrentSchema] = useState(createGameSchemas[0]);
+  const [currentSchema, setCurrentSchema] = useState(createPlaySchemas[0]);
   const [game, setgame] = useState<{
     image: string;
     _id: string;
@@ -43,11 +44,44 @@ const GameHeader: React.FC = () => {
       gameID: game_ID,
     },
 
-    onCompleted: ({ getGame }) => {
+    onCompleted: async ({ getGame }) => {
+      const homeplayerIds = getGame?.homeTeam.Players || [];
+
+      const homeplayerQueries = homeplayerIds.map(async (id: string) => {
+        const { data } = await getPlayerName({
+          variables: {
+            id: id,
+          },
+        });
+        return data.getUser;
+      });
+
+      const homeplayerResults: Player[] = await Promise.all(homeplayerQueries);
+
+      setHomePlayers(homeplayerResults);
+
+      const playerIds = getGame?.awayTeam.Players || [];
+
+      const awayplayerQueries: Player[] = playerIds.map((id: string) => {
+        return getPlayerName({
+          variables: {
+            id: id,
+          },
+        });
+      });
+
+      const awayplayerResults = await Promise.all(awayplayerQueries);
+      setawayPlayers(awayplayerResults);
       setgame(getGame);
     },
   });
-  const submitStep = async (values: ICreateGame, actions: FormikValues) => {
+  const [HomePlayers, setHomePlayers] = useState<Player[]>();
+  const [awayPlayers, setawayPlayers] = useState<Player[]>();
+
+  const submitStep = async (values: ICreatePlay, actions: FormikValues) => {
+    console.log(values);
+    console.log(initValues);
+
     // if (!stepper.current) {
     //   return;
     // }
@@ -63,8 +97,67 @@ const GameHeader: React.FC = () => {
     // }
     // setCurrentSchema(createGameSchemas[stepper.current.currentStepIndex - 1]);
   };
-  const [initValues] = useState<ICreateGame>(inits);
+  const [initValues] = useState<ICreatePlay>(inits);
   const location = useLocation();
+  let [getPlayerName] = useLazyQuery(getUser);
+  const [PlayType, setPlayType] = useState("");
+  const options =
+    PlayType === "Play" ? (
+      <>
+        {" "}
+        <option></option>
+        <option key={"2-Point"} value={"2-Point"}>
+          {"2-Point"}
+        </option>
+        <option key={"3-Point"} value={"3-Point"}>
+          {"3-Point"}
+        </option>
+        <option key={"Free Throw	"} value={"Free Throw"}>
+          {"Free Throw"}
+        </option>
+      </>
+    ) : PlayType === "Rebound" ? (
+      <>
+        {" "}
+        <option></option>
+        <option key={"OFF"} value={"OFF"}>
+          {"OFF"}
+        </option>
+        <option key={"DEF"} value={"DEF"}>
+          {"DEF"}
+        </option>
+      </>
+    ) : PlayType === "Foul" ? (
+      <>
+        {" "}
+        <option></option>
+        <option key={"F"} value={"F"}>
+          {"F"}
+        </option>
+        <option key={"TF"} value={"TF"}>
+          {"TF"}
+        </option>
+      </>
+    ) : (
+      <>
+        {" "}
+        <option></option>
+        <option key={"A"} value={"A"}>
+          {"A"}
+        </option>
+        <option key={"TO"} value={"TO"}>
+          {"TO"}
+        </option>
+        <option key={"BLOCK"} value={"BLOCK"}>
+          {"BLOCK"}
+        </option>
+        <option key={"STEAL"} value={"STEAL"}>
+          {"STEAL"}
+        </option>
+      </>
+    );
+  const [GameActive, setGameActive] = useState(false);
+  const [GameEnded, setGameEnded] = useState(false);
   return (
     <div className="card mb-5 mb-xl-10">
       <div className="card-body pt-9 pb-0">
@@ -151,27 +244,93 @@ const GameHeader: React.FC = () => {
             </div>
           </div>
         </div>
-        <div
-          className="flex-column-auto pt-10 px-5"
-          id="kt_aside_secondary_footer"
-        >
+        {!GameEnded && (
           <div
-            className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_modal_1"
+            className="flex-column-auto pt-10"
+            id="kt_aside_secondary_footer"
           >
-            <KTSVG
-              path="/media/icons/duotune/general/gen041.svg"
-              className="svg-icon-muted svg-icon-2hx"
-            />
-            <span className="btn-label">Create Play</span>
+            <div
+              className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100 mb-2"
+              onClick={() => {
+                if (!GameActive) setGameActive(true);
+                else setGameEnded(true);
+              }}
+            >
+              <KTSVG
+                path="/media/icons/duotune/general/gen041.svg"
+                className="svg-icon-muted svg-icon-2hx"
+              />
+              <span className="btn-label">
+                {!GameActive ? "Start Game" : "End Game"}
+              </span>
+            </div>
+            {GameActive && (
+              <div className="d-sm-flex flex-sm-row gap-3 gap-y-3">
+                <div
+                  className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100 mb-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_modal_1"
+                  onClick={() => {
+                    setPlayType("Play");
+                  }}
+                >
+                  <KTSVG
+                    path="/media/icons/duotune/general/gen041.svg"
+                    className="svg-icon-muted svg-icon-2hx"
+                  />
+                  <span className="btn-label">Create Play</span>
+                </div>
+                <div
+                  className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100 mb-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_modal_1"
+                  onClick={() => {
+                    setPlayType("Rebound");
+                  }}
+                >
+                  <KTSVG
+                    path="/media/icons/duotune/general/gen041.svg"
+                    className="svg-icon-muted svg-icon-2hx"
+                  />
+                  <span className="btn-label">Create Rebounds</span>
+                </div>{" "}
+                <div
+                  className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100 mb-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_modal_1"
+                  onClick={() => {
+                    setPlayType("Foul");
+                  }}
+                >
+                  <KTSVG
+                    path="/media/icons/duotune/general/gen041.svg"
+                    className="svg-icon-muted svg-icon-2hx"
+                  />
+                  <span className="btn-label">Create Fouls</span>
+                </div>{" "}
+                <div
+                  className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100 mb-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_modal_1"
+                  onClick={() => {
+                    setPlayType("Action");
+                  }}
+                >
+                  <KTSVG
+                    path="/media/icons/duotune/general/gen041.svg"
+                    className="svg-icon-muted svg-icon-2hx"
+                  />
+                  <span className="btn-label">Create Action</span>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        )}
         <div className="modal fade" tabIndex={-1} id="kt_modal_1">
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Create Play</h5>
+                <h5 className="modal-title">Create {PlayType}</h5>
                 <div
                   className="btn btn-icon btn-sm btn-active-light-primary ms-2"
                   data-bs-dismiss="modal"
@@ -183,148 +342,143 @@ const GameHeader: React.FC = () => {
                   />
                 </div>
               </div>
-              <div className="modal-body">
-                <Formik
-                  validationSchema={currentSchema}
-                  initialValues={initValues}
-                  onSubmit={submitStep}
-                >
-                  {() => (
-                    <Form
-                      className="py-20 w-100"
-                      noValidate
-                      id="kt_create_account_form"
-                    >
+
+              <Formik
+                validationSchema={currentSchema}
+                initialValues={initValues}
+                onSubmit={submitStep}
+              >
+                {({ values }) => (
+                  <Form
+                    className="py-20 w-100"
+                    noValidate
+                    id="kt_create_account_form"
+                  >
+                    <div className="modal-body">
+                      <div className="row">
+                        <div className="fv-row mb-10">
+                          <label className="form-label required">Team</label>
+
+                          <Field
+                            as="select"
+                            name="Team"
+                            className="form-select form-select-solid"
+                          >
+                            <option></option>
+
+                            <option
+                              key={game?.homeTeam._id}
+                              value={game?.homeTeam._id}
+                            >
+                              {game?.homeTeam.teamName}
+                            </option>
+                            <option
+                              key={game?.awayTeam._id}
+                              value={game?.awayTeam._id}
+                            >
+                              {game?.awayTeam.teamName}
+                            </option>
+                          </Field>
+                          <div className="text-danger mt-2">
+                            <ErrorMessage name="Team" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="fv-row mb-10">
+                          <label className="form-label required">Player</label>
+
+                          <Field
+                            as="select"
+                            name="Player"
+                            className="form-select form-select-solid"
+                          >
+                            <option></option>
+                            {values.Team === game?.homeTeam._id ? (
+                              <>
+                                {HomePlayers?.length &&
+                                  HomePlayers?.map((Player, index) => {
+                                    return (
+                                      <option key={index} value={Player._id}>
+                                        {Player.fname + " " + Player.lname}
+                                      </option>
+                                    );
+                                  })}
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                {awayPlayers?.length &&
+                                  awayPlayers?.map((Player, index) => {
+                                    return (
+                                      <option key={index} value={Player._id}>
+                                        {Player.fname + " " + Player.lname}
+                                      </option>
+                                    );
+                                  })}
+                              </>
+                            )}
+                          </Field>
+                          <div className="text-danger mt-2">
+                            <ErrorMessage name="Player" />
+                          </div>
+                        </div>
+                      </div>
                       <div className="row">
                         <div className="fv-row mb-10">
                           <label className="form-label required">
-                            Scoring Team
+                            {PlayType}
                           </label>
 
                           <Field
                             as="select"
-                            name="scoringTeam"
+                            name="Score"
                             className="form-select form-select-solid"
                           >
-                            <option></option>
-
-                            <option
-                              key={game?.homeTeam._id}
-                              value={game?.homeTeam._id}
-                            >
-                              {game?.homeTeam.teamName}
-                            </option>
-                            <option
-                              key={game?.awayTeam._id}
-                              value={game?.awayTeam._id}
-                            >
-                              {game?.awayTeam.teamName}
-                            </option>
+                            {options}
                           </Field>
                           <div className="text-danger mt-2">
-                            <ErrorMessage name="homeTeam" />
+                            <ErrorMessage name="Score" />
                           </div>
                         </div>
                       </div>
-                      <div className="row">
-                        <div className="fv-row mb-10">
-                          <label className="form-label required">
-                            Scoring Player
-                          </label>
-
-                          <Field
-                            as="select"
-                            name="scoringTeam"
-                            className="form-select form-select-solid"
-                          >
-                            <option></option>
-
-                            <option
-                              key={game?.homeTeam._id}
-                              value={game?.homeTeam._id}
-                            >
-                              {game?.homeTeam.teamName}
-                            </option>
-                            <option
-                              key={game?.awayTeam._id}
-                              value={game?.awayTeam._id}
-                            >
-                              {game?.awayTeam.teamName}
-                            </option>
-                          </Field>
-                          <div className="text-danger mt-2">
-                            <ErrorMessage name="homeTeam" />
+                      {PlayType === "Play" && (
+                        <div className="row mb-6">
+                          <div className="col-lg-8 fv-row">
+                            <div className="d-flex align-items-center mt-3">
+                              <label className="form-check form-check-inline form-check-solid me-5">
+                                <Field
+                                  type="checkbox"
+                                  name="Missed"
+                                  className="form-check-input"
+                                />
+                                <span className="fw-bold ps-2 fs-6">
+                                  Missed
+                                </span>
+                              </label>
+                            </div>
+                            <div className="text-danger mt-2">
+                              <ErrorMessage name="Missed" />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="row">
-                        <div className="fv-row mb-10">
-                          <label className="form-label required">Score</label>
-
-                          <Field
-                            as="select"
-                            name="scoringTeam"
-                            className="form-select form-select-solid"
-                          >
-                            <option></option>
-
-                            <option
-                              key={game?.homeTeam._id}
-                              value={game?.homeTeam._id}
-                            >
-                              {game?.homeTeam.teamName}
-                            </option>
-                            <option
-                              key={game?.awayTeam._id}
-                              value={game?.awayTeam._id}
-                            >
-                              {game?.awayTeam.teamName}
-                            </option>
-                          </Field>
-                          <div className="text-danger mt-2">
-                            <ErrorMessage name="homeTeam" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row mb-6">
-                        <div className="col-lg-8 fv-row">
-                          <div className="d-flex align-items-center mt-3">
-                            <label className="form-check form-check-inline form-check-solid me-5">
-                              <input
-                                className="form-check-input"
-                                name="communication[]"
-                                type="checkbox"
-                                defaultChecked={false}
-                                onChange={() => {
-                                  // updateData({
-                                  //   communications: {
-                                  //     email: !data.communications?.email,
-                                  //     phone: data.communications?.phone,
-                                  //   },
-                                  // });
-                                }}
-                              />
-                              <span className="fw-bold ps-2 fs-6">Missed</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-light"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary">
-                  Save Play
-                </button>
-              </div>
+                      )}
+                    </div>
+                    <div className="modal-footer">
+                      <button
+                        type="button"
+                        className="btn btn-light"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button type="submit" className="btn btn-primary">
+                        Save Play
+                      </button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
             </div>
           </div>
         </div>
