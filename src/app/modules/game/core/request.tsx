@@ -41,6 +41,59 @@ export const createTeam = gql`
   }
 `;
 
+export const createPlay = gql`
+  mutation (
+    $PlayerID: String!
+    $TeamID: String!
+    $PlayType: String!
+    $Missed: Boolean!
+    $GameID: String!
+  ) {
+    createPlay(
+      PlayerID: $PlayerID
+      TeamID: $TeamID
+      PlayType: $PlayType
+      Missed: $Missed
+      GameID: $GameID
+    ) {
+      PlayerID
+      TeamID
+      PlayType
+      Missed
+      Time
+      GameID
+    }
+  }
+`;
+
+export const getGamePlay = gql`
+  query ($gameID: String!) {
+    getGamePlay(gameID: $gameID) {
+      awayTeam
+      homeTeam
+    }
+  }
+`;
+
+export const getScoringGamePlay = gql`
+  query ($gameID: String!) {
+    getScoringGamePlay(gameID: $gameID) {
+      homeTeam {
+        PlayerID
+        PlayType
+        Time
+        Team
+      }
+      awayTeam {
+        PlayerID
+        PlayType
+        Time
+        Team
+      }
+    }
+  }
+`;
+
 export const getGames = gql`
   query {
     getGames {

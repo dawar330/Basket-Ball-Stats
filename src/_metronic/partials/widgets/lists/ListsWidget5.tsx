@@ -39,7 +39,7 @@ const ListsWidget5: React.FC<Props> = ({ className }) => {
       </div>
       {/* end::Header */}
       {/* begin::Body */}
-      <div className="card-body pt-5">
+      <div className="card-body pt-5" style={{ filter: "blur(5px)" }}>
         {/* begin::Timeline */}
         <div className="timeline-label">
           {/* begin::Item */}
@@ -83,6 +83,114 @@ const ListsWidget5: React.FC<Props> = ({ className }) => {
               <span className="text-primary"> (1 Reb, 1 Def)</span>.
             </div>
             {/* end::Text */}
+          </div>
+          {/* end::Item */}
+          {/* begin::Item */}
+          <div className="timeline-item">
+            {/* begin::Label */}
+            <div className="timeline-label fw-bold text-gray-800 fs-6 d-flex-column justify-content-center">
+              <div>21:03</div>
+              <div>2ND</div>
+            </div>
+
+            {/* end::Label */}
+            {/* begin::Badge */}
+            <div className="timeline-badge">
+              <i className="fa fa-genderless text-warning fs-1"></i>
+            </div>
+            {/* end::Badge */}
+            {/* begin::Desc */}
+            <div className="timeline-content fw-semibold text-gray-800 ps-3">
+              00 Blue Cain FOUL
+              <span className="text-primary"> (1 PF)</span>.
+            </div>
+            {/* end::Desc */}
+          </div>
+          {/* end::Item */}
+          {/* begin::Item */}
+          <div className="timeline-item">
+            {/* begin::Label */}
+            <div className="timeline-label fw-bold text-gray-800 fs-6 d-flex-column justify-content-center">
+              <div>20:53</div>
+              <div>2ND</div>
+            </div>
+            {/* end::Label */}
+            {/* begin::Badge */}
+            <div className="timeline-badge">
+              <i className="fa fa-genderless text-primary fs-1"></i>
+            </div>
+            {/* end::Badge */}
+            {/* begin::Text */}
+            <div className="timeline-content fw-semibold text-gray-800 ps-3">
+              05 Vyctorius Miller DEF. REBOUND
+              <span className="text-primary"> (1 Reb, 1 Def)</span>.
+            </div>
+            {/* end::Text */}
+          </div>
+          {/* end::Item */}
+          {/* begin::Item */}
+          <div className="timeline-item">
+            {/* begin::Label */}
+            <div className="timeline-label fw-bold text-gray-800 fs-6 d-flex-column justify-content-center">
+              <div>21:03</div>
+              <div>2ND</div>
+            </div>
+
+            {/* end::Label */}
+            {/* begin::Badge */}
+            <div className="timeline-badge">
+              <i className="fa fa-genderless text-warning fs-1"></i>
+            </div>
+            {/* end::Badge */}
+            {/* begin::Desc */}
+            <div className="timeline-content fw-semibold text-gray-800 ps-3">
+              00 Blue Cain FOUL
+              <span className="text-primary"> (1 PF)</span>.
+            </div>
+            {/* end::Desc */}
+          </div>
+          {/* end::Item */}
+          {/* begin::Item */}
+          <div className="timeline-item">
+            {/* begin::Label */}
+            <div className="timeline-label fw-bold text-gray-800 fs-6 d-flex-column justify-content-center">
+              <div>20:53</div>
+              <div>2ND</div>
+            </div>
+            {/* end::Label */}
+            {/* begin::Badge */}
+            <div className="timeline-badge">
+              <i className="fa fa-genderless text-primary fs-1"></i>
+            </div>
+            {/* end::Badge */}
+            {/* begin::Text */}
+            <div className="timeline-content fw-semibold text-gray-800 ps-3">
+              05 Vyctorius Miller DEF. REBOUND
+              <span className="text-primary"> (1 Reb, 1 Def)</span>.
+            </div>
+            {/* end::Text */}
+          </div>
+          {/* end::Item */}
+          {/* begin::Item */}
+          <div className="timeline-item">
+            {/* begin::Label */}
+            <div className="timeline-label fw-bold text-gray-800 fs-6 d-flex-column justify-content-center">
+              <div>21:03</div>
+              <div>2ND</div>
+            </div>
+
+            {/* end::Label */}
+            {/* begin::Badge */}
+            <div className="timeline-badge">
+              <i className="fa fa-genderless text-warning fs-1"></i>
+            </div>
+            {/* end::Badge */}
+            {/* begin::Desc */}
+            <div className="timeline-content fw-semibold text-gray-800 ps-3">
+              00 Blue Cain FOUL
+              <span className="text-primary"> (1 PF)</span>.
+            </div>
+            {/* end::Desc */}
           </div>
           {/* end::Item */}
         </div>

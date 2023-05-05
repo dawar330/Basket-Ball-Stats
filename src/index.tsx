@@ -19,6 +19,8 @@ import { AppRoutes } from "./app/routing/AppRoutes";
 import { AuthProvider, getAuth, setupAxios } from "./app/modules/auth";
 import { ThemeModeProvider } from "./_metronic/partials/layout/theme-mode/ThemeModeProvider";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { Provider } from "react-redux";
+import store from "./Redux/store";
 const auth = getAuth();
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -47,13 +49,15 @@ if (container) {
   createRoot(container).render(
     <QueryClientProvider client={queryClient}>
       <MetronicI18nProvider>
-        <ThemeModeProvider>
-          <AuthProvider>
-            <ApolloProvider client={client}>
-              <AppRoutes />
-            </ApolloProvider>
-          </AuthProvider>
-        </ThemeModeProvider>
+        <Provider store={store}>
+          <ThemeModeProvider>
+            <AuthProvider>
+              <ApolloProvider client={client}>
+                <AppRoutes />
+              </ApolloProvider>
+            </AuthProvider>
+          </ThemeModeProvider>
+        </Provider>
       </MetronicI18nProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

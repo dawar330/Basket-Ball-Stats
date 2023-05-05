@@ -1,13 +1,40 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { useQuery } from "@apollo/client";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Params, useParams } from "react-router-dom";
+import { getScoringGamePlay } from "../../../../app/modules/game/core/request";
+import { upsertScoringGamePlay } from "../../../../Redux/CurrectGame";
 
 type Props = {
   className: string;
-  Home: string;
-  Away: string;
 };
+interface GameRouteParams extends Params {
+  id: string;
+}
+const ListsWidget3: React.FC<Props> = ({ className }) => {
+  const dispatch = useDispatch();
+  const CurrentGame = useSelector((state: any) => state.CurrentGame);
 
-const ListsWidget3: React.FC<Props> = ({ className, Home, Away }) => {
+  const { id: game_ID } = useParams<GameRouteParams>();
+  useQuery(getScoringGamePlay, {
+    variables: {
+      gameID: game_ID,
+    },
+    onCompleted: ({ getScoringGamePlay }) => {
+      dispatch(upsertScoringGamePlay(getScoringGamePlay));
+    },
+  });
+  let ScoringPlays = CurrentGame?.homeTeam?.ScoringGamePlays.concat(
+    CurrentGame?.awayTeam?.ScoringGamePlays
+  );
+  ScoringPlays.sort((a: any, b: any) => {
+    const timeA = parseInt(a.Time);
+    const timeB = parseInt(b.Time);
+    return timeB - timeA;
+  });
+  let oldhome = CurrentGame?.homeTeam?.TotalScore;
+  let oldaway = CurrentGame?.awayTeam?.TotalScore;
   return (
     <div
       className={`card  ${className}`}
@@ -37,331 +64,103 @@ const ListsWidget3: React.FC<Props> = ({ className, Home, Away }) => {
       {/* end::Header */}
       {/* begin::Body */}
       <div className="card-body pt-2">
-        {/* begin::Item */}
-        <div className="d-flex align-items-center mb-8">
-          <div className="d-flex me-3">
-            <span>08:42</span>
-          </div>
+        {ScoringPlays.length &&
+          ScoringPlays.map((Play: any) => {
+            let home = oldhome;
+            let away = oldaway;
+            let isHome = Play.Team == CurrentGame.homeTeam._id;
+            console.log(
+              Play.Team == CurrentGame.homeTeam._id,
+              Play.Team,
+              CurrentGame.homeTeam._id
+            );
 
-          {/* begin::Bullet */}
-          <span className="bullet bullet-vertical h-40px bg-primary me-5"></span>
-          {/* end::Bullet */}
+            switch (Play.PlayType) {
+              case "3-Point":
+                Play.Team == CurrentGame.homeTeam._id
+                  ? (oldhome = oldhome - 3)
+                  : (oldaway = oldaway - 3);
+                break;
+              case "2-Point":
+                Play.Team === CurrentGame.homeTeam._id
+                  ? (oldhome = oldhome - 2)
+                  : (oldaway = oldaway - 2);
+                break;
+              case "Free Throw":
+                Play.Team === CurrentGame.homeTeam._id
+                  ? (oldhome = oldhome - 1)
+                  : (oldaway = oldaway - 1);
+                break;
+              default:
+                Play.Team === CurrentGame.homeTeam._id
+                  ? (oldhome = oldhome - 0)
+                  : (oldaway = oldaway - 0);
+                break;
+            }
 
-          {/* begin::Description */}
-          <div className="flex-grow-1">
-            <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-              03 Bryson Tucker FT GOOD (3 Pt)
-            </span>
-            <div className="d-flex">
-              <span
-                className="badge badge-light-warning  text-muted fw-semibold d-block"
-                style={{ fontSize: "1rem" }}
-              >
-                FT
-              </span>
-            </div>
-          </div>
-          {/* end::Description */}
-          <div className="d-flex flex-column g-5">
-            <div className="d-flex mb-2 justify-content-around">
-              <span
-                className="badge badge-warning fw-bold me-2 "
-                style={{ fontSize: "1rem" }}
-              >
-                {Home.slice(0, 3).toUpperCase()}
-              </span>
-              <span
-                className="badge badge-primary fw-bold "
-                style={{ fontSize: "1rem" }}
-              >
-                {Away.slice(0, 3).toUpperCase()}
-              </span>
-            </div>
-            <div className="d-flex justify-content-around text-muted fw-semibold">
-              <span className="">5</span>
-              <span className="">11</span>
-            </div>
-          </div>
-        </div>
-        {/* end:Item */}
-        {/* begin::Item */}
-        <div className="d-flex align-items-center mb-8">
-          <div className="d-flex me-3">
-            <span>08:40</span>
-          </div>
-          {/* begin::Bullet */}
-          <span className="bullet bullet-vertical h-40px bg-warning me-5"></span>
-          {/* end::Bullet */}
+            return (
+              <>
+                {" "}
+                {/* begin::Item */}
+                <div className="d-flex align-items-center mb-8">
+                  <div className="d-flex me-3">
+                    <span>
+                      {new Date(parseInt(Play.Time)).toLocaleTimeString()}
+                    </span>
+                  </div>
 
-          {/* begin::Description */}
-          <div className="flex-grow-1">
-            <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-              10 Jamie Kaiser Jr 3PTR GOOD (3 Pt); 04 Jacoi Hutchinson Assist (1
-              Asst)
-            </span>
-            <div className="d-flex">
-              <span
-                className="badge badge-light-warning  text-muted fw-semibold d-block"
-                style={{ fontSize: "1rem" }}
-              >
-                3PTR
-              </span>
-            </div>
-          </div>
-          {/* end::Description */}
-          <div className="d-flex flex-column g-5">
-            <div className="d-flex mb-2 justify-content-around">
-              <span
-                className="badge badge-warning fw-bold me-2 "
-                style={{ fontSize: "1rem" }}
-              >
-                {Home.slice(0, 3).toUpperCase()}
-              </span>
-              <span
-                className="badge badge-primary fw-bold "
-                style={{ fontSize: "1rem" }}
-              >
-                {Away.slice(0, 3).toUpperCase()}
-              </span>
-            </div>
-            <div className="d-flex justify-content-around text-muted fw-semibold">
-              <span className="">5</span>
-              <span className="">8</span>
-            </div>
-          </div>
-        </div>
-        {/* end:Item */}
-        {/* begin::Item */}
-        <div className="d-flex align-items-center mb-8">
-          <div className="d-flex me-3">
-            <span>08:38</span>
-          </div>
-          {/* begin::Bullet */}
-          <span className="bullet bullet-vertical h-40px bg-primary me-5"></span>
-          {/* end::Bullet */}
+                  {/* begin::Bullet */}
+                  <span
+                    className={`bullet bullet-vertical h-40px ${
+                      isHome ? "bg-primary" : "bg-warning"
+                    } me-5`}
+                  ></span>
+                  {/* end::Bullet */}
 
-          {/* begin::Description */}
-          <div className="flex-grow-1">
-            <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-              03 Bryson Tucker JUMPER GOOD (2 Pt)
-            </span>
-            <div className="d-flex">
-              <span
-                className="badge badge-light-warning  text-muted fw-semibold d-block"
-                style={{ fontSize: "1rem" }}
-              >
-                JUMPER
-              </span>
-            </div>
-          </div>
-          {/* end::Description */}
-          <div className="d-flex flex-column g-5">
-            <div className="d-flex mb-2 justify-content-around">
-              <span
-                className="badge badge-warning fw-bold me-2 "
-                style={{ fontSize: "1rem" }}
-              >
-                {Home.slice(0, 3).toUpperCase()}
-              </span>
-              <span
-                className="badge badge-primary fw-bold "
-                style={{ fontSize: "1rem" }}
-              >
-                {Away.slice(0, 3).toUpperCase()}
-              </span>
-            </div>
-            <div className="d-flex justify-content-around text-muted fw-semibold">
-              <span className="">2</span>
-              <span className="">8</span>
-            </div>
-          </div>
-        </div>
-        {/* end:Item */}
-        {/* begin::Item */}
-        <div className="d-flex align-items-center mb-8">
-          <div className="d-flex me-3">
-            <span>08:37</span>
-          </div>
-          {/* begin::Bullet */}
-          <span className="bullet bullet-vertical h-40px bg-primary me-5"></span>
-          {/* end::Bullet */}
-
-          {/* begin::Description */}
-          <div className="flex-grow-1">
-            <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-              03 Bryson Tucker FT GOOD (3 Pt)
-            </span>
-            <div className="d-flex">
-              <span
-                className="badge badge-light-warning  text-muted fw-semibold d-block"
-                style={{ fontSize: "1rem" }}
-              >
-                FT
-              </span>
-            </div>
-          </div>
-          {/* end::Description */}
-          <div className="d-flex flex-column g-5">
-            <div className="d-flex mb-2 justify-content-around">
-              <span
-                className="badge badge-warning fw-bold me-2 "
-                style={{ fontSize: "1rem" }}
-              >
-                {Home.slice(0, 3).toUpperCase()}
-              </span>
-              <span
-                className="badge badge-primary fw-bold "
-                style={{ fontSize: "1rem" }}
-              >
-                {Away.slice(0, 3).toUpperCase()}
-              </span>
-            </div>
-            <div className="d-flex justify-content-around text-muted fw-semibold">
-              <span className="">2</span>
-              <span className="">6</span>
-            </div>
-          </div>
-        </div>
-        {/* end:Item */}
-        {/* begin::Item */}
-        <div className="d-flex align-items-center mb-8">
-          <div className="d-flex me-3">
-            <span>08:34</span>
-          </div>
-          {/* begin::Bullet */}
-          <span className="bullet bullet-vertical h-40px bg-primary me-5"></span>
-          {/* end::Bullet */}
-
-          {/* begin::Description */}
-          <div className="flex-grow-1">
-            <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-              11 Khani Rooths DUNK GOOD (2 Pt); 05 Amier Ali Assist (1 Asst)
-            </span>
-            <div className="d-flex">
-              <span
-                className="badge badge-light-warning  text-muted fw-semibold d-block"
-                style={{ fontSize: "1rem" }}
-              >
-                DUNK
-              </span>
-            </div>
-          </div>
-          {/* end::Description */}
-          <div className="d-flex flex-column g-5">
-            <div className="d-flex mb-2 justify-content-around">
-              <span
-                className="badge badge-warning fw-bold me-2 "
-                style={{ fontSize: "1rem" }}
-              >
-                {Home.slice(0, 3).toUpperCase()}
-              </span>
-              <span
-                className="badge badge-primary fw-bold "
-                style={{ fontSize: "1rem" }}
-              >
-                {Away.slice(0, 3).toUpperCase()}
-              </span>
-            </div>
-            <div className="d-flex justify-content-around text-muted fw-semibold">
-              <span className="">2</span>
-              <span className="">3</span>
-            </div>
-          </div>
-        </div>
-        {/* end:Item */}
-        {/* begin::Item */}
-        <div className="d-flex align-items-center mb-8">
-          <div className="d-flex me-3">
-            <span>08:30</span>
-          </div>
-          {/* begin::Bullet */}
-          <span className="bullet bullet-vertical h-40px bg-primary me-5"></span>
-          {/* end::Bullet */}
-
-          {/* begin::Description */}
-          <div className="flex-grow-1">
-            <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-              04 Marcus Allen FT GOOD (1 Pt)
-            </span>
-            <div className="d-flex">
-              <span
-                className="badge badge-light-warning  text-muted fw-semibold d-block"
-                style={{ fontSize: "1rem" }}
-              >
-                FT
-              </span>
-            </div>
-          </div>
-          {/* end::Description */}
-          <div className="d-flex flex-column g-5">
-            <div className="d-flex mb-2 justify-content-around">
-              <span
-                className="badge badge-warning fw-bold me-2 "
-                style={{ fontSize: "1rem" }}
-              >
-                {Home.slice(0, 3).toUpperCase()}
-              </span>
-              <span
-                className="badge badge-primary fw-bold "
-                style={{ fontSize: "1rem" }}
-              >
-                {Away.slice(0, 3).toUpperCase()}
-              </span>
-            </div>
-            <div className="d-flex justify-content-around text-muted fw-semibold">
-              <span className="">2</span>
-              <span className="">1</span>
-            </div>
-          </div>
-        </div>
-        {/* end:Item */}
-
-        {/* begin::Item */}
-        <div className="d-flex align-items-center ">
-          <div className="d-flex me-3">
-            <span>08:25</span>
-          </div>
-          {/* begin::Bullet */}
-          <span className="bullet bullet-vertical h-40px bg-warning me-5"></span>
-          {/* end::Bullet */}
-
-          {/* begin::Description */}
-          <div className="flex-grow-1">
-            <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-              04 Jacoi Hutchinson LAYUP GOOD (2 Pt)
-            </span>
-            <div className="d-flex">
-              <span
-                className="badge badge-light-warning  text-muted fw-semibold d-block"
-                style={{ fontSize: "1rem" }}
-              >
-                LAYUP
-              </span>
-            </div>
-          </div>
-          {/* end::Description */}
-          <div className="d-flex flex-column g-5">
-            <div className="d-flex mb-2 justify-content-around">
-              <span
-                className="badge badge-warning fw-bold me-2 "
-                style={{ fontSize: "1rem" }}
-              >
-                {Home.slice(0, 3).toUpperCase()}
-              </span>
-              <span
-                className="badge badge-primary fw-bold "
-                style={{ fontSize: "1rem" }}
-              >
-                {Away.slice(0, 3).toUpperCase()}
-              </span>
-            </div>
-            <div className="d-flex justify-content-around text-muted fw-semibold">
-              <span className="">2</span>
-              <span className="">0</span>
-            </div>
-          </div>
-        </div>
-        {/* end:Item */}
+                  {/* begin::Description */}
+                  <div className="flex-grow-1">
+                    <span className="text-gray-800 text-hover-primary fw-bold fs-6">
+                      {Play.PlayerID}
+                    </span>
+                    <div className="d-flex">
+                      <span
+                        className="badge badge-light-warning  text-muted fw-semibold d-block"
+                        style={{ fontSize: "1rem" }}
+                      >
+                        {Play.PlayType}
+                      </span>
+                    </div>
+                  </div>
+                  {/* end::Description */}
+                  <div className="d-flex flex-column g-5">
+                    <div className="d-flex mb-2 justify-content-around">
+                      <span
+                        className="badge badge-warning fw-bold me-2 "
+                        style={{ fontSize: "1rem" }}
+                      >
+                        {CurrentGame.homeTeam.teamName
+                          .slice(0, 3)
+                          .toUpperCase()}
+                      </span>
+                      <span
+                        className="badge badge-primary fw-bold "
+                        style={{ fontSize: "1rem" }}
+                      >
+                        {CurrentGame.awayTeam.teamName
+                          .slice(0, 3)
+                          .toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="d-flex justify-content-around text-muted fw-semibold">
+                      <span className="">{home}</span>
+                      <span className="">{away}</span>
+                    </div>
+                  </div>
+                </div>
+                {/* end:Item */}
+              </>
+            );
+          })}
       </div>
       {/* end::Body */}
     </div>

@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
-import { getGame } from "./core/request";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { createPlay, getGame } from "./core/request";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { ErrorMessage, Field, Form, Formik, FormikValues } from "formik";
 import { ICreatePlay, createPlaySchemas, inits } from "./CreatePlayHelper";
 import { getUser } from "../auth/core/requests";
+import { useDispatch, useSelector } from "react-redux";
+import { upsertGame } from "../../../Redux/CurrectGame";
 
 interface GameRouteParams extends Params {
   id: string;
@@ -17,28 +19,14 @@ interface Player {
   lname: string;
 }
 const GameHeader: React.FC = () => {
+  const dispatch = useDispatch();
+  const CurrentGame = useSelector((state: any) => state.CurrentGame);
+
   const { id: game_ID } = useParams<GameRouteParams>();
   const [currentSchema, setCurrentSchema] = useState(createPlaySchemas[0]);
-  const [game, setgame] = useState<{
-    image: string;
-    _id: string;
-    homeTeam: {
-      _id: string;
-      teamName: string;
-      teamCity: string;
-      Image: string;
-      Players: [string];
-    };
-    awayTeam: {
-      _id: string;
-      teamName: string;
-      teamCity: string;
-      Image: string;
-      Players: [string];
-    };
-    startTime: string;
-  }>();
 
+  const [GameActive, setGameActive] = useState(false);
+  const [GameEnded, setGameEnded] = useState(false);
   useQuery(getGame, {
     variables: {
       gameID: game_ID,
@@ -72,30 +60,24 @@ const GameHeader: React.FC = () => {
 
       const awayplayerResults = await Promise.all(awayplayerQueries);
       setawayPlayers(awayplayerResults);
-      setgame(getGame);
+
+      dispatch(upsertGame(getGame));
+      setGameActive(getGame.startTime ? true : false);
     },
   });
   const [HomePlayers, setHomePlayers] = useState<Player[]>();
   const [awayPlayers, setawayPlayers] = useState<Player[]>();
-
+  const [createPlayF] = useMutation(createPlay);
   const submitStep = async (values: ICreatePlay, actions: FormikValues) => {
-    console.log(values);
-    console.log(initValues);
-
-    // if (!stepper.current) {
-    //   return;
-    // }
-    // if (stepper.current.currentStepIndex !== stepper.current.totatStepsNumber) {
-    //   stepper.current.goNext();
-    // } else {
-    //   await createGameF({
-    //     variables: { CreateGameInput: { ...values } },
-    //   });
-    //   //TODO NAVIGATE TO GAME
-    //   navigate("/account/teams");
-    //   // actions.resetForm();
-    // }
-    // setCurrentSchema(createGameSchemas[stepper.current.currentStepIndex - 1]);
+    await createPlayF({
+      variables: {
+        GameID: game_ID,
+        PlayerID: values.Player,
+        TeamID: values.Team,
+        PlayType: values.Score,
+        Missed: values.Missed,
+      },
+    });
   };
   const [initValues] = useState<ICreatePlay>(inits);
   const location = useLocation();
@@ -156,8 +138,7 @@ const GameHeader: React.FC = () => {
         </option>
       </>
     );
-  const [GameActive, setGameActive] = useState(false);
-  const [GameEnded, setGameEnded] = useState(false);
+
   return (
     <div className="card mb-5 mb-xl-10">
       <div className="card-body pt-9 pb-0">
@@ -181,7 +162,7 @@ const GameHeader: React.FC = () => {
                       href="#"
                       className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
                     >
-                      {game?.homeTeam.teamName}
+                      {CurrentGame?.homeTeam.teamName}
                     </a>
                   </div>
                 </div>
@@ -192,7 +173,10 @@ const GameHeader: React.FC = () => {
                   <div className="d-flex flex-wrap">
                     <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
                       <div className="d-flex align-items-center">
-                        <div className="fs-2 fw-bolder">5</div>
+                        <div className="fs-2 fw-bolder">
+                          {" "}
+                          {CurrentGame?.homeTeam?.TotalScore}
+                        </div>
                       </div>
 
                       <div className="fw-bold fs-6 text-gray-400">Points</div>
@@ -222,7 +206,7 @@ const GameHeader: React.FC = () => {
                       href="#"
                       className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
                     >
-                      {game?.awayTeam.teamName}
+                      {CurrentGame?.awayTeam.teamName}
                     </a>
                   </div>
                 </div>
@@ -233,7 +217,10 @@ const GameHeader: React.FC = () => {
                   <div className="d-flex flex-wrap">
                     <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4  mb-3">
                       <div className="d-flex align-items-center">
-                        <div className="fs-2 fw-bolder">11</div>
+                        <div className="fs-2 fw-bolder">
+                          {" "}
+                          {CurrentGame?.awayTeam?.TotalScore}
+                        </div>
                       </div>
 
                       <div className="fw-bold fs-6 text-gray-400">Points</div>
@@ -367,16 +354,16 @@ const GameHeader: React.FC = () => {
                             <option></option>
 
                             <option
-                              key={game?.homeTeam._id}
-                              value={game?.homeTeam._id}
+                              key={CurrentGame?.homeTeam._id}
+                              value={CurrentGame?.homeTeam._id}
                             >
-                              {game?.homeTeam.teamName}
+                              {CurrentGame?.homeTeam.teamName}
                             </option>
                             <option
-                              key={game?.awayTeam._id}
-                              value={game?.awayTeam._id}
+                              key={CurrentGame?.awayTeam._id}
+                              value={CurrentGame?.awayTeam._id}
                             >
-                              {game?.awayTeam.teamName}
+                              {CurrentGame?.awayTeam.teamName}
                             </option>
                           </Field>
                           <div className="text-danger mt-2">
@@ -394,7 +381,7 @@ const GameHeader: React.FC = () => {
                             className="form-select form-select-solid"
                           >
                             <option></option>
-                            {values.Team === game?.homeTeam._id ? (
+                            {values.Team === CurrentGame?.homeTeam._id ? (
                               <>
                                 {HomePlayers?.length &&
                                   HomePlayers?.map((Player, index) => {
@@ -504,7 +491,6 @@ const GameHeader: React.FC = () => {
                     "active")
                 }
                 to={`/game/${game_ID}/gamesheet`}
-                state={{ Home: game?.homeTeam, Away: game?.awayTeam }}
               >
                 Game Sheet
               </Link>
@@ -528,7 +514,6 @@ const GameHeader: React.FC = () => {
                   (location.pathname === `/game/${game_ID}/leaders` && "active")
                 }
                 to={`/game/${game_ID}/leaders`}
-                state={{ Home: game?.homeTeam, Away: game?.awayTeam }}
               >
                 Leaders
               </Link>
@@ -541,7 +526,6 @@ const GameHeader: React.FC = () => {
                     "active")
                 }
                 to={`/game/${game_ID}/playerstats`}
-                state={{ Home: game?.homeTeam, Away: game?.awayTeam }}
               >
                 Player Statistics
               </Link>

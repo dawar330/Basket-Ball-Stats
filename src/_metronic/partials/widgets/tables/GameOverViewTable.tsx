@@ -2,7 +2,10 @@
 import { useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { useParams, Params } from "react-router-dom";
-import { getGame } from "../../../../app/modules/game/core/request";
+
+import { useDispatch, useSelector } from "react-redux";
+import { upsertPlays } from "../../../../Redux/CurrectGame";
+import { getGamePlay } from "../../../../app/modules/game/core/request";
 
 type Props = {
   className: string;
@@ -13,34 +16,22 @@ interface GameRouteParams extends Params {
 
 const GameOverViewTable: React.FC<Props> = ({ className }) => {
   const { id: game_ID } = useParams<GameRouteParams>();
-  const [game, setgame] = useState<{
-    image: string;
-    _id: string;
-    homeTeam: {
-      _id: string;
-      teamName: string;
-      teamCity: string;
-      Image: string;
-      Players: [string];
-    };
-    awayTeam: {
-      _id: string;
-      teamName: string;
-      teamCity: string;
-      Image: string;
-      Players: [string];
-    };
-  }>();
+  const dispatch = useDispatch();
+  const CurrentGame = useSelector((state: any) => state.CurrentGame);
+  console.log(CurrentGame);
 
-  useQuery(getGame, {
+  useQuery(getGamePlay, {
     variables: {
       gameID: game_ID,
     },
 
-    onCompleted: ({ getGame }) => {
-      setgame(getGame);
+    onCompleted: ({ getGamePlay }) => {
+      dispatch(upsertPlays(getGamePlay));
     },
   });
+  let homeTotal = 0;
+  let awayTotal = 0;
+
   return (
     <div className={`card ${className}`}>
       {/* begin::Header */}
@@ -86,42 +77,25 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
                 <td>
                   <div className="d-flex align-items-center">
                     <div className="d-flex justify-content-start flex-column">
-                      {game?.homeTeam.teamName}
+                      {CurrentGame?.homeTeam.teamName}
                     </div>
                   </div>
                 </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      2
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      -
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      -
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      5
-                    </div>
-                  </div>
-                </td>
+                {CurrentGame?.homeTeam?.QuarterScore?.map((Score: any) => {
+                  return (
+                    <td>
+                      <div className="text-end text-muted">
+                        <div className="d-flex justify-content-start flex-column">
+                          {Score}
+                        </div>
+                      </div>
+                    </td>
+                  );
+                })}
                 <td>
                   <div className="text-end">
                     <div className="d-flex justify-content-start flex-column">
-                      5
+                      {CurrentGame?.homeTeam?.TotalScore}
                     </div>
                   </div>
                 </td>
@@ -130,42 +104,25 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
                 <td>
                   <div className="d-flex align-items-center">
                     <div className="d-flex justify-content-start flex-column">
-                      {game?.awayTeam.teamName}
+                      {CurrentGame?.awayTeam.teamName}
                     </div>
                   </div>
                 </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      3
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      3
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      2
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="text-end text-muted">
-                    <div className="d-flex justify-content-start flex-column">
-                      3
-                    </div>
-                  </div>
-                </td>
+                {CurrentGame?.awayTeam?.QuarterScore?.map((Score: any) => {
+                  return (
+                    <td>
+                      <div className="text-end text-muted">
+                        <div className="d-flex justify-content-start flex-column">
+                          {Score}
+                        </div>
+                      </div>
+                    </td>
+                  );
+                })}
                 <td>
                   <div className="text-end ">
                     <div className="d-flex justify-content-start flex-column">
-                      11
+                      {CurrentGame?.awayTeam?.TotalScore}
                     </div>
                   </div>
                 </td>
