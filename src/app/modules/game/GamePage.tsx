@@ -45,7 +45,7 @@ const GamePage: React.FC = () => {
           element={
             <>
               <PageTitle breadcrumbs={gameBreadCrumbs}>Game Sheet</PageTitle>
-              <GameTable className="mb-5 mb-xl-8" Home={Home} Away={Away} />
+              <GameTable className="mb-5 mb-xl-8" />
             </>
           }
         />
@@ -56,7 +56,7 @@ const GamePage: React.FC = () => {
               <PageTitle breadcrumbs={gameBreadCrumbs}>
                 Player Statistics
               </PageTitle>
-              <PlayerStats className="mb-5 mb-xl-8" Home={Home} Away={Away} />
+              <PlayerStats className="mb-5 mb-xl-8" />
             </>
           }
         />

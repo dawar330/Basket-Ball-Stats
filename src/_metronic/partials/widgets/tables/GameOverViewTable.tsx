@@ -1,36 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
-import { useParams, Params } from "react-router-dom";
+import React from "react";
 
-import { useDispatch, useSelector } from "react-redux";
-import { upsertPlays } from "../../../../Redux/CurrectGame";
-import { getGamePlay } from "../../../../app/modules/game/core/request";
+import { useSelector } from "react-redux";
 
 type Props = {
   className: string;
 };
-interface GameRouteParams extends Params {
-  id: string;
-}
 
 const GameOverViewTable: React.FC<Props> = ({ className }) => {
-  const { id: game_ID } = useParams<GameRouteParams>();
-  const dispatch = useDispatch();
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
-  console.log(CurrentGame);
-
-  useQuery(getGamePlay, {
-    variables: {
-      gameID: game_ID,
-    },
-
-    onCompleted: ({ getGamePlay }) => {
-      dispatch(upsertPlays(getGamePlay));
-    },
-  });
-  let homeTotal = 0;
-  let awayTotal = 0;
 
   return (
     <div className={`card ${className}`}>
@@ -81,17 +59,19 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
                     </div>
                   </div>
                 </td>
-                {CurrentGame?.homeTeam?.QuarterScore?.map((Score: any) => {
-                  return (
-                    <td>
-                      <div className="text-end text-muted">
-                        <div className="d-flex justify-content-start flex-column">
-                          {Score}
+                {CurrentGame?.homeTeam?.QuarterScore?.map(
+                  (Score: any, index: any) => {
+                    return (
+                      <td key={index}>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column">
+                            {Score}
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                  );
-                })}
+                      </td>
+                    );
+                  }
+                )}
                 <td>
                   <div className="text-end">
                     <div className="d-flex justify-content-start flex-column">
@@ -108,17 +88,19 @@ const GameOverViewTable: React.FC<Props> = ({ className }) => {
                     </div>
                   </div>
                 </td>
-                {CurrentGame?.awayTeam?.QuarterScore?.map((Score: any) => {
-                  return (
-                    <td>
-                      <div className="text-end text-muted">
-                        <div className="d-flex justify-content-start flex-column">
-                          {Score}
+                {CurrentGame?.awayTeam?.QuarterScore?.map(
+                  (Score: any, index: any) => {
+                    return (
+                      <td key={index}>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column">
+                            {Score}
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                  );
-                })}
+                      </td>
+                    );
+                  }
+                )}
                 <td>
                   <div className="text-end ">
                     <div className="d-flex justify-content-start flex-column">

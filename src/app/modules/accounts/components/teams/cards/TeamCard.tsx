@@ -1,18 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { FC } from "react";
+import { FC, useState } from "react";
 import { toAbsoluteUrl, KTSVG } from "../../../../../../_metronic/helpers";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { getTeamStats } from "../../../../game/core/request";
 
 type Props = {
   color?: string;
   avatar?: string;
   online?: boolean;
   name: string;
-  position: string;
-  points: string;
-  assists: string;
-  rebounds: string;
-  steals: string;
+  id: string;
 };
 
 const TeamCard: FC<Props> = ({
@@ -20,13 +18,28 @@ const TeamCard: FC<Props> = ({
   avatar = "",
   online = false,
   name,
-  position,
-  points,
-  assists,
-  rebounds,
-  steals,
+  id,
 }) => {
+  const [teamStat, setteamStat] = useState<{
+    points: string;
+    rebounds: string;
+    assists: string;
+    steals: string;
+  }>();
   const navigate = useNavigate();
+  useQuery(getTeamStats, {
+    variables: {
+      teamID: id,
+    },
+    onError: (e) => {
+      console.log(e);
+      debugger;
+    },
+    onCompleted: ({ getTeamStats }) => {
+      debugger;
+      setteamStat(getTeamStats);
+    },
+  });
   return (
     <div className="card">
       <div className="card-body d-flex flex-center flex-column p-9">
@@ -54,27 +67,35 @@ const TeamCard: FC<Props> = ({
           {name}
         </a>
 
-        <div className="fw-bold text-gray-400 mb-6">{position}</div>
+        <div className="fw-bold text-gray-400 mb-6">{}</div>
 
         <div className="d-flex flex-center flex-wrap mb-5">
           <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 mx-3 mb-3">
-            <div className="fs-6 fw-bolder text-gray-700">{points}</div>
+            <div className="fs-6 fw-bolder text-gray-700">
+              {teamStat?.points}
+            </div>
             <div className="fw-bold text-gray-400">Points</div>
           </div>
 
           <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 mx-3 px-4 mb-3">
-            <div className="fs-6 fw-bolder text-gray-700">{rebounds}</div>
+            <div className="fs-6 fw-bolder text-gray-700">
+              {teamStat?.rebounds}
+            </div>
             <div className="fw-bold text-gray-400">Rebounds</div>
           </div>
         </div>
         <div className="d-flex flex-center flex-wrap mb-5">
           <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 mx-3 mb-3">
-            <div className="fs-6 fw-bolder text-gray-700">{assists}</div>
+            <div className="fs-6 fw-bolder text-gray-700">
+              {teamStat?.assists}
+            </div>
             <div className="fw-bold text-gray-400">Assists</div>
           </div>
 
           <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 mx-3 px-4 mb-3">
-            <div className="fs-6 fw-bolder text-gray-700">{steals}</div>
+            <div className="fs-6 fw-bolder text-gray-700">
+              {teamStat?.steals}
+            </div>
             <div className="fw-bold text-gray-400">Steals</div>
           </div>
         </div>

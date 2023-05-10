@@ -1,440 +1,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 type Props = {
   className: string;
-  Home: string;
-  Away: string;
 };
 
-const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
+const GameTable: React.FC<Props> = ({ className }) => {
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
-  const dumyData = [
-    {
-      Player: "John Doe",
-      "FG-FGA": "8-12",
-      "FT-FTA": "4-4",
-      PTS: 20,
-      OFF: 2,
-      DEF: 8,
-      TOT: 10,
-      PF: 3,
-      A: 5,
-      TO: 2,
-      BLOCK: 1,
-      STEAL: 3,
-    },
-    {
-      Player: "Jane Smith",
-      "FG-FGA": "5-9",
-      "FT-FTA": "2-3",
-      PTS: 12,
-      OFF: 1,
-      DEF: 6,
-      TOT: 7,
-      PF: 2,
-      A: 3,
-      TO: 1,
-      BLOCK: 0,
-      STEAL: 2,
-    },
-    {
-      Player: "Bob Johnson",
-      "FG-FGA": "3-7",
-      "FT-FTA": "1-2",
-      PTS: 7,
-      OFF: 3,
-      DEF: 4,
-      TOT: 7,
-      PF: 4,
-      A: 2,
-      TO: 3,
-      BLOCK: 2,
-      STEAL: 1,
-    },
-    {
-      Player: "LeBron James",
-      "FG-FGA": "10-20",
-      "FT-FTA": "6-8",
-      PTS: 26,
-      OFF: 3,
-      DEF: 7,
-      TOT: 10,
-      PF: 2,
-      A: 8,
-      TO: 3,
-      BLOCK: 2,
-      STEAL: 1,
-    },
-    {
-      Player: "Kevin Durant",
-      "FG-FGA": "12-25",
-      "FT-FTA": "4-5",
-      PTS: 31,
-      OFF: 2,
-      DEF: 5,
-      TOT: 7,
-      PF: 1,
-      A: 4,
-      TO: 2,
-      BLOCK: 3,
-      STEAL: 0,
-    },
-    {
-      Player: "Stephen Curry",
-      "FG-FGA": "9-17",
-      "FT-FTA": "3-3",
-      PTS: 25,
-      OFF: 1,
-      DEF: 4,
-      TOT: 5,
-      PF: 3,
-      A: 9,
-      TO: 4,
-      BLOCK: 0,
-      STEAL: 2,
-    },
-    {
-      Player: "Kawhi Leonard",
-      "FG-FGA": "7-14",
-      "FT-FTA": "5-6",
-      PTS: 20,
-      OFF: 1,
-      DEF: 9,
-      TOT: 10,
-      PF: 2,
-      A: 3,
-      TO: 1,
-      BLOCK: 2,
-      STEAL: 1,
-    },
-    {
-      Player: "James Harden",
-      "FG-FGA": "6-18",
-      "FT-FTA": "10-11",
-      PTS: 24,
-      OFF: 2,
-      DEF: 3,
-      TOT: 5,
-      PF: 3,
-      A: 12,
-      TO: 5,
-      BLOCK: 0,
-      STEAL: 3,
-    },
-    {
-      Player: "Giannis Antetokounmpo",
-      "FG-FGA": "11-20",
-      "FT-FTA": "4-8",
-      PTS: 26,
-      OFF: 4,
-      DEF: 11,
-      TOT: 15,
-      PF: 1,
-      A: 6,
-      TO: 4,
-      BLOCK: 4,
-      STEAL: 2,
-    },
-    {
-      Player: "Russell Westbrook",
-      "FG-FGA": "9-21",
-      "FT-FTA": "5-7",
-      PTS: 23,
-      OFF: 4,
-      DEF: 8,
-      TOT: 12,
-      PF: 2,
-      A: 10,
-      TO: 3,
-      BLOCK: 1,
-      STEAL: 2,
-    },
-    {
-      Player: "Joel Embiid",
-      "FG-FGA": "10-18",
-      "FT-FTA": "8-10",
-      PTS: 28,
-      OFF: 4,
-      DEF: 12,
-      TOT: 16,
-      PF: 4,
-      A: 4,
-      TO: 2,
-      BLOCK: 3,
-      STEAL: 0,
-    },
-    {
-      Player: "Luka Doncic",
-      "FG-FGA": "11-22",
-      "FT-FTA": "6-8",
-      PTS: 30,
-      OFF: 1,
-      DEF: 8,
-      TOT: 9,
-      PF: 3,
-      A: 9,
-      TO: 4,
-      BLOCK: 0,
-      STEAL: 2,
-    },
-    {
-      Player: "Damian Lillard",
-      "FG-FGA": "10-19",
-      "FT-FTA": "7-8",
-      PTS: 31,
-      OFF: 0,
-      DEF: 4,
-      TOT: 4,
-      PF: 1,
-      A: 10,
-      TO: 2,
-      BLOCK: 0,
-      STEAL: 1,
-    },
-    {
-      Player: "Kyrie Irving",
-      "FG-FGA": "9-17",
-      "FT-FTA": "3-4",
-      PTS: 24,
-      OFF: 2,
-      DEF: 4,
-      TOT: 6,
-      PF: 2,
-      A: 7,
-      TO: 1,
-      BLOCK: 0,
-      STEAL: 2,
-    },
-    {
-      Player: "Chris Paul",
-      "FG-FGA": "6-11",
-      "FT-FTA": "4-4",
-      PTS: 17,
-      OFF: 0,
-      DEF: 6,
-      TOT: 6,
-      PF: 2,
-      A: 12,
-      TO: 3,
-      BLOCK: 0,
-      STEAL: 3,
-    },
-  ];
-  const dumyData2 = [
-    {
-      Player: "Steph Curry",
-      "FG-FGA": "8-17",
-      "FT-FTA": "5-5",
-      PTS: 23,
-      OFF: 1,
-      DEF: 4,
-      TOT: 5,
-      PF: 2,
-      A: 7,
-      TO: 2,
-      BLOCK: 0,
-      STEAL: 3,
-    },
-    {
-      Player: "Jimmy Butler",
-      "FG-FGA": "7-15",
-      "FT-FTA": "9-10",
-      PTS: 23,
-      OFF: 3,
-      DEF: 4,
-      TOT: 7,
-      PF: 2,
-      A: 8,
-      TO: 3,
-      BLOCK: 1,
-      STEAL: 4,
-    },
-    {
-      Player: "Donovan Mitchell",
-      "FG-FGA": "11-25",
-      "FT-FTA": "6-7",
-      PTS: 31,
-      OFF: 0,
-      DEF: 3,
-      TOT: 3,
-      PF: 3,
-      A: 6,
-      TO: 2,
-      BLOCK: 0,
-      STEAL: 2,
-    },
-    {
-      Player: "Devin Booker",
-      "FG-FGA": "10-22",
-      "FT-FTA": "5-6",
-      PTS: 27,
-      OFF: 1,
-      DEF: 3,
-      TOT: 4,
-      PF: 1,
-      A: 5,
-      TO: 2,
-      BLOCK: 0,
-      STEAL: 1,
-    },
-    {
-      Player: "Trae Young",
-      "FG-FGA": "9-20",
-      "FT-FTA": "8-9",
-      PTS: 28,
-      OFF: 0,
-      DEF: 4,
-      TOT: 4,
-      PF: 2,
-      A: 11,
-      TO: 4,
-      BLOCK: 0,
-      STEAL: 1,
-    },
+  const CurrentGame = useSelector((state: any) => state.CurrentGame);
 
-    {
-      Player: "Joel Embiid",
-      "FG-FGA": "10-18",
-      "FT-FTA": "13-15",
-      PTS: 33,
-      OFF: 3,
-      DEF: 9,
-      TOT: 12,
-      PF: 2,
-      A: 3,
-      TO: 3,
-      BLOCK: 2,
-      STEAL: 1,
-    },
-    {
-      Player: "Kawhi Leonard",
-      "FG-FGA": "11-21",
-      "FT-FTA": "5-6",
-      PTS: 27,
-      OFF: 1,
-      DEF: 8,
-      TOT: 9,
-      PF: 3,
-      A: 3,
-      TO: 2,
-      BLOCK: 1,
-      STEAL: 2,
-    },
-    {
-      Player: "Giannis Antetokounmpo",
-      "FG-FGA": "9-16",
-      "FT-FTA": "8-10",
-      PTS: 26,
-      OFF: 4,
-      DEF: 11,
-      TOT: 15,
-      PF: 4,
-      A: 5,
-      TO: 4,
-      BLOCK: 2,
-      STEAL: 2,
-    },
-    {
-      Player: "Damian Lillard",
-      "FG-FGA": "9-19",
-      "FT-FTA": "7-7",
-      PTS: 27,
-      OFF: 0,
-      DEF: 3,
-      TOT: 3,
-      PF: 1,
-      A: 8,
-      TO: 1,
-      BLOCK: 0,
-      STEAL: 0,
-    },
-    {
-      Player: "Bradley Beal",
-      "FG-FGA": "13-25",
-      "FT-FTA": "5-5",
-      PTS: 31,
-      OFF: 0,
-      DEF: 2,
-      TOT: 2,
-      PF: 2,
-      A: 4,
-      TO: 4,
-      BLOCK: 0,
-      STEAL: 1,
-    },
-    {
-      Player: "Jaylen Brown",
-      "FG-FGA": "9-18",
-      "FT-FTA": "4-4",
-      PTS: 22,
-      OFF: 2,
-      DEF: 5,
-      TOT: 7,
-      PF: 3,
-      A: 2,
-      TO: 2,
-      BLOCK: 1,
-      STEAL: 2,
-    },
-    {
-      Player: "Zion Williamson",
-      "FG-FGA": "12-18",
-      "FT-FTA": "6-8",
-      PTS: 30,
-      OFF: 3,
-      DEF: 9,
-      TOT: 12,
-      PF: 3,
-      A: 2,
-      TO: 2,
-      BLOCK: 1,
-      STEAL: 0,
-    },
-    {
-      Player: "Jimmy Butler",
-      "FG-FGA": "7-15",
-      "FT-FTA": "9-10",
-      PTS: 24,
-      OFF: 2,
-      DEF: 10,
-      TOT: 12,
-      PF: 4,
-      A: 5,
-      TO: 2,
-      BLOCK: 1,
-      STEAL: 2,
-    },
-    {
-      Player: "Russell Westbrook",
-      "FG-FGA": "10-22",
-      "FT-FTA": "3-4",
-      PTS: 23,
-      OFF: 3,
-      DEF: 7,
-      TOT: 10,
-      PF: 2,
-      A: 8,
-      TO: 5,
-      BLOCK: 0,
-      STEAL: 2,
-    },
-    {
-      Player: "Devin Booker",
-      "FG-FGA": "12-25",
-      "FT-FTA": "3-3",
-      PTS: 28,
-      OFF: 1,
-      DEF: 2,
-      TOT: 3,
-      PF: 2,
-      A: 7,
-      TO: 3,
-      BLOCK: 0,
-      STEAL: 1,
-    },
-  ];
-
+  const team = !TeamCheckBox ? "homeTeam" : "awayTeam";
+  let FG3 = 0;
+  let FG2 = 0;
+  let FT = 0;
   let PTS = 0;
   let OFF = 0;
   let DEF = 0;
@@ -461,7 +40,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                 !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
               }`}
             >
-              {Home}HOME
+              {CurrentGame.homeTeam.teamName}
             </label>
             <input
               className="form-check-input"
@@ -477,7 +56,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                 TeamCheckBox ? "fw-bold text-primary" : " text-muted"
               }`}
             >
-              {Away}AWAY
+              {CurrentGame.awayTeam.teamName}
             </label>
           </div>
         </div>
@@ -536,13 +115,17 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
               {/* end::Table head */}
               {/* begin::Table body */}
               <tbody>
-                {TeamCheckBox
-                  ? dumyData.map((player, index) => {
+                {CurrentGame?.[team].PlayerPlays &&
+                  CurrentGame?.[team].PlayerPlays.map(
+                    (player: any, index: any) => {
+                      FG2 += player.FG2;
+                      FT += player.FT;
+                      FG3 += player.FG3;
                       PTS += player.PTS;
                       OFF += player.OFF;
                       DEF += player.DEF;
                       TO += player.TO;
-                      TOT += player.TOT;
+                      TOT += player.OFF + player.DEF;
                       PF += player.PF;
                       STEAL += player.STEAL;
                       BLOCK += player.BLOCK;
@@ -568,21 +151,21 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                             <td>
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
-                                  {player["FG-FGA"]}
+                                  {player.FG2 + "-" + player.FGA2}
                                 </div>
                               </div>
                             </td>
                             <td>
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
-                                  {player["FG-FGA"]}
+                                  {player.FG3 + "-" + player.FGA3}
                                 </div>
                               </div>
                             </td>
                             <td>
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
-                                  {player["FT-FTA"]}
+                                  {player.FT + "-" + player.FTA}
                                 </div>
                               </div>
                             </td>
@@ -610,7 +193,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                             <td className="border border-dashed border-gray-300 px-2">
                               <div className="text-end ">
                                 <div className="d-flex justify-content-start flex-column">
-                                  {player.TOT}
+                                  {player.DEF + player.OFF}
                                 </div>
                               </div>
                             </td>
@@ -654,125 +237,8 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                           </tr>
                         </>
                       );
-                    })
-                  : dumyData2.map((player, index) => {
-                      PTS += player.PTS;
-                      OFF += player.OFF;
-                      DEF += player.DEF;
-                      TO += player.TO;
-                      TOT += player.TOT;
-                      PF += player.PF;
-                      STEAL += player.STEAL;
-                      BLOCK += player.BLOCK;
-                      A += player.A;
-                      return (
-                        <>
-                          {" "}
-                          <tr>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {index + 1}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.Player}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player["FG-FGA"]}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player["FG-FGA"]}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player["FT-FTA"]}
-                                </div>
-                              </div>
-                            </td>
-                            <td className="border border-dashed border-gray-300 px-2">
-                              <div className="text-end ">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.PTS}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.OFF}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.DEF}
-                                </div>
-                              </div>
-                            </td>
-                            <td className="border border-dashed border-gray-300 px-2">
-                              <div className="text-end ">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.TOT}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.PF}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.A}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {" "}
-                                  {player.TO}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.BLOCK}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {" "}
-                                  {player.STEAL}
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        </>
-                      );
-                    })}
+                    }
+                  )}
                 <tr className="text-primary">
                   <td style={{ borderBottomStyle: "hidden" }}>
                     <div className="d-flex align-items-center">
@@ -790,7 +256,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                     <div className="text-end ">
                       <div className="d-flex justify-content-start flex-column">
                         {" "}
-                        {1}
+                        {FG2}
                       </div>
                     </div>
                   </td>
@@ -798,7 +264,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                     <div className="text-end ">
                       <div className="d-flex justify-content-start flex-column">
                         {" "}
-                        {1}
+                        {FG3}
                       </div>
                     </div>
                   </td>
@@ -806,7 +272,7 @@ const GameTable: React.FC<Props> = ({ className, Home, Away }) => {
                     <div className="text-end ">
                       <div className="d-flex justify-content-start flex-column">
                         {" "}
-                        {1}
+                        {FT}
                       </div>
                     </div>
                   </td>

@@ -3,9 +3,6 @@ import { useQuery } from "@apollo/client";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Params, useParams } from "react-router-dom";
-import { getScoringGamePlay } from "../../../../app/modules/game/core/request";
-import { upsertScoringGamePlay } from "../../../../Redux/CurrectGame";
-
 type Props = {
   className: string;
 };
@@ -17,14 +14,7 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
 
   const { id: game_ID } = useParams<GameRouteParams>();
-  useQuery(getScoringGamePlay, {
-    variables: {
-      gameID: game_ID,
-    },
-    onCompleted: ({ getScoringGamePlay }) => {
-      dispatch(upsertScoringGamePlay(getScoringGamePlay));
-    },
-  });
+
   let ScoringPlays = CurrentGame?.homeTeam?.ScoringGamePlays.concat(
     CurrentGame?.awayTeam?.ScoringGamePlays
   );
@@ -65,7 +55,7 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
       {/* begin::Body */}
       <div className="card-body pt-2">
         {ScoringPlays.length &&
-          ScoringPlays.map((Play: any) => {
+          ScoringPlays.map((Play: any, index: any) => {
             let home = oldhome;
             let away = oldaway;
             let isHome = Play.Team == CurrentGame.homeTeam._id;
@@ -99,66 +89,57 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
             }
 
             return (
-              <>
-                {" "}
-                {/* begin::Item */}
-                <div className="d-flex align-items-center mb-8">
-                  <div className="d-flex me-3">
-                    <span>
-                      {new Date(parseInt(Play.Time)).toLocaleTimeString()}
-                    </span>
-                  </div>
+              <div className="d-flex align-items-center mb-8" key={index}>
+                <div className="d-flex me-3">
+                  <span>
+                    {new Date(parseInt(Play.Time)).toLocaleTimeString()}
+                  </span>
+                </div>
 
-                  {/* begin::Bullet */}
-                  <span
-                    className={`bullet bullet-vertical h-40px ${
-                      isHome ? "bg-primary" : "bg-warning"
-                    } me-5`}
-                  ></span>
-                  {/* end::Bullet */}
+                {/* begin::Bullet */}
+                <span
+                  className={`bullet bullet-vertical h-40px ${
+                    isHome ? "bg-primary" : "bg-warning"
+                  } me-5`}
+                ></span>
+                {/* end::Bullet */}
 
-                  {/* begin::Description */}
-                  <div className="flex-grow-1">
-                    <span className="text-gray-800 text-hover-primary fw-bold fs-6">
-                      {Play.PlayerID}
+                {/* begin::Description */}
+                <div className="flex-grow-1">
+                  <span className="text-gray-800 text-hover-primary fw-bold fs-6">
+                    {Play.PlayerID}
+                  </span>
+                  <div className="d-flex">
+                    <span
+                      className="badge badge-light-warning  text-muted fw-semibold d-block"
+                      style={{ fontSize: "1rem" }}
+                    >
+                      {Play.PlayType}
                     </span>
-                    <div className="d-flex">
-                      <span
-                        className="badge badge-light-warning  text-muted fw-semibold d-block"
-                        style={{ fontSize: "1rem" }}
-                      >
-                        {Play.PlayType}
-                      </span>
-                    </div>
-                  </div>
-                  {/* end::Description */}
-                  <div className="d-flex flex-column g-5">
-                    <div className="d-flex mb-2 justify-content-around">
-                      <span
-                        className="badge badge-warning fw-bold me-2 "
-                        style={{ fontSize: "1rem" }}
-                      >
-                        {CurrentGame.homeTeam.teamName
-                          .slice(0, 3)
-                          .toUpperCase()}
-                      </span>
-                      <span
-                        className="badge badge-primary fw-bold "
-                        style={{ fontSize: "1rem" }}
-                      >
-                        {CurrentGame.awayTeam.teamName
-                          .slice(0, 3)
-                          .toUpperCase()}
-                      </span>
-                    </div>
-                    <div className="d-flex justify-content-around text-muted fw-semibold">
-                      <span className="">{home}</span>
-                      <span className="">{away}</span>
-                    </div>
                   </div>
                 </div>
-                {/* end:Item */}
-              </>
+                {/* end::Description */}
+                <div className="d-flex flex-column g-5">
+                  <div className="d-flex mb-2 justify-content-around">
+                    <span
+                      className="badge badge-warning fw-bold me-2 "
+                      style={{ fontSize: "1rem" }}
+                    >
+                      {CurrentGame.homeTeam.teamName.slice(0, 3).toUpperCase()}
+                    </span>
+                    <span
+                      className="badge badge-primary fw-bold "
+                      style={{ fontSize: "1rem" }}
+                    >
+                      {CurrentGame.awayTeam.teamName.slice(0, 3).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-around text-muted fw-semibold">
+                    <span className="">{home}</span>
+                    <span className="">{away}</span>
+                  </div>
+                </div>
+              </div>
             );
           })}
       </div>

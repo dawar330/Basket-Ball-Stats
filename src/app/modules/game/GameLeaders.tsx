@@ -18,7 +18,7 @@ export function GameLeaders() {
         <div className="col-xl-6">
           <TablesWidget3 label="Blocks" className="card-xl-stretch mb-xl-8" />
         </div>
-        <div className="col-xl-6">
+        {/* <div className="col-xl-6">
           <TablesWidget3
             label="Personal Fouls"
             className="card-xl-stretch mb-xl-8"
@@ -35,7 +35,7 @@ export function GameLeaders() {
             label="Usage Percentage"
             className="card-xl-stretch mb-xl-8"
           />
-        </div>
+        </div> */}
       </div>
     </>
   );

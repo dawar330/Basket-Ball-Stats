@@ -8,6 +8,7 @@ export function Teams() {
   const [teams, setteams] = useState<
     [
       {
+        _id: string;
         teamName: string;
         teamCity: string;
         Image: string;
@@ -52,11 +53,7 @@ export function Teams() {
             <TeamCard
               avatar="/media/avatars/300-6.jpg"
               name={team.teamName}
-              position="Center"
-              points="$14,560"
-              assists="$236,400"
-              rebounds="70"
-              steals="2"
+              id={team._id}
             />
           </div>
         ))}

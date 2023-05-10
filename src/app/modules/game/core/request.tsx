@@ -20,11 +20,27 @@ export const getComments = gql`
     }
   }
 `;
+export const getTeamStats = gql`
+  query ($teamID: String!) {
+    getTeamStats(teamID: $teamID) {
+      assists
+      steals
+      rebounds
+      points
+    }
+  }
+`;
+
 export const createGame = gql`
   mutation ($CreateGameInput: CreateGameInput!) {
     createGame(CreateGameInput: $CreateGameInput) {
-      homeTeam
-      awayTeam
+      coach
+    }
+  }
+`;
+export const StartGame = gql`
+  mutation ($gameID: String!) {
+    StartGame(gameID: $gameID) {
       coach
     }
   }
@@ -57,11 +73,10 @@ export const createPlay = gql`
       GameID: $GameID
     ) {
       PlayerID
-      TeamID
+
       PlayType
       Missed
       Time
-      GameID
     }
   }
 `;
@@ -89,6 +104,48 @@ export const getScoringGamePlay = gql`
         PlayType
         Time
         Team
+      }
+    }
+  }
+`;
+export const getGamePlaysByPlayer = gql`
+  query ($gameID: String!) {
+    getGamePlaysByPlayer(gameID: $gameID) {
+      homeTeam {
+        Player
+        FG3
+        FGA3
+        FG2
+        FGA2
+        FT
+        FTA
+        PTS
+        OFF
+        DEF
+        TOT
+        PF
+        A
+        TO
+        BLOCK
+        STEAL
+      }
+      awayTeam {
+        Player
+        FG3
+        FGA3
+        FG2
+        FGA2
+        FT
+        FTA
+        PTS
+        OFF
+        DEF
+        TOT
+        PF
+        A
+        TO
+        BLOCK
+        STEAL
       }
     }
   }
@@ -128,6 +185,7 @@ export const getTeams = gql`
     }
   }
 `;
+
 export const getTeamPlayers = gql`
   query ($teamID: String!) {
     getTeamPlayers(teamID: $teamID) {

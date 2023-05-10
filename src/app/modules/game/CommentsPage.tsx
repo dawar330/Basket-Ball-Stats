@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
+import { KTSVG } from "../../../_metronic/helpers";
 import { FeedsWidget2 } from "../../../_metronic/partials/widgets";
-import { Link, useLocation, useParams, Params } from "react-router-dom";
+import { useParams, Params } from "react-router-dom";
 import { createComment, getComments } from "./core/request";
 import { useMutation, useQuery } from "@apollo/client";
 

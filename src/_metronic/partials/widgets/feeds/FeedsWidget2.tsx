@@ -29,9 +29,20 @@ function timeAgo(timestamp: number) {
 
   // Convert difference to hours
   const hours = Math.floor(difference / 1000 / 60 / 60);
-  return hours + " hours ago";
-}
+  if (hours < 24) {
+    return hours + " hours ago";
+  }
 
+  // Convert difference to days
+  const days = Math.floor(difference / 1000 / 60 / 60 / 24);
+  if (days < 365) {
+    return days + " days ago";
+  }
+
+  // Convert difference to years
+  const years = Math.floor(days / 365);
+  return years + " years ago";
+}
 const FeedsWidget2: React.FC<Props> = ({
   className,
   userID,

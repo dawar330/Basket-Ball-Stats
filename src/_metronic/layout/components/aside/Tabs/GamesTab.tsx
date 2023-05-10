@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { KTSVG, toAbsoluteUrl } from "../../../../helpers";
-import { Dropdown1, Search } from "../../../../partials";
+import { KTSVG } from "../../../../helpers";
 import { getGames } from "../../../../../app/modules/game/core/request";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
+import { getAuth } from "../../../../../app/modules/auth";
 
 const GamesTab = () => {
   const [games, setgames] = useState<
@@ -28,8 +28,14 @@ const GamesTab = () => {
       }
     ]
   >();
+  const auth = getAuth();
   useQuery(getGames, {
+    skip: auth?.api_token === "",
+    onError: () => {
+      console.log(auth?.api_token === "");
+    },
     onCompleted: ({ getGames }) => {
+      console.log(auth?.api_token === "");
       setgames(getGames);
     },
   });

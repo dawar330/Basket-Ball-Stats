@@ -2,21 +2,15 @@
 import React, { useState } from "react";
 import { Card2 } from "../../../_metronic/partials/content/cards/Card2";
 import { PlayerStatsTable } from "../../../_metronic/partials/widgets/tables/PlayerStatsTable";
-import { IconUserModel } from "../profile/ProfileModels";
 import { useQuery } from "@apollo/client";
-import { getGame, getTeamPlayers } from "./core/request";
-import { useParams, Params } from "react-router-dom";
-interface GameRouteParams extends Params {
-  id: string;
-}
+import { getTeamPlayers } from "./core/request";
+import { useSelector } from "react-redux";
 
 type Props = {
   className: string;
-  Home: string;
-  Away: string;
 };
 
-const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
+const PlayerStats: React.FC<Props> = ({ className }) => {
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const [SelectedPlayer, setSelectedPlayer] = useState("");
 
@@ -28,45 +22,19 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
       }
     ]
   >();
-  const { id: game_ID } = useParams<GameRouteParams>();
-  const [game, setgame] = useState<{
-    image: string;
-    _id: string;
-    homeTeam: {
-      _id: string;
-      teamName: string;
-      teamCity: string;
-      Image: string;
-      Players: [string];
-    };
-    awayTeam: {
-      _id: string;
-      teamName: string;
-      teamCity: string;
-      Image: string;
-      Players: [string];
-    };
-  }>();
+  const CurrentGame = useSelector((state: any) => state.CurrentGame);
 
-  useQuery(getGame, {
-    variables: {
-      gameID: game_ID,
-    },
-
-    onCompleted: ({ getGame }) => {
-      setgame(getGame);
-    },
-  });
   useQuery(getTeamPlayers, {
     variables: {
-      teamID: !TeamCheckBox ? game?.homeTeam._id : game?.awayTeam._id,
+      teamID: !TeamCheckBox
+        ? CurrentGame?.homeTeam._id
+        : CurrentGame?.awayTeam._id,
     },
 
     onCompleted: ({ getTeamPlayers }) => {
       setPlayers(getTeamPlayers);
     },
   });
-  console.log(Home);
 
   return (
     <>
@@ -87,7 +55,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
                     !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
                   }`}
                 >
-                  {game?.homeTeam.teamName}
+                  {CurrentGame?.homeTeam.teamName}
                 </label>
                 <input
                   className="form-check-input"
@@ -103,7 +71,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
                     TeamCheckBox ? "fw-bold text-primary" : " text-muted"
                   }`}
                 >
-                  {game?.awayTeam.teamName}
+                  {CurrentGame?.awayTeam.teamName}
                 </label>
               </div>
             </div>
@@ -126,6 +94,7 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
                       budget="$284,900.00"
                       progress={50}
                       setSelectedPlayer={setSelectedPlayer}
+                      team={!TeamCheckBox ? "homeTeam" : "awayTeam"}
                     />
                   </div>
                 );
@@ -137,6 +106,8 @@ const PlayerStats: React.FC<Props> = ({ className, Home, Away }) => {
       ) : (
         <PlayerStatsTable
           setSelectedPlayer={setSelectedPlayer}
+          SelectedPlayer={SelectedPlayer}
+          team={!TeamCheckBox ? "homeTeam" : "awayTeam"}
           className="mb-5 mb-xl-8"
         />
       )}

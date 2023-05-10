@@ -2,13 +2,25 @@
 import React, { useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
-import { createPlay, getGame } from "./core/request";
+import {
+  StartGame,
+  createPlay,
+  getGame,
+  getGamePlay,
+  getGamePlaysByPlayer,
+  getScoringGamePlay,
+} from "./core/request";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { ErrorMessage, Field, Form, Formik, FormikValues } from "formik";
 import { ICreatePlay, createPlaySchemas, inits } from "./CreatePlayHelper";
 import { getUser } from "../auth/core/requests";
 import { useDispatch, useSelector } from "react-redux";
-import { upsertGame } from "../../../Redux/CurrectGame";
+import {
+  upsertGame,
+  upsertPlayerPlays,
+  upsertPlays,
+  upsertScoringGamePlay,
+} from "../../../Redux/CurrectGame";
 
 interface GameRouteParams extends Params {
   id: string;
@@ -27,6 +39,35 @@ const GameHeader: React.FC = () => {
 
   const [GameActive, setGameActive] = useState(false);
   const [GameEnded, setGameEnded] = useState(false);
+  let [startGame] = useMutation(StartGame, {
+    variables: { gameID: game_ID },
+    onCompleted: () => {
+      setGameActive(true);
+    },
+  });
+  useQuery(getGamePlaysByPlayer, {
+    variables: { gameID: game_ID },
+    onCompleted: ({ getGamePlaysByPlayer }) => {
+      dispatch(upsertPlayerPlays(getGamePlaysByPlayer));
+    },
+  });
+  useQuery(getGamePlay, {
+    variables: {
+      gameID: game_ID,
+    },
+
+    onCompleted: ({ getGamePlay }) => {
+      dispatch(upsertPlays(getGamePlay));
+    },
+  });
+  useQuery(getScoringGamePlay, {
+    variables: {
+      gameID: game_ID,
+    },
+    onCompleted: ({ getScoringGamePlay }) => {
+      dispatch(upsertScoringGamePlay(getScoringGamePlay));
+    },
+  });
   useQuery(getGame, {
     variables: {
       gameID: game_ID,
@@ -63,6 +104,13 @@ const GameHeader: React.FC = () => {
 
       dispatch(upsertGame(getGame));
       setGameActive(getGame.startTime ? true : false);
+      setGameEnded(
+        new Date().getTime() -
+          new Date(parseInt(getGame.startTime)).getTime() >=
+          48 * 60 * 1000
+          ? true
+          : false
+      );
     },
   });
   const [HomePlayers, setHomePlayers] = useState<Player[]>();
@@ -239,7 +287,7 @@ const GameHeader: React.FC = () => {
             <div
               className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100 mb-2"
               onClick={() => {
-                if (!GameActive) setGameActive(true);
+                if (!GameActive) startGame();
                 else setGameEnded(true);
               }}
             >

@@ -12,6 +12,7 @@ export const CurrentGameSlice = createSlice({
       Players: [],
       QuarterScore: [],
       ScoringGamePlays: [],
+      PlayerPlays: [],
       TotalScore: 0,
     },
     awayTeam: {
@@ -22,6 +23,7 @@ export const CurrentGameSlice = createSlice({
       Players: [],
       QuarterScore: [],
       ScoringGamePlays: [],
+      PlayerPlays: [],
       TotalScore: 0,
     },
     startTime: "",
@@ -58,11 +60,19 @@ export const CurrentGameSlice = createSlice({
       state.homeTeam.ScoringGamePlays = action.payload.homeTeam;
       state.awayTeam.ScoringGamePlays = action.payload.awayTeam;
     },
+    upsertPlayerPlays: (state, action) => {
+      state.homeTeam.PlayerPlays = action.payload.homeTeam;
+      state.awayTeam.PlayerPlays = action.payload.awayTeam;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { upsertGame, upsertPlays, upsertScoringGamePlay } =
-  CurrentGameSlice.actions;
+export const {
+  upsertGame,
+  upsertPlays,
+  upsertScoringGamePlay,
+  upsertPlayerPlays,
+} = CurrentGameSlice.actions;
 
 export default CurrentGameSlice.reducer;
