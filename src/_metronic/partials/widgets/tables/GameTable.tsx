@@ -1,14 +1,22 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { KTSVG } from "../../../helpers";
+import { useMutation } from "@apollo/client";
+import { createPlay } from "../../../../app/modules/game/core/request";
 
 type Props = {
   className: string;
 };
 
 const GameTable: React.FC<Props> = ({ className }) => {
+  const [createPlayF] = useMutation(createPlay);
+
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
+  const [PlayerID, setPlayerID] = useState("");
+  const [PlayType, setPlayType] = useState("");
 
   const team = !TeamCheckBox ? "homeTeam" : "awayTeam";
   let FG3 = 0;
@@ -25,6 +33,67 @@ const GameTable: React.FC<Props> = ({ className }) => {
   let STEAL = 0;
   return (
     <>
+      {" "}
+      <div className="modal fade" tabIndex={-1} id="createPlay_modal">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Create {PlayType}</h5>
+              <div
+                className="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <KTSVG
+                  path="/media/icons/duotune/arrows/arr061.svg"
+                  className="svg-icon svg-icon-2x"
+                />
+              </div>
+            </div>
+
+            <Formik initialValues={{}} onSubmit={() => {}}>
+              {() => (
+                <Form className="w-100" noValidate>
+                  <div className="modal-body">
+                    <div
+                      className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                      onClick={() => {
+                        createPlayF({
+                          variables: {
+                            GameID: CurrentGame._id,
+                            PlayerID: PlayerID,
+                            TeamID: CurrentGame?.[team]._id,
+                            PlayType: PlayType,
+                            Missed: true,
+                          },
+                        });
+                      }}
+                    >
+                      <span className="btn-label text-danger">Missed</span>
+                    </div>
+                    <div
+                      className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                      onClick={() => {
+                        createPlayF({
+                          variables: {
+                            GameID: CurrentGame._id,
+                            PlayerID: PlayerID,
+                            TeamID: CurrentGame?.[team]._id,
+                            PlayType: PlayType,
+                            Missed: false,
+                          },
+                        });
+                      }}
+                    >
+                      <span className="btn-label text-primary">Basket</span>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </div>
       <div className="d-flex w-100 justify-content-center my-5"> </div>
       <div className={`card ${className}`}>
         {/* begin::Header */}
@@ -148,21 +217,42 @@ const GameTable: React.FC<Props> = ({ className }) => {
                                 </div>
                               </div>
                             </td>
-                            <td>
+                            <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
+                              onClick={() => {
+                                setPlayerID(player._id);
+                                setPlayType("2-Point");
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.FG2 + "-" + player.FGA2}
                                 </div>
                               </div>
                             </td>
-                            <td>
+                            <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
+                              onClick={() => {
+                                setPlayerID(player._id);
+                                setPlayType("3-Point");
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.FG3 + "-" + player.FGA3}
                                 </div>
                               </div>
                             </td>
-                            <td>
+                            <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
+                              onClick={() => {
+                                setPlayerID(player._id);
+                                setPlayType("Free Throw");
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.FT + "-" + player.FTA}
@@ -176,14 +266,38 @@ const GameTable: React.FC<Props> = ({ className }) => {
                                 </div>
                               </div>
                             </td>
-                            <td>
+                            <td
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: player._id,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "OFF",
+                                    Missed: false,
+                                  },
+                                });
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.OFF}
                                 </div>
                               </div>
                             </td>{" "}
-                            <td>
+                            <td
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: player._id,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "DEF",
+                                    Missed: false,
+                                  },
+                                });
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.DEF}
@@ -197,21 +311,57 @@ const GameTable: React.FC<Props> = ({ className }) => {
                                 </div>
                               </div>
                             </td>
-                            <td>
+                            <td
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: player._id,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "F",
+                                    Missed: false,
+                                  },
+                                });
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.PF}
                                 </div>
                               </div>
                             </td>{" "}
-                            <td>
+                            <td
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: player._id,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "A",
+                                    Missed: false,
+                                  },
+                                });
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.A}
                                 </div>
                               </div>
                             </td>{" "}
-                            <td>
+                            <td
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: player._id,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "TO",
+                                    Missed: false,
+                                  },
+                                });
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {" "}
@@ -219,14 +369,38 @@ const GameTable: React.FC<Props> = ({ className }) => {
                                 </div>
                               </div>
                             </td>
-                            <td>
+                            <td
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: player._id,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "BLOCK",
+                                    Missed: false,
+                                  },
+                                });
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {player.BLOCK}
                                 </div>
                               </div>
                             </td>{" "}
-                            <td>
+                            <td
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: player._id,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "STEAL",
+                                    Missed: false,
+                                  },
+                                });
+                              }}
+                            >
                               <div className="text-end text-muted">
                                 <div className="d-flex justify-content-start flex-column">
                                   {" "}

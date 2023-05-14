@@ -8,6 +8,7 @@ import { PlayerStats } from "./PlayerStats";
 import { GameLeaders } from "./GameLeaders";
 import { TeamStats } from "./TeamStats";
 import { CommentsPage } from "./CommentsPage";
+import { QuarterlyTable } from "../../../_metronic/partials/widgets/tables/QuarterlyTable";
 
 const GamePage: React.FC = () => {
   const [Home, setHome] = useState("");
@@ -46,6 +47,17 @@ const GamePage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={gameBreadCrumbs}>Game Sheet</PageTitle>
               <GameTable className="mb-5 mb-xl-8" />
+            </>
+          }
+        />
+        <Route
+          path="quarterlysheet"
+          element={
+            <>
+              <PageTitle breadcrumbs={gameBreadCrumbs}>
+                Quarterly Sheet
+              </PageTitle>
+              <QuarterlyTable className="mb-5 mb-xl-8" />
             </>
           }
         />

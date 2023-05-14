@@ -23,7 +23,7 @@ const ProfileDetails: React.FC = () => {
     fName: currentUser ? currentUser.fname : "",
     lName: currentUser ? currentUser.lname : "",
     company: "Keenthemes",
-    contactPhone: "044 3276 454 935",
+    email: currentUser ? currentUser.email : "",
     companySite: "keenthemes.com",
     country: "",
     language: "",
@@ -83,7 +83,7 @@ const ProfileDetails: React.FC = () => {
               <div className="col-lg-8">
                 <div
                   className="image-input image-input-outline"
-                  data-kt-image-input="true"
+                  data-image-input="true"
                   style={{
                     backgroundImage: `url(${toAbsoluteUrl(
                       "/media/avatars/blank.png"
@@ -144,7 +144,7 @@ const ProfileDetails: React.FC = () => {
 
             <div className="row mb-6">
               <label className="col-lg-4 col-form-label fw-bold fs-6">
-                <span className="required">Contact Phone</span>
+                <span className="required">Email</span>
               </label>
 
               <div className="col-lg-8 fv-row">
@@ -152,13 +152,11 @@ const ProfileDetails: React.FC = () => {
                   type="tel"
                   className="form-control form-control-lg form-control-solid"
                   placeholder="Phone number"
-                  {...formik.getFieldProps("contactPhone")}
+                  {...formik.getFieldProps("email")}
                 />
-                {formik.touched.contactPhone && formik.errors.contactPhone && (
+                {formik.touched.email && formik.errors.email && (
                   <div className="fv-plugins-message-container">
-                    <div className="fv-help-block">
-                      {formik.errors.contactPhone}
-                    </div>
+                    <div className="fv-help-block">{formik.errors.email}</div>
                   </div>
                 )}
               </div>

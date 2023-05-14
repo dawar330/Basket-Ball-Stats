@@ -10,7 +10,7 @@ export const createComment = gql`
   }
 `;
 export const getComments = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getComments(gameID: $gameID) {
       _id
       userID
@@ -21,7 +21,7 @@ export const getComments = gql`
   }
 `;
 export const getTeamStats = gql`
-  query ($teamID: String!) {
+  query ($teamID: String!) @live {
     getTeamStats(teamID: $teamID) {
       assists
       steals
@@ -82,7 +82,7 @@ export const createPlay = gql`
 `;
 
 export const getGamePlay = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getGamePlay(gameID: $gameID) {
       awayTeam
       homeTeam
@@ -91,7 +91,7 @@ export const getGamePlay = gql`
 `;
 
 export const getScoringGamePlay = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getScoringGamePlay(gameID: $gameID) {
       homeTeam {
         PlayerID
@@ -109,9 +109,10 @@ export const getScoringGamePlay = gql`
   }
 `;
 export const getGamePlaysByPlayer = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getGamePlaysByPlayer(gameID: $gameID) {
       homeTeam {
+        _id
         Player
         FG3
         FGA3
@@ -130,6 +131,7 @@ export const getGamePlaysByPlayer = gql`
         STEAL
       }
       awayTeam {
+        _id
         Player
         FG3
         FGA3
@@ -146,6 +148,169 @@ export const getGamePlaysByPlayer = gql`
         TO
         BLOCK
         STEAL
+      }
+    }
+  }
+`;
+
+export const getQuarterlyGamePlaysByPlayer = gql`
+  query ($gameID: String!) {
+    getQuarterlyGamePlaysByPlayer(gameID: $gameID) {
+      homeTeam {
+        Quarter1 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
+        Quarter2 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
+        Quarter3 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
+        Quarter4 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
+      }
+      awayTeam {
+        Quarter1 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
+        Quarter2 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
+        Quarter3 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
+        Quarter4 {
+          _id
+          Player
+          FG3
+          FGA3
+          FG2
+          FGA2
+          FT
+          FTA
+          PTS
+          OFF
+          DEF
+          TOT
+          PF
+          A
+          TO
+          BLOCK
+          STEAL
+        }
       }
     }
   }

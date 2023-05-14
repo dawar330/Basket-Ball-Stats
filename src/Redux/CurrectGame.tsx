@@ -13,6 +13,7 @@ export const CurrentGameSlice = createSlice({
       QuarterScore: [],
       ScoringGamePlays: [],
       PlayerPlays: [],
+      QuarterlyPlayerPlays: [[], [], [], []],
       TotalScore: 0,
     },
     awayTeam: {
@@ -24,6 +25,7 @@ export const CurrentGameSlice = createSlice({
       QuarterScore: [],
       ScoringGamePlays: [],
       PlayerPlays: [],
+      QuarterlyPlayerPlays: [[], [], [], []],
       TotalScore: 0,
     },
     startTime: "",
@@ -64,6 +66,17 @@ export const CurrentGameSlice = createSlice({
       state.homeTeam.PlayerPlays = action.payload.homeTeam;
       state.awayTeam.PlayerPlays = action.payload.awayTeam;
     },
+    upsertQuarterlyPlayerPlays: (state, action) => {
+      state.homeTeam.QuarterlyPlayerPlays[0] = action.payload.homeTeam.Quarter1;
+      state.homeTeam.QuarterlyPlayerPlays[1] = action.payload.homeTeam.Quarter2;
+      state.homeTeam.QuarterlyPlayerPlays[2] = action.payload.homeTeam.Quarter3;
+      state.homeTeam.QuarterlyPlayerPlays[3] = action.payload.homeTeam.Quarter4;
+
+      state.awayTeam.QuarterlyPlayerPlays[0] = action.payload.awayTeam.Quarter1;
+      state.awayTeam.QuarterlyPlayerPlays[1] = action.payload.awayTeam.Quarter2;
+      state.awayTeam.QuarterlyPlayerPlays[2] = action.payload.awayTeam.Quarter3;
+      state.awayTeam.QuarterlyPlayerPlays[3] = action.payload.awayTeam.Quarter4;
+    },
   },
 });
 
@@ -73,6 +86,7 @@ export const {
   upsertPlays,
   upsertScoringGamePlay,
   upsertPlayerPlays,
+  upsertQuarterlyPlayerPlays,
 } = CurrentGameSlice.actions;
 
 export default CurrentGameSlice.reducer;

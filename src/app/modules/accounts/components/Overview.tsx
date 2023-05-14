@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { KTSVG } from "../../../../_metronic/helpers";
 import { ChartsWidget1 } from "../../../../_metronic/partials/widgets";
+import { useAuth } from "../../auth";
 
 export function Overview() {
   const [PaymentMethodAdded, setPaymentMethodAdded] = useState(false);
+  const { currentUser } = useAuth();
   return (
     <>
       <div className="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -27,13 +29,15 @@ export function Overview() {
             <label className="col-lg-4 fw-bold text-muted">Full Name</label>
 
             <div className="col-lg-8">
-              <span className="fw-bolder fs-6 text-dark">Max Smith</span>
+              <span className="fw-bolder fs-6 text-dark">
+                {currentUser?.fname + " " + currentUser?.lname}
+              </span>
             </div>
           </div>
 
           <div className="row mb-7">
             <label className="col-lg-4 fw-bold text-muted">
-              Contact Phone
+              Email
               <i
                 className="fas fa-exclamation-circle ms-1 fs-7"
                 data-bs-toggle="tooltip"
@@ -42,7 +46,7 @@ export function Overview() {
             </label>
 
             <div className="col-lg-8 d-flex align-items-center">
-              <span className="fw-bolder fs-6 me-2">044 3276 454 935</span>
+              <span className="fw-bolder fs-6 me-2">{currentUser?.email}</span>
             </div>
           </div>
 

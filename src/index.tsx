@@ -24,7 +24,9 @@ import store from "./Redux/store";
 const auth = getAuth();
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    dataIdFromObject: () => false,
+  }),
   headers: {
     bearer: auth ? auth?.api_token : "",
   },
