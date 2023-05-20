@@ -28,10 +28,13 @@ export const CurrentGameSlice = createSlice({
       QuarterlyPlayerPlays: [[], [], [], []],
       TotalScore: 0,
     },
+    TimeOutLimit: 0,
+    FoulLimit: 0,
     startTime: "",
   },
   reducers: {
     upsertGame: (state, action) => {
+      debugger;
       state._id = action.payload._id;
       state.homeTeam._id = action.payload.homeTeam._id;
       state.homeTeam.teamName = action.payload.homeTeam.teamName;
@@ -45,6 +48,9 @@ export const CurrentGameSlice = createSlice({
       state.awayTeam.Image = action.payload.awayTeam.Image;
       state.awayTeam.Players = action.payload.awayTeam.Players;
       state.startTime = action.payload.startTime;
+
+      state.TimeOutLimit = action.payload.TimeOutLimit;
+      state.FoulLimit = action.payload.FoulLimit;
     },
     upsertPlays: (state, action) => {
       state.homeTeam.QuarterScore = action.payload.homeTeam;
@@ -63,10 +69,12 @@ export const CurrentGameSlice = createSlice({
       state.awayTeam.ScoringGamePlays = action.payload.awayTeam;
     },
     upsertPlayerPlays: (state, action) => {
+      debugger;
       state.homeTeam.PlayerPlays = action.payload.homeTeam;
       state.awayTeam.PlayerPlays = action.payload.awayTeam;
     },
     upsertQuarterlyPlayerPlays: (state, action) => {
+      debugger;
       state.homeTeam.QuarterlyPlayerPlays[0] = action.payload.homeTeam.Quarter1;
       state.homeTeam.QuarterlyPlayerPlays[1] = action.payload.homeTeam.Quarter2;
       state.homeTeam.QuarterlyPlayerPlays[2] = action.payload.homeTeam.Quarter3;

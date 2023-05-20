@@ -55,37 +55,159 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
               {() => (
                 <Form className="w-100" noValidate>
                   <div className="modal-body">
+                    {CurrentGame.FoulLimit >
+                    CurrentGame[team]?.PlayerPlays?.find(
+                      (item: any) => item._id === PlayerID
+                    )?.PF ? (
+                      PlayType === "2-Point" ||
+                      PlayType === "3-Point" ||
+                      PlayType === "Free Throw" ? (
+                        <>
+                          {" "}
+                          <div
+                            className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                            onClick={() => {
+                              createPlayF({
+                                variables: {
+                                  GameID: CurrentGame._id,
+                                  PlayerID: PlayerID,
+                                  TeamID: CurrentGame?.[team]._id,
+                                  PlayType: PlayType,
+                                  Missed: true,
+                                  Quarter: quarter,
+                                },
+                              });
+                            }}
+                          >
+                            <span className="btn-label text-danger">
+                              Missed
+                            </span>
+                          </div>
+                          <div
+                            className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                            onClick={() => {
+                              createPlayF({
+                                variables: {
+                                  GameID: CurrentGame._id,
+                                  PlayerID: PlayerID,
+                                  TeamID: CurrentGame?.[team]._id,
+                                  PlayType: PlayType,
+                                  Missed: false,
+                                  Quarter: quarter,
+                                },
+                              });
+                            }}
+                          >
+                            <span className="btn-label text-primary">
+                              Basket
+                            </span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {" "}
+                          <div
+                            className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                            onClick={() => {
+                              createPlayF({
+                                variables: {
+                                  GameID: CurrentGame._id,
+                                  PlayerID: PlayerID,
+                                  TeamID: CurrentGame?.[team]._id,
+                                  PlayType: PlayType,
+                                  Missed: false,
+                                  Quarter: quarter,
+                                },
+                              });
+                            }}
+                          >
+                            <span className="btn-label text-danger">
+                              {PlayType}
+                            </span>
+                          </div>
+                          {PlayType === "F" && (
+                            <div
+                              className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                              onClick={() => {
+                                createPlayF({
+                                  variables: {
+                                    GameID: CurrentGame._id,
+                                    PlayerID: PlayerID,
+                                    TeamID: CurrentGame?.[team]._id,
+                                    PlayType: "TF",
+                                    Missed: false,
+                                    Quarter: quarter,
+                                  },
+                                });
+                              }}
+                            >
+                              <span className="btn-label text-danger">TF</span>
+                            </div>
+                          )}
+                        </>
+                      )
+                    ) : (
+                      <>Player has Reached Foul Limit</>
+                    )}
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </div>
+      <div className="modal fade" tabIndex={-1} id="createTimeOut_modal">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Create Time Out</h5>
+              <div
+                className="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <KTSVG
+                  path="/media/icons/duotune/arrows/arr061.svg"
+                  className="svg-icon svg-icon-2x"
+                />
+              </div>
+            </div>
+
+            <Formik initialValues={{}} onSubmit={() => {}}>
+              {() => (
+                <Form className="w-100" noValidate>
+                  <div className="modal-body">
                     <div
                       className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                      onClick={() => {
-                        createPlayF({
-                          variables: {
-                            GameID: CurrentGame._id,
-                            PlayerID: PlayerID,
-                            TeamID: CurrentGame?.[team]._id,
-                            PlayType: PlayType,
-                            Missed: true,
-                          },
-                        });
-                      }}
+                      // onClick={() => {
+                      //   createPlayF({
+                      //     variables: {
+                      //       GameID: CurrentGame._id,
+                      //       PlayerID: PlayerID,
+                      //       TeamID: CurrentGame?.[team]._id,
+                      //       PlayType: PlayType,
+                      //       Missed: true,
+                      //     },
+                      //   });
+                      // }}
                     >
-                      <span className="btn-label text-danger">Missed</span>
+                      <span className="btn-label text-danger">30 Sec</span>
                     </div>
                     <div
                       className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                      onClick={() => {
-                        createPlayF({
-                          variables: {
-                            GameID: CurrentGame._id,
-                            PlayerID: PlayerID,
-                            TeamID: CurrentGame?.[team]._id,
-                            PlayType: PlayType,
-                            Missed: false,
-                          },
-                        });
-                      }}
+                      // onClick={() => {
+                      //   createPlayF({
+                      //     variables: {
+                      //       GameID: CurrentGame._id,
+                      //       PlayerID: PlayerID,
+                      //       TeamID: CurrentGame?.[team]._id,
+                      //       PlayType: PlayType,
+                      //       Missed: false,
+                      //     },
+                      //   });
+                      // }}
                     >
-                      <span className="btn-label text-primary">Basket</span>
+                      <span className="btn-label text-primary">60 Sec</span>
                     </div>
                   </div>
                 </Form>
@@ -307,16 +429,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                               </div>
                             </td>
                             <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
                               onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: player._id,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "OFF",
-                                    Missed: false,
-                                  },
-                                });
+                                setPlayerID(player._id);
+                                setPlayType("OFF");
                               }}
                             >
                               <div className="text-end text-muted">
@@ -326,16 +443,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                               </div>
                             </td>{" "}
                             <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
                               onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: player._id,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "DEF",
-                                    Missed: false,
-                                  },
-                                });
+                                setPlayerID(player._id);
+                                setPlayType("DEF");
                               }}
                             >
                               <div className="text-end text-muted">
@@ -352,16 +464,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                               </div>
                             </td>
                             <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
                               onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: player._id,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "F",
-                                    Missed: false,
-                                  },
-                                });
+                                setPlayerID(player._id);
+                                setPlayType("F");
                               }}
                             >
                               <div className="text-end text-muted">
@@ -371,16 +478,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                               </div>
                             </td>{" "}
                             <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
                               onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: player._id,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "A",
-                                    Missed: false,
-                                  },
-                                });
+                                setPlayerID(player._id);
+                                setPlayType("A");
                               }}
                             >
                               <div className="text-end text-muted">
@@ -390,16 +492,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                               </div>
                             </td>{" "}
                             <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
                               onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: player._id,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "TO",
-                                    Missed: false,
-                                  },
-                                });
+                                setPlayerID(player._id);
+                                setPlayType("TO");
                               }}
                             >
                               <div className="text-end text-muted">
@@ -410,16 +507,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                               </div>
                             </td>
                             <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
                               onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: player._id,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "BLOCK",
-                                    Missed: false,
-                                  },
-                                });
+                                setPlayerID(player._id);
+                                setPlayType("BLOCK");
                               }}
                             >
                               <div className="text-end text-muted">
@@ -429,16 +521,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                               </div>
                             </td>{" "}
                             <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#createPlay_modal"
                               onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: player._id,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "STEAL",
-                                    Missed: false,
-                                  },
-                                });
+                                setPlayerID(player._id);
+                                setPlayType("STEAL");
                               }}
                             >
                               <div className="text-end text-muted">
@@ -606,39 +693,61 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTimeOut_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column"></div>
                     </div>
                   </td>
-                  <td>
+                  <td
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTimeOut_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column"></div>
                     </div>
                   </td>
-                  <td colSpan={2}>
+                  <td
+                    colSpan={2}
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTimeOut_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column">
                         {" "}
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTimeOut_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column"></div>
                     </div>
                   </td>
-                  <td>
+                  <td
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTimeOut_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column"></div>
                     </div>
                   </td>
-                  <td>
+                  <td
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTimeOut_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column"></div>
                     </div>
                   </td>
-                  <td>
+                  <td
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTimeOut_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column"></div>
                     </div>

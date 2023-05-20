@@ -27,6 +27,7 @@ interface GameRouteParams extends Params {
 const GameHeader: React.FC = () => {
   const dispatch = useDispatch();
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
+  console.log(CurrentGame);
 
   const { id: game_ID } = useParams<GameRouteParams>();
 

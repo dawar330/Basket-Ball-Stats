@@ -18,10 +18,25 @@ import "./_metronic/assets/sass/style.react.scss";
 import { AppRoutes } from "./app/routing/AppRoutes";
 import { AuthProvider, getAuth, setupAxios } from "./app/modules/auth";
 import { ThemeModeProvider } from "./_metronic/partials/layout/theme-mode/ThemeModeProvider";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  DefaultOptions,
+} from "@apollo/client";
 import { Provider } from "react-redux";
 import store from "./Redux/store";
 const auth = getAuth();
+const defaultOptions: DefaultOptions = {
+  watchQuery: {
+    fetchPolicy: "no-cache",
+    errorPolicy: "ignore",
+  },
+  query: {
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  },
+};
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache({
@@ -30,6 +45,7 @@ const client = new ApolloClient({
   headers: {
     bearer: auth ? auth?.api_token : "",
   },
+  defaultOptions: defaultOptions,
 });
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add

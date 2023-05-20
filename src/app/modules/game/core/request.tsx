@@ -64,6 +64,7 @@ export const createPlay = gql`
     $PlayType: String!
     $Missed: Boolean!
     $GameID: String!
+    $Quarter: Int!
   ) {
     createPlay(
       PlayerID: $PlayerID
@@ -71,9 +72,9 @@ export const createPlay = gql`
       PlayType: $PlayType
       Missed: $Missed
       GameID: $GameID
+      Quarter: $Quarter
     ) {
       PlayerID
-
       PlayType
       Missed
       Time
@@ -377,6 +378,8 @@ export const getGame = gql`
         Image
         Players
       }
+      TimeOutLimit
+      FoulLimit
       startTime
       coach
     }
