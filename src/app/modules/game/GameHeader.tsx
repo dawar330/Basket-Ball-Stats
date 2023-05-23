@@ -7,6 +7,7 @@ import {
   getGame,
   getGamePlay,
   getGamePlaysByPlayer,
+  getGameTimeOuts,
   getQuarterlyGamePlaysByPlayer,
   getScoringGamePlay,
 } from "./core/request";
@@ -46,6 +47,13 @@ const GameHeader: React.FC = () => {
     },
   });
 
+  useQuery(getGameTimeOuts, {
+    variables: { gameID: game_ID },
+    onCompleted: ({ getGameTimeOuts }) => {
+      debugger;
+      // dispatch(upsertPlayerPlays(getGamePlaysByPlayer));
+    },
+  });
   useQuery(getQuarterlyGamePlaysByPlayer, {
     variables: { gameID: game_ID },
     onCompleted: ({ getQuarterlyGamePlaysByPlayer }) => {

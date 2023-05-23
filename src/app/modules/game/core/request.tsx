@@ -81,6 +81,43 @@ export const createPlay = gql`
     }
   }
 `;
+export const createTimeOuts = gql`
+  mutation (
+    $TeamID: String!
+    $Secs: String!
+    $GameID: String!
+    $Quarter: Int!
+  ) {
+    createTimeOuts(
+      TeamID: $TeamID
+      Secs: $Secs
+
+      GameID: $GameID
+      Quarter: $Quarter
+    ) {
+      Time
+    }
+  }
+`;
+
+export const getGameTimeOuts = gql`
+  query ($gameID: String!) @live {
+    getGameTimeOuts(gameID: $gameID) {
+      homeTeam {
+        PlayerID
+        PlayType
+        Time
+        Team
+      }
+      awayTeam {
+        PlayerID
+        PlayType
+        Time
+        Team
+      }
+    }
+  }
+`;
 
 export const getGamePlay = gql`
   query ($gameID: String!) @live {

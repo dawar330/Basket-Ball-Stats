@@ -4,7 +4,10 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { KTSVG } from "../../../helpers";
 import { useMutation } from "@apollo/client";
-import { createPlay } from "../../../../app/modules/game/core/request";
+import {
+  createPlay,
+  createTimeOuts,
+} from "../../../../app/modules/game/core/request";
 
 type Props = {
   className: string;
@@ -12,6 +15,7 @@ type Props = {
 
 const QuarterlyTable: React.FC<Props> = ({ className }) => {
   const [createPlayF] = useMutation(createPlay);
+  const [createTimeOutsF] = useMutation(createTimeOuts);
 
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
@@ -179,33 +183,31 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   <div className="modal-body">
                     <div
                       className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                      // onClick={() => {
-                      //   createPlayF({
-                      //     variables: {
-                      //       GameID: CurrentGame._id,
-                      //       PlayerID: PlayerID,
-                      //       TeamID: CurrentGame?.[team]._id,
-                      //       PlayType: PlayType,
-                      //       Missed: true,
-                      //     },
-                      //   });
-                      // }}
+                      onClick={() => {
+                        createTimeOutsF({
+                          variables: {
+                            GameID: CurrentGame._id,
+                            TeamID: CurrentGame?.[team]._id,
+                            Secs: "30",
+                            Quarter: quarter,
+                          },
+                        });
+                      }}
                     >
                       <span className="btn-label text-danger">30 Sec</span>
                     </div>
                     <div
                       className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                      // onClick={() => {
-                      //   createPlayF({
-                      //     variables: {
-                      //       GameID: CurrentGame._id,
-                      //       PlayerID: PlayerID,
-                      //       TeamID: CurrentGame?.[team]._id,
-                      //       PlayType: PlayType,
-                      //       Missed: false,
-                      //     },
-                      //   });
-                      // }}
+                      onClick={() => {
+                        createTimeOutsF({
+                          variables: {
+                            GameID: CurrentGame._id,
+                            TeamID: CurrentGame?.[team]._id,
+                            Secs: "60",
+                            Quarter: quarter,
+                          },
+                        });
+                      }}
                     >
                       <span className="btn-label text-primary">60 Sec</span>
                     </div>
