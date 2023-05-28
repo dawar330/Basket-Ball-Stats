@@ -75,7 +75,6 @@ export function TeamStats() {
   CurrentGame["homeTeam"].PlayerPlays.forEach((play: any) => {
     homeFGCount += play.FGA3 + play.FGA2;
     home3pCount += play.FGA3;
-    debugger;
 
     homeFTCount += play.FTA;
     homeRebounds += play.OFF + play.DEF;

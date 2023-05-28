@@ -7,6 +7,7 @@ export const register = gql`
       email
       first_name
       last_name
+      Role
     }
   }
 `;
@@ -36,6 +37,7 @@ export const login = gql`
       email
       first_name
       last_name
+      Role
     }
   }
 `;

@@ -15,6 +15,7 @@ export const CurrentGameSlice = createSlice({
       PlayerPlays: [],
       QuarterlyPlayerPlays: [[], [], [], []],
       TotalScore: 0,
+      TimeOuts: [],
     },
     awayTeam: {
       _id: "",
@@ -27,6 +28,7 @@ export const CurrentGameSlice = createSlice({
       PlayerPlays: [],
       QuarterlyPlayerPlays: [[], [], [], []],
       TotalScore: 0,
+      TimeOuts: [],
     },
     TimeOutLimit: 0,
     FoulLimit: 0,
@@ -34,7 +36,6 @@ export const CurrentGameSlice = createSlice({
   },
   reducers: {
     upsertGame: (state, action) => {
-      debugger;
       state._id = action.payload._id;
       state.homeTeam._id = action.payload.homeTeam._id;
       state.homeTeam.teamName = action.payload.homeTeam.teamName;
@@ -69,12 +70,15 @@ export const CurrentGameSlice = createSlice({
       state.awayTeam.ScoringGamePlays = action.payload.awayTeam;
     },
     upsertPlayerPlays: (state, action) => {
-      debugger;
       state.homeTeam.PlayerPlays = action.payload.homeTeam;
       state.awayTeam.PlayerPlays = action.payload.awayTeam;
     },
-    upsertQuarterlyPlayerPlays: (state, action) => {
+    upsertTimeOuts: (state, action) => {
       debugger;
+      state.homeTeam.TimeOuts = action.payload.homeTeam;
+      state.awayTeam.TimeOuts = action.payload.awayTeam;
+    },
+    upsertQuarterlyPlayerPlays: (state, action) => {
       state.homeTeam.QuarterlyPlayerPlays[0] = action.payload.homeTeam.Quarter1;
       state.homeTeam.QuarterlyPlayerPlays[1] = action.payload.homeTeam.Quarter2;
       state.homeTeam.QuarterlyPlayerPlays[2] = action.payload.homeTeam.Quarter3;
@@ -90,6 +94,7 @@ export const CurrentGameSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
+  upsertTimeOuts,
   upsertGame,
   upsertPlays,
   upsertScoringGamePlay,

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState, useEffect } from "react";
-import { useFormik } from "formik";
+import { ErrorMessage, Field, useFormik } from "formik";
 import * as Yup from "yup";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ const initialValues = {
   email: "",
   password: "",
   changepassword: "",
+  Role: "Player",
   acceptTerms: false,
 };
 
@@ -32,6 +33,9 @@ const registrationSchema = Yup.object().shape({
   lastname: Yup.string()
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols")
+    .required("Last name is required"),
+  Role: Yup.string()
+    .oneOf(["Player", "Coach", "Parent"])
     .required("Last name is required"),
   password: Yup.string()
     .min(3, "Minimum 3 symbols")
@@ -80,6 +84,7 @@ export function Registration() {
               lastname: values.lastname,
               email: values.email,
               password: values.password,
+              Role: values.Role,
             },
           },
         });
@@ -332,6 +337,19 @@ export function Registration() {
         )}
       </div>
       {/* end::Form group */}
+
+      <div className="d-flex my-2 mb-5">
+        <select
+          className="form-select form-select-white form-select-sm w-100"
+          defaultValue="Player"
+          {...formik.getFieldProps("Role")}
+        >
+          <option value="">Select a role</option>
+          <option value="Player">Player</option>
+          <option value="Coach">Coach</option>
+          <option value="Parent">Parent</option>
+        </select>
+      </div>
 
       {/* begin::Form group */}
       <div className="fv-row mb-10">

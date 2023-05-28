@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useAuth } from "../../../../app/modules/auth";
 
 type Props = {
   className: string;
@@ -9,7 +10,7 @@ type Props = {
 const GameTable: React.FC<Props> = ({ className }) => {
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
-
+  const auth = useAuth();
   const team = !TeamCheckBox ? "homeTeam" : "awayTeam";
   let FG3 = 0;
   let FG2 = 0;
@@ -36,6 +37,7 @@ const GameTable: React.FC<Props> = ({ className }) => {
               Game Statistics
             </span>
           </h3>
+
           <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
             <label
               className={`form-check-label fs-3  me-4 ${

@@ -101,19 +101,21 @@ export const createTimeOuts = gql`
 `;
 
 export const getGameTimeOuts = gql`
-  query ($gameID: String!) @live {
+  query ($gameID: String!) {
     getGameTimeOuts(gameID: $gameID) {
       homeTeam {
-        PlayerID
-        PlayType
+        Quarter
         Time
         Team
+        Secs
+        Time
       }
       awayTeam {
-        PlayerID
-        PlayType
+        Quarter
         Time
         Team
+        Secs
+        Time
       }
     }
   }

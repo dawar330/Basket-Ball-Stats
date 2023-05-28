@@ -30,12 +30,7 @@ const GamesTab = () => {
   >();
   const auth = getAuth();
   useQuery(getGames, {
-    skip: auth?.api_token === "",
-    onError: () => {
-      console.log(auth?.api_token === "");
-    },
     onCompleted: ({ getGames }) => {
-      console.log(auth?.api_token === "");
       setgames(getGames);
     },
   });

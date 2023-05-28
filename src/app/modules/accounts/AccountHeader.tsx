@@ -10,7 +10,7 @@ const AccountHeader: React.FC = () => {
   const location = useLocation();
   const [Victories, setVictories] = useState(25);
   const [Defeats, setDefeats] = useState(2);
-  const { currentUser } = useAuth();
+  const { currentUser, auth } = useAuth();
 
   return (
     <div className="card mb-5 mb-xl-10">
@@ -41,6 +41,7 @@ const AccountHeader: React.FC = () => {
                       className="svg-icon-1 svg-icon-primary"
                     />
                   </a>
+                  {auth?.Role}
                   <a
                     href="#"
                     className="btn btn-sm btn-light-success fw-bolder ms-2 fs-8 py-1 px-3"
@@ -174,17 +175,19 @@ const AccountHeader: React.FC = () => {
                 Overview
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className={
-                  `nav-link text-active-primary me-6 ` +
-                  (location.pathname === "/account/teams" && "active")
-                }
-                to="/account/teams"
-              >
-                Teams
-              </Link>
-            </li>
+            {auth?.Role === "Coach" && (
+              <li className="nav-item">
+                <Link
+                  className={
+                    `nav-link text-active-primary me-6 ` +
+                    (location.pathname === "/account/teams" && "active")
+                  }
+                  to="/account/teams"
+                >
+                  Teams
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
               <Link
                 className={

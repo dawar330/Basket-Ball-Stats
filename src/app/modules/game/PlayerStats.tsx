@@ -5,6 +5,7 @@ import { PlayerStatsTable } from "../../../_metronic/partials/widgets/tables/Pla
 import { useQuery } from "@apollo/client";
 import { getTeamPlayers } from "./core/request";
 import { useSelector } from "react-redux";
+import { useAuth } from "../auth";
 
 type Props = {
   className: string;
@@ -12,7 +13,14 @@ type Props = {
 
 const PlayerStats: React.FC<Props> = ({ className }) => {
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
-  const [SelectedPlayer, setSelectedPlayer] = useState("");
+  const auth = useAuth();
+  console.log(auth);
+
+  const [SelectedPlayer, setSelectedPlayer] = useState(
+    auth.auth?.Role === "Player"
+      ? auth.auth?.first_name + " " + auth.auth?.last_name
+      : ""
+  );
 
   const [Players, setPlayers] = useState<
     [
@@ -46,7 +54,9 @@ const PlayerStats: React.FC<Props> = ({ className }) => {
             <div className="d-flex justify-content-between border-0 pt-3 mb-5">
               <h3 className="card-title align-items-start flex-column">
                 <span className="card-label fw-bold fs-3 mb-1">
-                  Players Statistics
+                  {auth.auth?.Role === "Player"
+                    ? "My Statistics"
+                    : "Players Statistics"}
                 </span>
               </h3>
               <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">

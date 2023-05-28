@@ -33,10 +33,8 @@ const TeamCard: FC<Props> = ({
     },
     onError: (e) => {
       console.log(e);
-      debugger;
     },
     onCompleted: ({ getTeamStats }) => {
-      debugger;
       setteamStat(getTeamStats);
     },
   });

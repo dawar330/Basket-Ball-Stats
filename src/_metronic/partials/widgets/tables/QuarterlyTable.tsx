@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { KTSVG } from "../../../helpers";
 import { useMutation } from "@apollo/client";
@@ -8,6 +8,7 @@ import {
   createPlay,
   createTimeOuts,
 } from "../../../../app/modules/game/core/request";
+import { useAuth } from "../../../../app/modules/auth";
 
 type Props = {
   className: string;
@@ -16,7 +17,6 @@ type Props = {
 const QuarterlyTable: React.FC<Props> = ({ className }) => {
   const [createPlayF] = useMutation(createPlay);
   const [createTimeOutsF] = useMutation(createTimeOuts);
-
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
   const [PlayerID, setPlayerID] = useState("");
@@ -35,6 +35,221 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   let TO = 0;
   let BLOCK = 0;
   let STEAL = 0;
+  const [EmptyArray, setEmptyArray] = useState(
+    Array.from({
+      length: 5 - (CurrentGame[team]?.TimeOuts?.length || 0),
+    })
+  );
+
+  useEffect(() => {
+    debugger;
+    setEmptyArray(
+      Array.from({
+        length:
+          CurrentGame.TimeOutLimit - (CurrentGame[team]?.TimeOuts?.length || 0),
+      })
+    );
+  }, [CurrentGame]);
+  const auth = useAuth();
+  function table(player: any, index: any) {
+    return (
+      <>
+        {" "}
+        <tr>
+          <td>
+            <div className="d-flex align-items-center">
+              <div className="d-flex justify-content-start flex-column">
+                {auth.auth?.Role === "Player" ? 1 : index + 1}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.Player}
+              </div>
+            </div>
+          </td>
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("2-Point");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.FG2 + "-" + player.FGA2}
+              </div>
+            </div>
+          </td>
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("3-Point");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.FG3 + "-" + player.FGA3}
+              </div>
+            </div>
+          </td>
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("Free Throw");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.FT + "-" + player.FTA}
+              </div>
+            </div>
+          </td>
+          <td className="border border-dashed border-gray-300 px-2">
+            <div className="text-end ">
+              <div className="d-flex justify-content-start flex-column">
+                {player.PTS}
+              </div>
+            </div>
+          </td>
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("OFF");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.OFF}
+              </div>
+            </div>
+          </td>{" "}
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("DEF");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.DEF}
+              </div>
+            </div>
+          </td>
+          <td className="border border-dashed border-gray-300 px-2">
+            <div className="text-end ">
+              <div className="d-flex justify-content-start flex-column">
+                {player.DEF + player.OFF}
+              </div>
+            </div>
+          </td>
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("F");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.PF}
+              </div>
+            </div>
+          </td>{" "}
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("A");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.A}
+              </div>
+            </div>
+          </td>{" "}
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("TO");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {" "}
+                {player.TO}
+              </div>
+            </div>
+          </td>
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("BLOCK");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {player.BLOCK}
+              </div>
+            </div>
+          </td>{" "}
+          <td
+            data-bs-toggle="modal"
+            data-bs-target={
+              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
+            }
+            onClick={() => {
+              setPlayerID(player._id);
+              setPlayType("STEAL");
+            }}
+          >
+            <div className="text-end text-muted">
+              <div className="d-flex justify-content-start flex-column">
+                {" "}
+                {player.STEAL}
+              </div>
+            </div>
+          </td>
+        </tr>
+      </>
+    );
+  }
   return (
     <>
       {" "}
@@ -267,31 +482,33 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
               Quarter {quarter}
             </span>
           </h3>
-          <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-            <label
-              className={`form-check-label fs-3  me-4 ${
-                !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
-              }`}
-            >
-              {CurrentGame.homeTeam.teamName}
-            </label>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              name="notifications"
-              onChange={(e) => {
-                setTeamCheckBox(e.target.checked);
-              }}
-              defaultChecked={false}
-            />
-            <label
-              className={`form-check-label fs-3  ms-4 ${
-                TeamCheckBox ? "fw-bold text-primary" : " text-muted"
-              }`}
-            >
-              {CurrentGame.awayTeam.teamName}
-            </label>
-          </div>
+          {auth.auth?.Role !== "Player" && (
+            <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
+              <label
+                className={`form-check-label fs-3  me-4 ${
+                  !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
+                }`}
+              >
+                {CurrentGame.homeTeam.teamName}
+              </label>
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="notifications"
+                onChange={(e) => {
+                  setTeamCheckBox(e.target.checked);
+                }}
+                defaultChecked={false}
+              />
+              <label
+                className={`form-check-label fs-3  ms-4 ${
+                  TeamCheckBox ? "fw-bold text-primary" : " text-muted"
+                }`}
+              >
+                {CurrentGame.awayTeam.teamName}
+              </label>
+            </div>
+          )}
         </div>
         {/* end::Header */}
         {/* begin::Body */}
@@ -351,195 +568,39 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                 {CurrentGame?.[team].QuarterlyPlayerPlays[quarter - 1] &&
                   CurrentGame?.[team].QuarterlyPlayerPlays[quarter - 1].map(
                     (player: any, index: any) => {
-                      FG2 += player.FG2;
-                      FT += player.FT;
-                      FG3 += player.FG3;
-                      PTS += player.PTS;
-                      OFF += player.OFF;
-                      DEF += player.DEF;
-                      TO += player.TO;
-                      TOT += player.OFF + player.DEF;
-                      PF += player.PF;
-                      STEAL += player.STEAL;
-                      BLOCK += player.BLOCK;
-                      A += player.A;
-                      return (
-                        <>
-                          {" "}
-                          <tr>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {index + 1}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.Player}
-                                </div>
-                              </div>
-                            </td>
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("2-Point");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.FG2 + "-" + player.FGA2}
-                                </div>
-                              </div>
-                            </td>
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("3-Point");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.FG3 + "-" + player.FGA3}
-                                </div>
-                              </div>
-                            </td>
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("Free Throw");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.FT + "-" + player.FTA}
-                                </div>
-                              </div>
-                            </td>
-                            <td className="border border-dashed border-gray-300 px-2">
-                              <div className="text-end ">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.PTS}
-                                </div>
-                              </div>
-                            </td>
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("OFF");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.OFF}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("DEF");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.DEF}
-                                </div>
-                              </div>
-                            </td>
-                            <td className="border border-dashed border-gray-300 px-2">
-                              <div className="text-end ">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.DEF + player.OFF}
-                                </div>
-                              </div>
-                            </td>
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("F");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.PF}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("A");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.A}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("TO");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {" "}
-                                  {player.TO}
-                                </div>
-                              </div>
-                            </td>
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("BLOCK");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {player.BLOCK}
-                                </div>
-                              </div>
-                            </td>{" "}
-                            <td
-                              data-bs-toggle="modal"
-                              data-bs-target="#createPlay_modal"
-                              onClick={() => {
-                                setPlayerID(player._id);
-                                setPlayType("STEAL");
-                              }}
-                            >
-                              <div className="text-end text-muted">
-                                <div className="d-flex justify-content-start flex-column">
-                                  {" "}
-                                  {player.STEAL}
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        </>
-                      );
+                      if (
+                        auth.auth?.Role === "Player" &&
+                        auth.auth?.first_name + " " + auth.auth?.last_name ==
+                          player.Player
+                      ) {
+                        FG2 += player.FG2;
+                        FT += player.FT;
+                        FG3 += player.FG3;
+                        PTS += player.PTS;
+                        OFF += player.OFF;
+                        DEF += player.DEF;
+                        TO += player.TO;
+                        TOT += player.OFF + player.DEF;
+                        PF += player.PF;
+                        STEAL += player.STEAL;
+                        BLOCK += player.BLOCK;
+                        A += player.A;
+                        return table(player, index);
+                      } else if (auth.auth?.Role !== "Player") {
+                        FG2 += player.FG2;
+                        FT += player.FT;
+                        FG3 += player.FG3;
+                        PTS += player.PTS;
+                        OFF += player.OFF;
+                        DEF += player.DEF;
+                        TO += player.TO;
+                        TOT += player.OFF + player.DEF;
+                        PF += player.PF;
+                        STEAL += player.STEAL;
+                        BLOCK += player.BLOCK;
+                        A += player.A;
+                        return table(player, index);
+                      }
                     }
                   )}
                 <tr className="text-primary">
@@ -695,65 +756,36 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                       </div>
                     </div>
                   </td>
-                  <td
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTimeOut_modal"
-                  >
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTimeOut_modal"
-                  >
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td
-                    colSpan={2}
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTimeOut_modal"
-                  >
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column">
-                        {" "}
-                      </div>
-                    </div>
-                  </td>
-                  <td
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTimeOut_modal"
-                  >
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTimeOut_modal"
-                  >
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTimeOut_modal"
-                  >
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTimeOut_modal"
-                  >
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
+                  {CurrentGame[team]?.TimeOuts?.filter(
+                    (TimeOuts: any) => TimeOuts.Quarter === quarter
+                  )?.map((TimeOuts: any) => {
+                    return (
+                      <td>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column">
+                            {TimeOuts.Secs} Secs
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  })}
+
+                  {EmptyArray.map(() => {
+                    return (
+                      <td
+                        data-bs-toggle="modal"
+                        data-bs-target={
+                          auth.auth?.Role === "Player"
+                            ? ""
+                            : "#createTimeOut_modal"
+                        }
+                      >
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column"></div>
+                        </div>
+                      </td>
+                    );
+                  })}
                 </tr>
 
                 <tr>

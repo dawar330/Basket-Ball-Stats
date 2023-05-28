@@ -18,7 +18,6 @@ export function Teams() {
   >();
   useQuery(getTeams, {
     onCompleted: ({ getTeams }) => {
-      debugger;
       setteams(getTeams);
     },
   });

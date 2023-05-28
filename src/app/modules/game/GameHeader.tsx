@@ -19,7 +19,9 @@ import {
   upsertPlays,
   upsertQuarterlyPlayerPlays,
   upsertScoringGamePlay,
+  upsertTimeOuts,
 } from "../../../Redux/CurrectGame";
+import { useAuth } from "../auth";
 
 interface GameRouteParams extends Params {
   id: string;
@@ -49,9 +51,12 @@ const GameHeader: React.FC = () => {
 
   useQuery(getGameTimeOuts, {
     variables: { gameID: game_ID },
+    onError: () => {
+      debugger;
+    },
     onCompleted: ({ getGameTimeOuts }) => {
       debugger;
-      // dispatch(upsertPlayerPlays(getGamePlaysByPlayer));
+      dispatch(upsertTimeOuts(getGameTimeOuts));
     },
   });
   useQuery(getQuarterlyGamePlaysByPlayer, {
@@ -99,6 +104,8 @@ const GameHeader: React.FC = () => {
   });
 
   const location = useLocation();
+
+  const auth = useAuth();
 
   return (
     <div className="card mb-5 mb-xl-10">
@@ -192,7 +199,7 @@ const GameHeader: React.FC = () => {
             </div>
           </div>
         </div>
-        {!GameEnded && (
+        {auth.auth?.Role !== "Player" && !GameEnded && (
           <div
             className="flex-column-auto pt-10"
             id="kt_aside_secondary_footer"
@@ -226,7 +233,7 @@ const GameHeader: React.FC = () => {
                 }
                 to={`/game/${game_ID}/overview`}
               >
-                Overview
+                {auth.auth?.Role === "Player" ? "My Stats" : "Overview"}
               </Link>
             </li>
             <li className="nav-item">
@@ -253,6 +260,7 @@ const GameHeader: React.FC = () => {
                 Quarterly Sheet
               </Link>
             </li>
+
             <li className="nav-item">
               <Link
                 className={
@@ -265,17 +273,21 @@ const GameHeader: React.FC = () => {
                 Team Stats
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className={
-                  `nav-link text-active-primary me-6 ` +
-                  (location.pathname === `/game/${game_ID}/leaders` && "active")
-                }
-                to={`/game/${game_ID}/leaders`}
-              >
-                Leaders
-              </Link>
-            </li>
+
+            {auth.auth?.Role === "Coach" && (
+              <li className="nav-item">
+                <Link
+                  className={
+                    `nav-link text-active-primary me-6 ` +
+                    (location.pathname === `/game/${game_ID}/leaders` &&
+                      "active")
+                  }
+                  to={`/game/${game_ID}/leaders`}
+                >
+                  Leaders
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
               <Link
                 className={
@@ -285,7 +297,9 @@ const GameHeader: React.FC = () => {
                 }
                 to={`/game/${game_ID}/playerstats`}
               >
-                Player Statistics
+                {auth.auth?.Role === "Player"
+                  ? "My Statistics"
+                  : "Player Statistics"}
               </Link>
             </li>
             <li className="nav-item">

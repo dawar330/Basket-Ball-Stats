@@ -2,6 +2,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { KTSVG } from "../../../helpers";
 import { useSelector } from "react-redux";
+import { useAuth } from "../../../../app/modules/auth";
 
 type Props = {
   className: string;
@@ -21,29 +22,35 @@ const PlayerStatsTable: React.FC<Props> = ({
     (stats: any) => stats.Player === SelectedPlayer
   );
 
+  const auth = useAuth();
+
   return (
     <div className={`card ${className}`}>
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
-        <div className="mr-2">
-          <button
-            onClick={() => {
-              setSelectedPlayer("");
-            }}
-            type="button"
-            className="btn btn-lg btn-light-primary me-3"
-            data-kt-stepper-action="previous"
-          >
-            <KTSVG
-              path="/media/icons/duotune/arrows/arr063.svg"
-              className="svg-icon-4 me-1"
-            />
-            Back
-          </button>
-        </div>
+        {auth.auth?.Role !== "Player" && (
+          <div className="mr-2">
+            <button
+              onClick={() => {
+                setSelectedPlayer("");
+              }}
+              type="button"
+              className="btn btn-lg btn-light-primary me-3"
+              data-kt-stepper-action="previous"
+            >
+              <KTSVG
+                path="/media/icons/duotune/arrows/arr063.svg"
+                className="svg-icon-4 me-1"
+              />
+              Back
+            </button>
+          </div>
+        )}
         <h3 className="card-title align-items-start flex-column">
           <span className="card-label fw-bold fs-3 mb-1">
-            Player Statistics
+            {auth.auth?.Role === "Player"
+              ? "My  Statistics"
+              : "Player Statistics"}
           </span>
         </h3>
       </div>

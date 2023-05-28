@@ -75,7 +75,6 @@ const CreateGameStep1: FC = () => {
               name="awayTeam"
               className="form-select form-select-lg form-select-solid"
               onChange={(e: any) => {
-                debugger;
                 setselectedAway(e.target.value);
                 awayTeam.onChange(e);
               }}

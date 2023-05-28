@@ -27,7 +27,6 @@ const CreateTeamStepper = () => {
   };
   const [createTeamF] = useMutation(createTeam, {
     onCompleted: ({ createTeam }) => {
-      debugger;
       navigate("/account/teams");
     },
   });
@@ -43,7 +42,6 @@ const CreateTeamStepper = () => {
   };
 
   const submitStep = async (values: ICreateTeam, actions: FormikValues) => {
-    debugger;
     if (!stepper.current) {
       return;
     }
@@ -51,7 +49,6 @@ const CreateTeamStepper = () => {
     if (stepper.current.currentStepIndex !== stepper.current.totatStepsNumber) {
       stepper.current.goNext();
     } else {
-      debugger;
       await createTeamF({
         variables: {
           teamName: values.teamName,
