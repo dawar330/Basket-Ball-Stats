@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/client";
 import { getTeamPlayers } from "./core/request";
 import { useSelector } from "react-redux";
 import { useAuth } from "../auth";
+import { toAbsoluteUrl } from "../../../_metronic/helpers";
 
 type Props = {
   className: string;
@@ -14,7 +15,6 @@ type Props = {
 const PlayerStats: React.FC<Props> = ({ className }) => {
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const auth = useAuth();
-  console.log(auth);
 
   const [SelectedPlayer, setSelectedPlayer] = useState(
     auth.auth?.Role === "Player"
@@ -27,6 +27,7 @@ const PlayerStats: React.FC<Props> = ({ className }) => {
       {
         fname: string;
         lname: string;
+        avatar: string;
       }
     ]
   >();
@@ -54,7 +55,7 @@ const PlayerStats: React.FC<Props> = ({ className }) => {
             <div className="d-flex justify-content-between border-0 pt-3 mb-5">
               <h3 className="card-title align-items-start flex-column">
                 <span className="card-label fw-bold fs-3 mb-1">
-                  {auth.auth?.Role === "Player"
+                  {!CurrentGame.ShowTeamStats
                     ? "My Statistics"
                     : "Players Statistics"}
                 </span>
@@ -94,7 +95,11 @@ const PlayerStats: React.FC<Props> = ({ className }) => {
                 return (
                   <div className="col-md-6 col-xl-4" key={index}>
                     <Card2
-                      icon="\media\icons\duotune\general\james.png"
+                      icon={
+                        Player.avatar === ""
+                          ? toAbsoluteUrl("/media/avatars/blank.png")
+                          : toAbsoluteUrl(Player.avatar)
+                      }
                       badgeColor="primary"
                       status="In Progress"
                       statusColor="primary"

@@ -27,7 +27,6 @@ function getTimeLeft(startTime: number, durationInMinutes: number): string {
 function getTimePassed(startTime: number): string {
   const currentTime = new Date().getTime();
   const timeDiffInSeconds = Math.floor((currentTime - startTime) / 1000);
-  console.log(timeDiffInSeconds);
 
   if (timeDiffInSeconds < 60) {
     return `${timeDiffInSeconds} second(s)`;

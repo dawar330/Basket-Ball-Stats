@@ -32,7 +32,11 @@ const Card2: FC<Props> = ({ icon, setSelectedPlayer, title, team }) => {
       className="card border border-2 border-primary border-hover"
       onClick={() => setSelectedPlayer(title)}
     >
-      <img src={toAbsoluteUrl(icon)} alt="card2" className="card-img-top" />
+      <img
+        src={toAbsoluteUrl(icon)}
+        alt="card2"
+        className="card-img-top h-350px"
+      />
 
       <div className="card-body p-9">
         <div className="d-flex justify-content-between fs-3 fw-bolder text-dark  mb-7">

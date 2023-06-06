@@ -1,62 +1,72 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { toAbsoluteUrl } from "../../../../../../_metronic/helpers";
 import { IProfileDetails } from "../SettingsModel";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useAuth } from "../../../../auth";
+import { useMutation } from "@apollo/client";
+import { updateUserInfo } from "../../../../auth/core/requests";
 
 const profileDetailsSchema = Yup.object().shape({
   fName: Yup.string().required("First name is required"),
   lName: Yup.string().required("Last name is required"),
-
-  contactPhone: Yup.string().required("Contact phone is required"),
-  country: Yup.string().required("Country is required"),
-  language: Yup.string().required("Language is required"),
-  timeZone: Yup.string().required("Time zone is required"),
-  currency: Yup.string().required("Currency is required"),
 });
 
 const ProfileDetails: React.FC = () => {
   const { currentUser } = useAuth();
   const initialValues: IProfileDetails = {
-    avatar: "/media/avatars/300-1.jpg",
+    avatar: currentUser ? currentUser.avatar : "",
     fName: currentUser ? currentUser.fname : "",
     lName: currentUser ? currentUser.lname : "",
-    company: "Keenthemes",
-    email: currentUser ? currentUser.email : "",
-    companySite: "keenthemes.com",
-    country: "",
-    language: "",
-    timeZone: "",
-    currency: "",
-    communications: {
-      email: false,
-      phone: false,
-    },
-    allowMarketing: false,
   };
   const [data, setData] = useState<IProfileDetails>(initialValues);
+  const [selectedImage, setselectedImage] = useState<string | null>(
+    currentUser ? currentUser.avatar : ""
+  );
   const updateData = (fieldsToUpdate: Partial<IProfileDetails>): void => {
     const updatedData = Object.assign(data, fieldsToUpdate);
     setData(updatedData);
   };
-
+  const [updateUserInfoF] = useMutation(updateUserInfo);
   const [loading, setLoading] = useState(false);
   const formik = useFormik<IProfileDetails>({
     initialValues,
     validationSchema: profileDetailsSchema,
     onSubmit: (values) => {
+      updateUserInfoF({
+        variables: {
+          fname: values.fName,
+          lname: values.lName,
+          avatar: values.avatar,
+        },
+      });
+
       setLoading(true);
       setTimeout(() => {
-        values.communications.email = data.communications.email;
-        values.communications.phone = data.communications.phone;
-        values.allowMarketing = data.allowMarketing;
         const updatedData = Object.assign(data, values);
         setData(updatedData);
         setLoading(false);
       }, 1000);
     },
   });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    fileInputRef?.current?.click();
+  };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target && e.target.result) {
+          updateData({ avatar: e.target.result.toString() });
+          setselectedImage(e.target.result.toString());
+        }
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
 
   return (
     <div className="card mb-5 mb-xl-10">
@@ -84,20 +94,26 @@ const ProfileDetails: React.FC = () => {
                 <div
                   className="image-input image-input-outline"
                   data-image-input="true"
-                  style={{
-                    backgroundImage: `url(${toAbsoluteUrl(
-                      "/media/avatars/blank.png"
-                    )})`,
-                  }}
+                  onClick={handleClick}
                 >
                   <div
                     className="image-input-wrapper w-125px h-125px"
                     style={{
-                      backgroundImage: `url(${toAbsoluteUrl(data.avatar)})`,
+                      backgroundImage: `${
+                        selectedImage
+                          ? `url(${data.avatar})`
+                          : `url(${toAbsoluteUrl("/media/avatars/blank.png")}`
+                      }`,
                     }}
                   ></div>
                 </div>
               </div>
+              <input
+                type="file"
+                style={{ display: "none" }}
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
             </div>
 
             <div className="row mb-6">
@@ -141,7 +157,7 @@ const ProfileDetails: React.FC = () => {
                 </div>
               </div>
             </div>
-
+            {/* 
             <div className="row mb-6">
               <label className="col-lg-4 col-form-label fw-bold fs-6">
                 <span className="required">Email</span>
@@ -437,7 +453,7 @@ const ProfileDetails: React.FC = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
 
             {/* <div className="row mb-6">
               <label className="col-lg-4 col-form-label required fw-bold fs-6">
@@ -511,7 +527,7 @@ const ProfileDetails: React.FC = () => {
               </div>
             </div> */}
 
-            <div className="row mb-6">
+            {/* <div className="row mb-6">
               <label className="col-lg-4 col-form-label required fw-bold fs-6">
                 Time Zone
               </label>
@@ -702,7 +718,7 @@ const ProfileDetails: React.FC = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="card-footer d-flex justify-content-end py-6 px-9">

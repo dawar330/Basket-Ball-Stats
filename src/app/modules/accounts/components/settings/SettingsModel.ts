@@ -2,18 +2,6 @@ export interface IProfileDetails {
   avatar: string;
   fName: string;
   lName: string;
-  company: string;
-  email: string;
-  companySite: string;
-  country: string;
-  language: string;
-  timeZone: string;
-  currency: string;
-  communications: {
-    email: boolean;
-    phone: boolean;
-  };
-  allowMarketing: boolean;
 }
 export interface ITeamDetails {
   avatar: string;
@@ -75,27 +63,15 @@ export interface IDeactivateAccount {
   confirm: boolean;
 }
 export const teamDetailsInitValues: ITeamDetails = {
-  avatar: "/media/avatars/300-1.jpg",
+  avatar: "/media/avatars/Blank.png",
   teamName: "",
   homeTown: "string",
 };
 
 export const profileDetailsInitValues: IProfileDetails = {
-  avatar: "/media/avatars/300-1.jpg",
+  avatar: "/media/avatars/Blank.png",
   fName: "Max",
   lName: "Smith",
-  company: "Keenthemes",
-  email: "",
-  companySite: "keenthemes.com",
-  country: "",
-  language: "",
-  timeZone: "",
-  currency: "",
-  communications: {
-    email: false,
-    phone: false,
-  },
-  allowMarketing: false,
 };
 
 export const updateEmail: IUpdateEmail = {

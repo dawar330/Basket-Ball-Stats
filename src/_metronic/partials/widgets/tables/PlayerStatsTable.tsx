@@ -28,7 +28,7 @@ const PlayerStatsTable: React.FC<Props> = ({
     <div className={`card ${className}`}>
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
-        {auth.auth?.Role !== "Player" && (
+        {CurrentGame.ShowTeamStats && (
           <div className="mr-2">
             <button
               onClick={() => {
@@ -48,7 +48,7 @@ const PlayerStatsTable: React.FC<Props> = ({
         )}
         <h3 className="card-title align-items-start flex-column">
           <span className="card-label fw-bold fs-3 mb-1">
-            {auth.auth?.Role === "Player"
+            {!CurrentGame.ShowTeamStats
               ? "My  Statistics"
               : "Player Statistics"}
           </span>

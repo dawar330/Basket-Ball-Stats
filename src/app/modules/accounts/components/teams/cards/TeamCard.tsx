@@ -100,7 +100,7 @@ const TeamCard: FC<Props> = ({
 
         <div
           onClick={() => {
-            navigate("/account/teams/editTeam/2");
+            navigate(`/account/teams/editTeam/${id}`);
           }}
           className="btn btn-sm btn-light"
         >

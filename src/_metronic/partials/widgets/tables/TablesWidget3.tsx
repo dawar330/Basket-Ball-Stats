@@ -24,7 +24,6 @@ function getStatValue(Play: any, label: any) {
 }
 const TablesWidget3: React.FC<Props> = ({ className, label }) => {
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
-  console.log();
 
   return (
     <div className={`card ${className}`}>

@@ -9,6 +9,8 @@ import { GameLeaders } from "./GameLeaders";
 import { TeamStats } from "./TeamStats";
 import { CommentsPage } from "./CommentsPage";
 import { QuarterlyTable } from "../../../_metronic/partials/widgets/tables/QuarterlyTable";
+import { Settings } from "./components/settings/Settings";
+import { GameRules } from "./components/settings/cards/GameRules";
 
 const GamePage: React.FC = () => {
   const [Home, setHome] = useState("");
@@ -88,6 +90,15 @@ const GamePage: React.FC = () => {
             <>
               <PageTitle breadcrumbs={gameBreadCrumbs}>Leaders</PageTitle>
               <GameLeaders />
+            </>
+          }
+        />
+        <Route
+          path="Settings"
+          element={
+            <>
+              <PageTitle breadcrumbs={gameBreadCrumbs}>Game Rules</PageTitle>
+              <GameRules />
             </>
           }
         />

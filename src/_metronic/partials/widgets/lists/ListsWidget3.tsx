@@ -59,11 +59,6 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
             let home = oldhome;
             let away = oldaway;
             let isHome = Play.Team == CurrentGame.homeTeam._id;
-            console.log(
-              Play.Team == CurrentGame.homeTeam._id,
-              Play.Team,
-              CurrentGame.homeTeam._id
-            );
 
             switch (Play.PlayType) {
               case "3-Point":

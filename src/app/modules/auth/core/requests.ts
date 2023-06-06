@@ -18,6 +18,7 @@ export const getUserByToken = gql`
       fname
       lname
       email
+      avatar
     }
   }
 `;
@@ -30,6 +31,17 @@ export const getUser = gql`
     }
   }
 `;
+export const getPlayers = gql`
+  query {
+    getPlayers {
+      _id
+      fname
+      lname
+      email
+      avatar
+    }
+  }
+`;
 export const login = gql`
   mutation ($loginInput: loginInput!) {
     login(loginInput: $loginInput) {
@@ -39,5 +51,22 @@ export const login = gql`
       last_name
       Role
     }
+  }
+`;
+export const updateUserInfo = gql`
+  mutation ($fname: String!, $lname: String!, $avatar: String!) {
+    updateUserInfo(fname: $fname, lname: $lname, avatar: $avatar) {
+      fname
+    }
+  }
+`;
+export const UpdateEmail = gql`
+  mutation ($email: String!, $PassWord: String!) {
+    UpdateEmail(email: $email, PassWord: $PassWord)
+  }
+`;
+export const UpdatePass = gql`
+  mutation ($newPass: String!, $PassWord: String!) {
+    UpdatePass(newPass: $newPass, PassWord: $PassWord)
   }
 `;

@@ -37,12 +37,12 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   let STEAL = 0;
   const [EmptyArray, setEmptyArray] = useState(
     Array.from({
-      length: 5 - (CurrentGame[team]?.TimeOuts?.length || 0),
+      length:
+        CurrentGame.TimeOutLimit - (CurrentGame[team]?.TimeOuts?.length || 0),
     })
   );
 
   useEffect(() => {
-    debugger;
     setEmptyArray(
       Array.from({
         length:
@@ -72,9 +72,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("2-Point");
@@ -88,9 +86,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("3-Point");
@@ -104,9 +100,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("Free Throw");
@@ -127,9 +121,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("OFF");
@@ -143,9 +135,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>{" "}
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("DEF");
@@ -166,9 +156,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("F");
@@ -182,9 +170,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>{" "}
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("A");
@@ -198,9 +184,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>{" "}
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("TO");
@@ -215,9 +199,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("BLOCK");
@@ -231,9 +213,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </td>{" "}
           <td
             data-bs-toggle="modal"
-            data-bs-target={
-              auth.auth?.Role === "Player" ? "" : "#createPlay_modal"
-            }
+            data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
               setPlayType("STEAL");
@@ -284,6 +264,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                         <>
                           {" "}
                           <div
+                            data-bs-dismiss="modal"
                             className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
                             onClick={() => {
                               createPlayF({
@@ -303,6 +284,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                             </span>
                           </div>
                           <div
+                            data-bs-dismiss="modal"
                             className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
                             onClick={() => {
                               createPlayF({
@@ -326,6 +308,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                         <>
                           {" "}
                           <div
+                            data-bs-dismiss="modal"
                             className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
                             onClick={() => {
                               createPlayF({
@@ -346,6 +329,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                           </div>
                           {PlayType === "F" && (
                             <div
+                              data-bs-dismiss="modal"
                               className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
                               onClick={() => {
                                 createPlayF({
@@ -397,6 +381,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                 <Form className="w-100" noValidate>
                   <div className="modal-body">
                     <div
+                      data-bs-dismiss="modal"
                       className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
                       onClick={() => {
                         createTimeOutsF({
@@ -412,6 +397,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                       <span className="btn-label text-danger">30 Sec</span>
                     </div>
                     <div
+                      data-bs-dismiss="modal"
                       className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
                       onClick={() => {
                         createTimeOutsF({
@@ -482,7 +468,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
               Quarter {quarter}
             </span>
           </h3>
-          {auth.auth?.Role !== "Player" && (
+          {CurrentGame.ShowTeamStats && (
             <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
               <label
                 className={`form-check-label fs-3  me-4 ${
@@ -569,7 +555,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   CurrentGame?.[team].QuarterlyPlayerPlays[quarter - 1].map(
                     (player: any, index: any) => {
                       if (
-                        auth.auth?.Role === "Player" &&
+                        !CurrentGame.ShowTeamStats &&
                         auth.auth?.first_name + " " + auth.auth?.last_name ==
                           player.Player
                       ) {
@@ -586,7 +572,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                         BLOCK += player.BLOCK;
                         A += player.A;
                         return table(player, index);
-                      } else if (auth.auth?.Role !== "Player") {
+                      } else if (CurrentGame.ShowTeamStats) {
                         FG2 += player.FG2;
                         FT += player.FT;
                         FG3 += player.FG3;
@@ -774,11 +760,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                     return (
                       <td
                         data-bs-toggle="modal"
-                        data-bs-target={
-                          auth.auth?.Role === "Player"
-                            ? ""
-                            : "#createTimeOut_modal"
-                        }
+                        data-bs-target="#createTimeOut_modal"
                       >
                         <div className="text-end text-muted">
                           <div className="d-flex justify-content-start flex-column"></div>

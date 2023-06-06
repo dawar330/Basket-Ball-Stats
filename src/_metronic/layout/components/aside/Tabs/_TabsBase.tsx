@@ -35,7 +35,6 @@ const SelectedTab: FC<Props> = ({ link }) => {
 
 const TabsBase: FC<Props> = ({ link }) => {
   const auth = useAuth();
-  console.log(auth);
   return (
     <div className="d-flex h-100 flex-column">
       {/* begin::Wrapper */}
@@ -62,28 +61,28 @@ const TabsBase: FC<Props> = ({ link }) => {
       </div>
       {/* end::Wrapper */}
       {/* begin::Footer */}
-      {auth.auth?.Role !== "Player" && (
-        <div
-          className="flex-column-auto pt-10 px-5"
-          id="kt_aside_secondary_footer"
+
+      <div
+        className="flex-column-auto pt-10 px-5"
+        id="kt_aside_secondary_footer"
+      >
+        <Link
+          to="createGame"
+          className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+          data-bs-toggle="tooltip"
+          data-bs-custom-class="tooltip-dark"
+          data-bs-trigger="hover"
+          data-bs-offset="0,5"
+          data-bs-dismiss-="click"
         >
-          <Link
-            to="createGame"
-            className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-            data-bs-toggle="tooltip"
-            data-bs-custom-class="tooltip-dark"
-            data-bs-trigger="hover"
-            data-bs-offset="0,5"
-            data-bs-dismiss-="click"
-          >
-            <KTSVG
-              path="/media/icons/duotune/general/gen041.svg"
-              className="svg-icon-muted svg-icon-2hx"
-            />
-            <span className="btn-label">Create Game</span>
-          </Link>
-        </div>
-      )}
+          <KTSVG
+            path="/media/icons/duotune/general/gen041.svg"
+            className="svg-icon-muted svg-icon-2hx"
+          />
+          <span className="btn-label">Create Game</span>
+        </Link>
+      </div>
+
       {/* end::Footer */}
     </div>
   );

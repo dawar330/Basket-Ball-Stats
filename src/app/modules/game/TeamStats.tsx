@@ -100,7 +100,6 @@ export function TeamStats() {
     awayTO += play.TO;
     awayF += play.PF;
   });
-  console.log(homeFG, homeFGCount);
 
   return (
     <>

@@ -5,12 +5,21 @@ import { Link } from "react-router-dom";
 import { Dropdown1 } from "../../../_metronic/partials";
 import { useLocation } from "react-router";
 import { useAuth } from "../auth";
+import { useQuery } from "@apollo/client";
+import { getSeasonOverView } from "../game/core/request";
 
 const AccountHeader: React.FC = () => {
   const location = useLocation();
-  const [Victories, setVictories] = useState(25);
-  const [Defeats, setDefeats] = useState(2);
+  const [Victories, setVictories] = useState(0);
+  const [Defeats, setDefeats] = useState(0);
   const { currentUser, auth } = useAuth();
+
+  useQuery(getSeasonOverView, {
+    onCompleted: ({ getSeasonOverView }) => {
+      setVictories(getSeasonOverView.Win);
+      setDefeats(getSeasonOverView.Loss);
+    },
+  });
 
   return (
     <div className="card mb-5 mb-xl-10">
@@ -19,7 +28,11 @@ const AccountHeader: React.FC = () => {
           <div className="me-7 mb-4">
             <div className="symbol symbol-100px symbol-lg-160px symbol-fixed ">
               <img
-                src={toAbsoluteUrl("/media/avatars/300-1.jpg")}
+                src={
+                  currentUser?.avatar !== ""
+                    ? currentUser?.avatar
+                    : toAbsoluteUrl("/media/avatars/blank.png")
+                }
                 alt="Metronic"
               />
             </div>
@@ -41,7 +54,7 @@ const AccountHeader: React.FC = () => {
                       className="svg-icon-1 svg-icon-primary"
                     />
                   </a>
-                  {auth?.Role}
+
                   <a
                     href="#"
                     className="btn btn-sm btn-light-success fw-bolder ms-2 fs-8 py-1 px-3"
@@ -58,10 +71,10 @@ const AccountHeader: React.FC = () => {
                     className="d-flex align-items-center text-gray-400 text-hover-primary me-5 "
                   >
                     <KTSVG
-                      path="/media/icons/duotune/general/gen018.svg"
+                      path="/media/icons/duotune/general/gen017.svg"
                       className="svg-icon-4 me-1"
                     />
-                    SF, Bay Area
+                    {auth?.Role}
                   </a>
                   <a
                     href="#"
@@ -114,51 +127,63 @@ const AccountHeader: React.FC = () => {
                 </div>
               </div> */}
             </div>
-            <div className="text-gray-800 fs-3 fw-bold mb-2">
-              Season Overview
-            </div>
-            <div className="d-flex flex-wrap flex-stack">
-              <div className="d-flex flex-column flex-grow-1 pe-8">
-                <div className="d-flex flex-wrap">
-                  <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                    <div className="d-flex align-items-center">
-                      <KTSVG
-                        path="/media/icons/duotune/arrows/arr066.svg"
-                        className="svg-icon-3 svg-icon-success me-2"
-                      />
-                      <div className="fs-2 fw-bolder">{Victories}</div>
-                    </div>
+            {auth?.Role === "Coach" && (
+              <>
+                {" "}
+                <div className="text-gray-800 fs-3 fw-bold mb-2">
+                  Season Overview
+                </div>
+                <div className="d-flex flex-wrap flex-stack">
+                  <div className="d-flex flex-column flex-grow-1 pe-8">
+                    <div className="d-flex flex-wrap">
+                      <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                        <div className="d-flex align-items-center">
+                          <KTSVG
+                            path="/media/icons/duotune/arrows/arr066.svg"
+                            className="svg-icon-3 svg-icon-success me-2"
+                          />
+                          <div className="fs-2 fw-bolder">{Victories}</div>
+                        </div>
 
-                    <div className="fw-bold fs-6 text-gray-400">Victories</div>
-                  </div>
-
-                  <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                    <div className="d-flex align-items-center">
-                      <KTSVG
-                        path="/media/icons/duotune/arrows/arr065.svg"
-                        className="svg-icon-3 svg-icon-danger me-2"
-                      />
-                      <div className="fs-2 fw-bolder">{Defeats}</div>
-                    </div>
-
-                    <div className="fw-bold fs-6 text-gray-400">Defeats</div>
-                  </div>
-
-                  <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                    <div className="d-flex align-items-center">
-                      <div className="fs-2 fw-bolder">
-                        {((Victories / (Victories + Defeats)) * 100).toFixed(2)}
-                        %
+                        <div className="fw-bold fs-6 text-gray-400">
+                          Victories
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="fw-bold fs-6 text-gray-400">
-                      Success Rate
+                      <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                        <div className="d-flex align-items-center">
+                          <KTSVG
+                            path="/media/icons/duotune/arrows/arr065.svg"
+                            className="svg-icon-3 svg-icon-danger me-2"
+                          />
+                          <div className="fs-2 fw-bolder">{Defeats}</div>
+                        </div>
+
+                        <div className="fw-bold fs-6 text-gray-400">
+                          Defeats
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                        <div className="d-flex align-items-center">
+                          <div className="fs-2 fw-bolder">
+                            {(
+                              (Victories / (Victories + Defeats)) *
+                              100
+                            ).toFixed(2)}
+                            %
+                          </div>
+                        </div>
+
+                        <div className="fw-bold fs-6 text-gray-400">
+                          Success Rate
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
 

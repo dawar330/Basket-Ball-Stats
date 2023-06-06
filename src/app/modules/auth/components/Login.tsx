@@ -53,8 +53,6 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       try {
-        console.log(values);
-
         await loginF({
           variables: {
             loginInput: { ...values },

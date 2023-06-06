@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const CurrentGameSlice = createSlice({
   name: "CurrentGame",
+
   initialState: {
     _id: "",
+    ShowTeamStats: true,
     homeTeam: {
       _id: "",
       teamName: "",
@@ -74,9 +76,11 @@ export const CurrentGameSlice = createSlice({
       state.awayTeam.PlayerPlays = action.payload.awayTeam;
     },
     upsertTimeOuts: (state, action) => {
-      debugger;
       state.homeTeam.TimeOuts = action.payload.homeTeam;
       state.awayTeam.TimeOuts = action.payload.awayTeam;
+    },
+    upsertToggleTeamStats: (state, action) => {
+      state.ShowTeamStats = action.payload;
     },
     upsertQuarterlyPlayerPlays: (state, action) => {
       state.homeTeam.QuarterlyPlayerPlays[0] = action.payload.homeTeam.Quarter1;
@@ -99,6 +103,7 @@ export const {
   upsertPlays,
   upsertScoringGamePlay,
   upsertPlayerPlays,
+  upsertToggleTeamStats,
   upsertQuarterlyPlayerPlays,
 } = CurrentGameSlice.actions;
 

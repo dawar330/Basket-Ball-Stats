@@ -25,6 +25,8 @@ const CreateTeamStepper = () => {
       stepperRef.current as HTMLDivElement
     );
   };
+
+  const [selectedImage, setselectedImage] = useState<string | null>();
   const [createTeamF] = useMutation(createTeam, {
     onCompleted: ({ createTeam }) => {
       navigate("/account/teams");
@@ -53,7 +55,7 @@ const CreateTeamStepper = () => {
         variables: {
           teamName: values.teamName,
           teamCity: values.homeTown,
-          Image: "/media/avatars/300-6.jpg",
+          Image: selectedImage,
         },
       });
 
@@ -187,7 +189,10 @@ const CreateTeamStepper = () => {
               </div>
 
               <div data-kt-stepper-element="content">
-                <CreateTeamStep2 />
+                <CreateTeamStep2
+                  setselectedImage={setselectedImage}
+                  selectedImage={selectedImage}
+                />
               </div>
 
               <div data-kt-stepper-element="content">

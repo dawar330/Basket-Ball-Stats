@@ -24,7 +24,11 @@ const GameTable: React.FC<Props> = ({ className }) => {
   let TO = 0;
   let BLOCK = 0;
   let STEAL = 0;
-
+  const [EmptyArray, setEmptyArray] = useState(
+    Array.from({
+      length: 7 - (CurrentGame[team]?.TimeOuts?.length || 0),
+    })
+  );
   return (
     <>
       {" "}
@@ -396,43 +400,30 @@ const GameTable: React.FC<Props> = ({ className }) => {
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td colSpan={2}>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column">
-                        {" "}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
+                  {CurrentGame[team]?.TimeOuts?.map((TimeOuts: any) => {
+                    return (
+                      <td>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column">
+                            {TimeOuts.Secs} Secs
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  })}
+
+                  {EmptyArray.map(() => {
+                    return (
+                      <td
+                        data-bs-toggle="modal"
+                        data-bs-target="#createTimeOut_modal"
+                      >
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column"></div>
+                        </div>
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr>
                   <td style={{ borderBottomStyle: "hidden" }}>
@@ -475,43 +466,30 @@ const GameTable: React.FC<Props> = ({ className }) => {
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td colSpan={2}>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column">
-                        {" "}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
+                  {CurrentGame[team]?.TimeOuts?.map((TimeOuts: any) => {
+                    return (
+                      <td>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column">
+                            {TimeOuts.Quarter +
+                              " / " +
+                              new Date(parseInt(TimeOuts.Time)).getHours() +
+                              ":" +
+                              new Date(parseInt(TimeOuts.Time)).getMinutes()}
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  })}
+                  {EmptyArray.map(() => {
+                    return (
+                      <td>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column"></div>
+                        </div>
+                      </td>
+                    );
+                  })}{" "}
                 </tr>{" "}
                 <tr>
                   <td>

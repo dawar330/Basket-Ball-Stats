@@ -50,7 +50,7 @@ export function Overview() {
             </div>
           </div>
 
-          <div className="row mb-7">
+          {/* <div className="row mb-7">
             <label className="col-lg-4 fw-bold text-muted">
               Country
               <i
@@ -63,9 +63,9 @@ export function Overview() {
             <div className="col-lg-8">
               <span className="fw-bolder fs-6 text-dark">Germany</span>
             </div>
-          </div>
+          </div> */}
 
-          <div className="row mb-7">
+          {/* <div className="row mb-7">
             <label className="col-lg-4 fw-bold text-muted">
               Account Subscription Type
             </label>
@@ -73,9 +73,9 @@ export function Overview() {
             <div className="col-lg-8">
               <span className="fw-bolder fs-6 text-dark">Package 1</span>
             </div>
-          </div>
+          </div> */}
 
-          <div className="row mb-10">
+          {/* <div className="row mb-10">
             <label className="col-lg-4 fw-bold text-muted">
               Payment Method Added
             </label>
@@ -85,9 +85,9 @@ export function Overview() {
                 {PaymentMethodAdded ? "Yes" : "No"}
               </span>
             </div>
-          </div>
+          </div> */}
 
-          {!PaymentMethodAdded && (
+          {/* {!PaymentMethodAdded && (
             <div className="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
               <KTSVG
                 path="icons/duotune/general/gen044.svg"
@@ -109,7 +109,7 @@ export function Overview() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
 

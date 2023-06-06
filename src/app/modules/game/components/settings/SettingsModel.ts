@@ -21,6 +21,14 @@ export interface IUpdateEmail {
   confirmPassword: string;
 }
 
+export interface IUpdateFoulLimit {
+  newFoulLimit: number;
+  confirmPassword: string;
+}
+export interface IUpdateTimeOutLimit {
+  newTimeOut: number;
+  confirmPassword: string;
+}
 export interface IUpdatePassword {
   currentPassword: string;
   newPassword: string;

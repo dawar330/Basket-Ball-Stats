@@ -45,6 +45,24 @@ export const StartGame = gql`
     }
   }
 `;
+export const UpdateGameFoulLimit = gql`
+  mutation ($gameID: String!, $PassWord: String!, $newLimit: Int!) {
+    UpdateGameFoulLimit(
+      gameID: $gameID
+      PassWord: $PassWord
+      newLimit: $newLimit
+    )
+  }
+`;
+export const UpdateGameTimeOutLimit = gql`
+  mutation ($gameID: String!, $PassWord: String!, $newLimit: Int!) {
+    UpdateGameTimeOutLimit(
+      gameID: $gameID
+      PassWord: $PassWord
+      newLimit: $newLimit
+    )
+  }
+`;
 export const createTeam = gql`
   mutation ($teamName: String!, $teamCity: String!, $Image: String!) {
     createTeam(teamName: $teamName, teamCity: $teamCity, Image: $Image) {
@@ -57,6 +75,27 @@ export const createTeam = gql`
   }
 `;
 
+export const updateTeamInfo = gql`
+  mutation (
+    $teamID: String!
+    $teamName: String!
+    $teamCity: String!
+    $Image: String!
+  ) {
+    updateTeamInfo(
+      teamID: $teamID
+      teamName: $teamName
+      teamCity: $teamCity
+      Image: $Image
+    ) {
+      _id
+      teamName
+      teamCity
+      Image
+      Players
+    }
+  }
+`;
 export const createPlay = gql`
   mutation (
     $PlayerID: String!
@@ -99,7 +138,16 @@ export const createTimeOuts = gql`
     }
   }
 `;
-
+export const RemoveTeamPlayer = gql`
+  mutation ($teamID: String!, $PlayerID: String!) {
+    RemoveTeamPlayer(teamID: $teamID, PlayerID: $PlayerID)
+  }
+`;
+export const addTeamPlayer = gql`
+  mutation ($teamID: String!, $PlayerIDs: [String!]) {
+    addTeamPlayer(teamID: $teamID, PlayerIDs: $PlayerIDs)
+  }
+`;
 export const getGameTimeOuts = gql`
   query ($gameID: String!) {
     getGameTimeOuts(gameID: $gameID) {
@@ -390,10 +438,41 @@ export const getTeams = gql`
     }
   }
 `;
+export const getTeamsInfo = gql`
+  query {
+    getTeamsInfo {
+      _id
+      teamName
+      teamCity
+      Image
+      Coach
+      Players {
+        _id
+        avatar
+        fname
+        lname
+      }
+    }
+  }
+`;
+
+export const getTeam = gql`
+  query ($teamID: String!) {
+    getTeam(teamID: $teamID) {
+      _id
+      teamName
+      teamCity
+      Image
+      Coach
+      Players
+    }
+  }
+`;
 
 export const getTeamPlayers = gql`
   query ($teamID: String!) {
     getTeamPlayers(teamID: $teamID) {
+      avatar
       fname
       lname
     }
@@ -421,6 +500,15 @@ export const getGame = gql`
       FoulLimit
       startTime
       coach
+    }
+  }
+`;
+
+export const getSeasonOverView = gql`
+  query {
+    getSeasonOverView {
+      Win
+      Loss
     }
   }
 `;

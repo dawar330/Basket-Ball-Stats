@@ -13,7 +13,7 @@ import {
 } from "./core/request";
 import { useMutation, useQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
-import {
+import CurrectGame, {
   upsertGame,
   upsertPlayerPlays,
   upsertPlays,
@@ -30,7 +30,6 @@ interface GameRouteParams extends Params {
 const GameHeader: React.FC = () => {
   const dispatch = useDispatch();
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
-  console.log(CurrentGame);
 
   const { id: game_ID } = useParams<GameRouteParams>();
 
@@ -51,19 +50,14 @@ const GameHeader: React.FC = () => {
 
   useQuery(getGameTimeOuts, {
     variables: { gameID: game_ID },
-    onError: () => {
-      debugger;
-    },
+    onError: () => {},
     onCompleted: ({ getGameTimeOuts }) => {
-      debugger;
       dispatch(upsertTimeOuts(getGameTimeOuts));
     },
   });
   useQuery(getQuarterlyGamePlaysByPlayer, {
     variables: { gameID: game_ID },
     onCompleted: ({ getQuarterlyGamePlaysByPlayer }) => {
-      console.log(getQuarterlyGamePlaysByPlayer);
-
       dispatch(upsertQuarterlyPlayerPlays(getQuarterlyGamePlaysByPlayer));
     },
   });
@@ -115,7 +109,7 @@ const GameHeader: React.FC = () => {
             <div className="me-7 mb-4">
               <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
                 <img
-                  src={toAbsoluteUrl("/media/teamlogo/teama.jfif")}
+                  src={toAbsoluteUrl(CurrentGame?.homeTeam.Image)}
                   alt="Metronic"
                 />
                 <div className="position-absolute translate-middle bottom-0 start-100 mb-6 bg-warning rounded-circle border border-4 border-white h-20px w-20px"></div>
@@ -160,7 +154,7 @@ const GameHeader: React.FC = () => {
               <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
                 <div className="position-absolute translate-middle bottom-0  start-0 mb-6 bg-primary rounded-circle border border-4 border-white h-20px w-20px"></div>
                 <img
-                  src={toAbsoluteUrl("/media/teamlogo/teamb.jfif")}
+                  src={toAbsoluteUrl(CurrentGame?.awayTeam.Image)}
                   alt="Metronic"
                 />
               </div>
@@ -199,7 +193,7 @@ const GameHeader: React.FC = () => {
             </div>
           </div>
         </div>
-        {auth.auth?.Role !== "Player" && !GameEnded && (
+        {!GameEnded && (
           <div
             className="flex-column-auto pt-10"
             id="kt_aside_secondary_footer"
@@ -261,18 +255,20 @@ const GameHeader: React.FC = () => {
               </Link>
             </li>
 
-            <li className="nav-item">
-              <Link
-                className={
-                  `nav-link text-active-primary me-6 ` +
-                  (location.pathname === `/game/${game_ID}/teamStats` &&
-                    "active")
-                }
-                to={`/game/${game_ID}/teamStats`}
-              >
-                Team Stats
-              </Link>
-            </li>
+            {CurrentGame.ShowTeamStats && (
+              <li className="nav-item">
+                <Link
+                  className={
+                    `nav-link text-active-primary me-6 ` +
+                    (location.pathname === `/game/${game_ID}/teamStats` &&
+                      "active")
+                  }
+                  to={`/game/${game_ID}/teamStats`}
+                >
+                  Team Stats
+                </Link>
+              </li>
+            )}
 
             {auth.auth?.Role === "Coach" && (
               <li className="nav-item">
@@ -297,9 +293,21 @@ const GameHeader: React.FC = () => {
                 }
                 to={`/game/${game_ID}/playerstats`}
               >
-                {auth.auth?.Role === "Player"
+                {!CurrentGame.ShowTeamStats
                   ? "My Statistics"
                   : "Player Statistics"}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className={
+                  `nav-link text-active-primary me-6 ` +
+                  (location.pathname === `/game/${game_ID}/Settings` &&
+                    "active")
+                }
+                to={`/game/${game_ID}/Settings`}
+              >
+                Game Rules
               </Link>
             </li>
             <li className="nav-item">

@@ -357,7 +357,13 @@ const UpgradePlan: FC = () => {
                 Cancel
               </button>
 
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                onClick={() => {
+                  window.open("https://buy.stripe.com/test_cN2dSpf4Obzu6uA289");
+                }}
+              >
                 Upgrade Plan
               </button>
             </div>
