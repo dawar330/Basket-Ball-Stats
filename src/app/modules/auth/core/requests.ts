@@ -19,6 +19,7 @@ export const getUserByToken = gql`
       lname
       email
       avatar
+      AvailableGames
     }
   }
 `;

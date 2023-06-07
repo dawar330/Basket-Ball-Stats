@@ -4,6 +4,7 @@ export interface AuthModel {
   first_name?: string;
   last_name?: string;
   Role?: string;
+  AvailableGames: Number;
 }
 
 export interface UserAddressModel {
