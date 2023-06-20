@@ -7,16 +7,18 @@ import {
   getGame,
   getGamePlay,
   getGamePlaysByPlayer,
+  getGamePossession,
   getGameTimeOuts,
   getQuarterlyGamePlaysByPlayer,
   getScoringGamePlay,
 } from "./core/request";
 import { useMutation, useQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
-import CurrectGame, {
+import {
   upsertGame,
   upsertPlayerPlays,
   upsertPlays,
+  upsertPossessions,
   upsertQuarterlyPlayerPlays,
   upsertScoringGamePlay,
   upsertTimeOuts,
@@ -53,6 +55,13 @@ const GameHeader: React.FC = () => {
     onError: () => {},
     onCompleted: ({ getGameTimeOuts }) => {
       dispatch(upsertTimeOuts(getGameTimeOuts));
+    },
+  });
+  useQuery(getGamePossession, {
+    variables: { gameID: game_ID },
+    onError: () => {},
+    onCompleted: ({ getGamePossession }) => {
+      dispatch(upsertPossessions(getGamePossession));
     },
   });
   useQuery(getQuarterlyGamePlaysByPlayer, {

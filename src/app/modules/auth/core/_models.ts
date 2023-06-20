@@ -54,4 +54,5 @@ export interface UserModel {
   fname: string;
   lname: string;
   avatar: string;
+  AvailableGames: Number;
 }

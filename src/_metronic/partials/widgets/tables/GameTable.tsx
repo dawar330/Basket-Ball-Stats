@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAuth } from "../../../../app/modules/auth";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 type Props = {
   className: string;
@@ -29,11 +31,34 @@ const GameTable: React.FC<Props> = ({ className }) => {
       length: 7 - (CurrentGame[team]?.TimeOuts?.length || 0),
     })
   );
+  const generatePDF = () => {
+    const report = new jsPDF();
+    const exportTable = document.querySelector(
+      "#exportTable"
+    ) as HTMLElement | null;
+
+    exportTable &&
+      html2canvas(exportTable).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        // Adjust the PDF page size to match the canvas
+        const pdfWidth = report.internal.pageSize.getWidth();
+        const pdfHeight = report.internal.pageSize.getHeight();
+        const aspectRatio = canvas.width / canvas.height;
+        const pdfImgHeight = pdfWidth / aspectRatio;
+
+        // Add the image of the component to the PDF
+        report.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfImgHeight);
+
+        // Save the PDF file
+        report.save("exportedComponent.pdf");
+      });
+  };
   return (
     <>
       {" "}
       <div className="d-flex w-100 justify-content-center my-5"> </div>
-      <div className={`card ${className}`}>
+      <div className={`card ${className}`} id="exportTable">
         {/* begin::Header */}
         <div className="card-header border-0 pt-3">
           <h3 className="card-title align-items-start flex-column">
@@ -41,6 +66,11 @@ const GameTable: React.FC<Props> = ({ className }) => {
               Game Statistics
             </span>
           </h3>
+          <div className=" btn btn-bg-light  btn-color-gray-600 align-self-center">
+            <span className="btn-label" onClick={() => generatePDF()}>
+              Export{" "}
+            </span>
+          </div>
 
           <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
             <label
@@ -481,15 +511,6 @@ const GameTable: React.FC<Props> = ({ className }) => {
                       </td>
                     );
                   })}
-                  {EmptyArray.map(() => {
-                    return (
-                      <td>
-                        <div className="text-end text-muted">
-                          <div className="d-flex justify-content-start flex-column"></div>
-                        </div>
-                      </td>
-                    );
-                  })}{" "}
                 </tr>{" "}
                 <tr>
                   <td>
@@ -532,48 +553,17 @@ const GameTable: React.FC<Props> = ({ className }) => {
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column">
-                        {" "}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
+                  {CurrentGame[team]?.Possessions?.map((Possession: any) => {
+                    return (
+                      <td>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column">
+                            {Possession.Quarter} / {Possession.Time}
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  })}
                 </tr>
               </tbody>
               {/* end::Table body */}

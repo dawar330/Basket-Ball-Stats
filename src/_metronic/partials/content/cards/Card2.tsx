@@ -94,7 +94,7 @@ const Card2: FC<Props> = ({ icon, setSelectedPlayer, title, team }) => {
           </div>
           <div className=" min-w-90px py-3  mb-3">
             <div className="text-center fs-3 text-gray-800 fw-bolder">
-              {playerPlays ? playerPlays?.STEALS : 0}
+              {playerPlays ? playerPlays?.STEAL : 0}
             </div>
             <div className="text-center text-primary fs-7 fw-bold text-primary ">
               STEALS

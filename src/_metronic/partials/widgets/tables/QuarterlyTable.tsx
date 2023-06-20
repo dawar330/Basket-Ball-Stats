@@ -6,10 +6,12 @@ import { KTSVG } from "../../../helpers";
 import { useMutation } from "@apollo/client";
 import {
   createPlay,
+  createPossession,
   createTimeOuts,
 } from "../../../../app/modules/game/core/request";
 import { useAuth } from "../../../../app/modules/auth";
-
+import JsPDF from "jspdf";
+import html2canvas from "html2canvas";
 type Props = {
   className: string;
 };
@@ -17,11 +19,26 @@ type Props = {
 const QuarterlyTable: React.FC<Props> = ({ className }) => {
   const [createPlayF] = useMutation(createPlay);
   const [createTimeOutsF] = useMutation(createTimeOuts);
+  const [createPossessionF] = useMutation(createPossession);
+
   const [TeamCheckBox, setTeamCheckBox] = useState(false);
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
   const [PlayerID, setPlayerID] = useState("");
   const [PlayType, setPlayType] = useState("");
   const [quarter, setquarter] = useState(1);
+  const [GameStarted, setGameStarted] = useState(
+    CurrentGame.startTime ? true : false
+  );
+  const [GameEnded, setGameEnded] = useState(
+    new Date().getTime() -
+      new Date(parseInt(CurrentGame.startTime)).getTime() >=
+      48 * 60 * 1000
+      ? true
+      : false
+  );
+  const [GameActive, setGameActive] = useState(GameStarted && !GameEnded);
+  console.log(GameActive, GameStarted, GameEnded);
+
   const team = !TeamCheckBox ? "homeTeam" : "awayTeam";
   let FG3 = 0;
   let FG2 = 0;
@@ -35,6 +52,8 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   let TO = 0;
   let BLOCK = 0;
   let STEAL = 0;
+  console.log(CurrentGame[team]);
+
   const [EmptyArray, setEmptyArray] = useState(
     Array.from({
       length:
@@ -54,7 +73,6 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   function table(player: any, index: any) {
     return (
       <>
-        {" "}
         <tr>
           <td>
             <div className="d-flex align-items-center">
@@ -230,6 +248,32 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
       </>
     );
   }
+
+  const generatePDF = () => {
+    const report = new JsPDF();
+    const exportTable = document.querySelector(
+      "#exportTable"
+    ) as HTMLElement | null;
+
+    exportTable &&
+      html2canvas(exportTable).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        // Adjust the PDF page size to match the canvas
+        const pdfWidth = report.internal.pageSize.getWidth();
+        const pdfHeight = report.internal.pageSize.getHeight();
+        const aspectRatio = canvas.width / canvas.height;
+        const pdfImgHeight = pdfWidth / aspectRatio;
+
+        // Add the image of the component to the PDF
+        report.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfImgHeight);
+
+        // Save the PDF file
+        report.save("exportedComponent.pdf");
+      });
+  };
+  const [Time, setTime] = useState("04:00");
+
   return (
     <>
       {" "}
@@ -419,6 +463,63 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </div>
         </div>
       </div>
+      <div className="modal fade" tabIndex={-1} id="createPossesion_modal">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Create Possession</h5>
+              <div
+                className="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <KTSVG
+                  path="/media/icons/duotune/arrows/arr061.svg"
+                  className="svg-icon svg-icon-2x"
+                />
+              </div>
+            </div>
+
+            <Formik initialValues={{}} onSubmit={() => {}}>
+              {() => (
+                <Form className="w-100" noValidate>
+                  <div className="modal-body">
+                    <input
+                      style={{
+                        backgroundColor: "primary",
+                        width: "100%",
+                      }}
+                      step="1800"
+                      type="time"
+                      onChange={(e) => {
+                        setTime(e.target.value);
+                      }}
+                      pattern="[0-9]*"
+                      value={Time}
+                    />
+                    <div
+                      className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+                      data-bs-dismiss="modal"
+                      onClick={() => {
+                        createPossessionF({
+                          variables: {
+                            GameID: CurrentGame._id,
+                            TeamID: CurrentGame?.[team]._id,
+                            Time: Time,
+                            Quarter: quarter,
+                          },
+                        });
+                      }}
+                    >
+                      <span className="btn-label">Save</span>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </div>
       <div className="d-flex w-100 justify-content-center my-5"> </div>
       <div className={`card ${className} `}>
         {/* begin::Header */}
@@ -457,7 +558,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </div>
         </div>
       </div>
-      <div className={`card ${className}`}>
+      <div className={`card ${className}`} id="exportTable">
         {/* begin::Header */}
         <div className="card-header border-0 pt-3">
           <h3 className="card-title align-items-start flex-column">
@@ -465,9 +566,14 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
               Quarterly Statistics
             </span>
             <span className="card-label fw-light fs-5 mb-1">
-              Quarter {quarter}
+              Quarter {quarter} {GameActive.toString()}
             </span>
           </h3>
+          <div className=" btn btn-bg-light  btn-color-gray-600 align-self-center">
+            <span className="btn-label" onClick={() => generatePDF()}>
+              Export{" "}
+            </span>
+          </div>
           {CurrentGame.ShowTeamStats && (
             <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
               <label
@@ -811,44 +917,24 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column">
-                        {" "}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="text-end text-muted">
-                      <div className="d-flex justify-content-start flex-column"></div>
-                    </div>
-                  </td>
-                  <td>
+                  {CurrentGame[team]?.Possessions?.filter(
+                    (Possession: any) => Possession.Quarter === quarter
+                  )?.map((Possession: any) => {
+                    return (
+                      <td>
+                        <div className="text-end text-muted">
+                          <div className="d-flex justify-content-start flex-column">
+                            {Possession.Time}
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  })}
+
+                  <td
+                    data-bs-toggle="modal"
+                    data-bs-target="#createPossesion_modal"
+                  >
                     <div className="text-end text-muted">
                       <div className="d-flex justify-content-start flex-column"></div>
                     </div>

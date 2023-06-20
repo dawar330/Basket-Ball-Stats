@@ -18,6 +18,7 @@ export const CurrentGameSlice = createSlice({
       QuarterlyPlayerPlays: [[], [], [], []],
       TotalScore: 0,
       TimeOuts: [],
+      Possessions: [],
     },
     awayTeam: {
       _id: "",
@@ -31,6 +32,7 @@ export const CurrentGameSlice = createSlice({
       QuarterlyPlayerPlays: [[], [], [], []],
       TotalScore: 0,
       TimeOuts: [],
+      Possessions: [],
     },
     TimeOutLimit: 0,
     FoulLimit: 0,
@@ -79,6 +81,10 @@ export const CurrentGameSlice = createSlice({
       state.homeTeam.TimeOuts = action.payload.homeTeam;
       state.awayTeam.TimeOuts = action.payload.awayTeam;
     },
+    upsertPossessions: (state, action) => {
+      state.homeTeam.Possessions = action.payload.homeTeam;
+      state.awayTeam.Possessions = action.payload.awayTeam;
+    },
     upsertToggleTeamStats: (state, action) => {
       state.ShowTeamStats = action.payload;
     },
@@ -99,6 +105,7 @@ export const CurrentGameSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   upsertTimeOuts,
+  upsertPossessions,
   upsertGame,
   upsertPlays,
   upsertScoringGamePlay,

@@ -5,6 +5,8 @@ import { KTSVG } from "../../../helpers";
 import { Dropdown1 } from "../../content/dropdown/Dropdown1";
 import { getCSS, getCSSVariableValue } from "../../../assets/ts/_utils";
 import { useThemeMode } from "../../layout/theme-mode/ThemeModeProvider";
+import { useQuery } from "@apollo/client";
+import { getRecentGamesStats } from "../../../../app/modules/game/core/request";
 
 type Props = {
   className: string;
@@ -13,6 +15,13 @@ type Props = {
 const ChartsWidget1: React.FC<Props> = ({ className }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const { mode } = useThemeMode();
+  const [data, setdata] = React.useState<any>();
+  useQuery(getRecentGamesStats, {
+    onCompleted: ({ getRecentGamesStats }) => {
+      setdata(getRecentGamesStats);
+    },
+  });
+  console.log(data?.map((row: any) => row));
 
   useEffect(() => {
     const chart = refreshChart();
@@ -22,7 +31,7 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
         chart.destroy();
       }
     };
-  }, [chartRef, mode]);
+  }, [chartRef, mode, data]);
 
   const refreshChart = () => {
     if (!chartRef.current) {
@@ -31,7 +40,10 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
 
     const height = parseInt(getCSS(chartRef.current, "height"));
 
-    const chart = new ApexCharts(chartRef.current, getChartOptions(height));
+    const chart = new ApexCharts(
+      chartRef.current,
+      getChartOptions(height, data)
+    );
     if (chart) {
       chart.render();
     }
@@ -42,7 +54,14 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
   return (
     <div className={`card ${className}`}>
       {/* begin::Header */}
-      <div className="card-header border-0 pt-5">
+      <div
+        className="card-header border-0  pt-5 cursor-pointer"
+        role="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#kt_account_profile_stats"
+        aria-expanded="true"
+        aria-controls="kt_account_profile_stats"
+      >
         {/* begin::Title */}
         <h3 className="card-title align-items-start flex-column">
           <span className="card-label fw-bold fs-3 mb-1">
@@ -54,7 +73,7 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
       {/* end::Header */}
 
       {/* begin::Body */}
-      <div className="card-body">
+      <div className=" card-body collapse show" id="kt_account_profile_stats">
         {/* begin::Chart */}
         <div
           ref={chartRef}
@@ -70,7 +89,7 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
 
 export { ChartsWidget1 };
 
-function getChartOptions(height: number): ApexOptions {
+function getChartOptions(height: number, data: any): ApexOptions {
   const labelColor = getCSSVariableValue("--bs-gray-500");
   const borderColor = getCSSVariableValue("--bs-gray-200");
   const baseColor = getCSSVariableValue("--bs-primary");
@@ -84,27 +103,27 @@ function getChartOptions(height: number): ApexOptions {
     series: [
       {
         name: "Points",
-        data: [44, 55, 57, 56, 61, 58],
+        data: data && data?.map((row: any) => row.Points),
       },
       {
         name: "Rebounds",
-        data: [76, 85, 101, 98, 87, 105],
+        data: data && data?.map((row: any) => row.ReboundDEF + row.ReboundOFF),
       },
       {
         name: "Assists",
-        data: [76, 85, 101, 98, 87, 105],
+        data: data && data?.map((row: any) => row.Assist),
       },
       {
         name: "Steals",
-        data: [44, 55, 57, 56, 61, 58],
+        data: data && data?.map((row: any) => row.Steal),
       },
       {
         name: "Blocks",
-        data: [76, 85, 101, 98, 87, 105],
+        data: data && data?.map((row: any) => row.BLOCK),
       },
       {
         name: "Turnovers",
-        data: [76, 85, 101, 98, 87, 105],
+        data: data && data?.map((row: any) => row.TournOvers),
       },
     ],
     chart: {
@@ -134,14 +153,7 @@ function getChartOptions(height: number): ApexOptions {
       colors: ["transparent"],
     },
     xaxis: {
-      categories: [
-        "Asd VS Bas",
-        "Asd VS Bas",
-        "Asd VS Bas",
-        "Asd VS Bas",
-        "Asd VS Bas",
-        "Asd VS Bas",
-      ],
+      categories: data && data?.map((row: any) => row._id),
       axisBorder: {
         show: false,
       },

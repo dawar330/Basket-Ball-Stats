@@ -5,14 +5,31 @@ import { Link } from "react-router-dom";
 import { Dropdown1 } from "../../../_metronic/partials";
 import { useLocation } from "react-router";
 import { useAuth } from "../auth";
-import { useQuery } from "@apollo/client";
-import { getSeasonOverView } from "../game/core/request";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { getGamePlayerPlays, getSeasonOverView } from "../game/core/request";
 
 const AccountHeader: React.FC = () => {
   const location = useLocation();
   const [Victories, setVictories] = useState(0);
   const [Defeats, setDefeats] = useState(0);
   const { currentUser, auth } = useAuth();
+  const [PlayerStats, setPlayerStats] = useState<{
+    FG3: number;
+    FGA3: number;
+    FG2: number;
+    FGA2: number;
+    FT: number;
+    FTA: number;
+    PTS: number;
+    OFF: number;
+    DEF: number;
+    TOT: number;
+    PF: number;
+    A: number;
+    TO: number;
+    BLOCK: number;
+    STEAL: number;
+  }>();
 
   useQuery(getSeasonOverView, {
     onCompleted: ({ getSeasonOverView }) => {
@@ -20,6 +37,15 @@ const AccountHeader: React.FC = () => {
       setDefeats(getSeasonOverView.Loss);
     },
   });
+
+  const [getGamePlayerPlaysF] = useLazyQuery(getGamePlayerPlays, {
+    onCompleted: ({ getGamePlayerPlays }) => {
+      setPlayerStats(getGamePlayerPlays);
+    },
+  });
+  React.useEffect(() => {
+    if (auth?.Role === "Player") getGamePlayerPlaysF();
+  }, []);
 
   return (
     <div className="card mb-5 mb-xl-10">
@@ -127,7 +153,7 @@ const AccountHeader: React.FC = () => {
                 </div>
               </div> */}
             </div>
-            {auth?.Role === "Coach" && (
+            {auth?.Role === "Coach" ? (
               <>
                 {" "}
                 <div className="text-gray-800 fs-3 fw-bold mb-2">
@@ -167,11 +193,12 @@ const AccountHeader: React.FC = () => {
                       <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
                         <div className="d-flex align-items-center">
                           <div className="fs-2 fw-bolder">
-                            {(
-                              (Victories / (Victories + Defeats)) *
-                              100
-                            ).toFixed(2)}
-                            %
+                            {Victories === 0 && Defeats === 0
+                              ? "--"
+                              : (
+                                  (Victories / (Victories + Defeats)) *
+                                  100
+                                ).toFixed(2) + "%"}
                           </div>
                         </div>
 
@@ -183,6 +210,65 @@ const AccountHeader: React.FC = () => {
                   </div>
                 </div>
               </>
+            ) : (
+              <div className="d-flex flex-wrap mb-5 justify-content-between">
+                <div className=" min-w-90px py-3  mb-3">
+                  <div className="text-center fs-3 text-gray-800 fw-bolder">
+                    27
+                  </div>
+                  <div className=" text-center fs-7 fw-bold text-primary ">
+                    MINUTES
+                  </div>
+                </div>
+                <div className=" min-w-90px py-3  mb-3">
+                  <div className="text-center fs-3 text-gray-800 fw-bolder">
+                    {" "}
+                    {PlayerStats?.PTS.toString()}
+                  </div>
+                  <div className="text-center text-primary fs-7 fw-bold text-primary ">
+                    Points
+                  </div>
+                </div>
+                <div className=" min-w-90px py-3  mb-3">
+                  <div className="text-center fs-3 text-gray-800 fw-bolder">
+                    {PlayerStats
+                      ? PlayerStats?.FG2 !== 0 || PlayerStats?.FG3 !== 0
+                        ? ((PlayerStats?.FG2 + PlayerStats.FG3) /
+                            (PlayerStats?.FGA2 + PlayerStats.FGA3)) *
+                          100
+                        : 0
+                      : 0}
+                  </div>
+                  <div className="text-center text-primary fs-7 fw-bold text-primary ">
+                    FG%
+                  </div>
+                </div>
+                <div className=" min-w-90px py-3  mb-3">
+                  <div className="text-center fs-3 text-gray-800 fw-bolder">
+                    {PlayerStats &&
+                      (PlayerStats?.OFF + PlayerStats?.DEF).toString()}
+                  </div>
+                  <div className="text-center text-primary fs-7 fw-bold text-primary ">
+                    REBOUNDS
+                  </div>
+                </div>
+                <div className=" min-w-90px py-3  mb-3">
+                  <div className="text-center fs-3 text-gray-800 fw-bolder">
+                    {PlayerStats?.A.toString()}
+                  </div>
+                  <div className="text-center text-primary  fs-7 fw-bold text-primary ">
+                    ASSISTS
+                  </div>
+                </div>
+                <div className=" min-w-90px py-3  mb-3">
+                  <div className="text-center fs-3 text-gray-800 fw-bolder">
+                    {PlayerStats?.STEAL.toString()}
+                  </div>
+                  <div className="text-center text-primary fs-7 fw-bold text-primary ">
+                    STEALS
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </div>

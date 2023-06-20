@@ -138,6 +138,24 @@ export const createTimeOuts = gql`
     }
   }
 `;
+export const createPossession = gql`
+  mutation (
+    $TeamID: String!
+    $Time: String!
+    $GameID: String!
+    $Quarter: Int!
+  ) {
+    createPossession(
+      TeamID: $TeamID
+      Time: $Time
+
+      GameID: $GameID
+      Quarter: $Quarter
+    ) {
+      Time
+    }
+  }
+`;
 export const RemoveTeamPlayer = gql`
   mutation ($teamID: String!, $PlayerID: String!) {
     RemoveTeamPlayer(teamID: $teamID, PlayerID: $PlayerID)
@@ -163,6 +181,24 @@ export const getGameTimeOuts = gql`
         Time
         Team
         Secs
+        Time
+      }
+    }
+  }
+`;
+export const getGamePossession = gql`
+  query ($gameID: String!) {
+    getGamePossession(gameID: $gameID) {
+      homeTeam {
+        Quarter
+        Time
+        Team
+        Time
+      }
+      awayTeam {
+        Quarter
+        Time
+        Team
         Time
       }
     }
@@ -509,6 +545,42 @@ export const getSeasonOverView = gql`
     getSeasonOverView {
       Win
       Loss
+    }
+  }
+`;
+export const getGamePlayerPlays = gql`
+  query {
+    getGamePlayerPlays {
+      FG3
+      FGA3
+      FG2
+      FGA2
+      FT
+      FTA
+      PTS
+      OFF
+      DEF
+      TOT
+      PF
+      A
+      TO
+      BLOCK
+      STEAL
+    }
+  }
+`;
+
+export const getRecentGamesStats = gql`
+  query {
+    getRecentGamesStats {
+      _id
+      Points
+      TournOvers
+      Steal
+      ReboundOFF
+      ReboundDEF
+      BLOCK
+      Assist
     }
   }
 `;

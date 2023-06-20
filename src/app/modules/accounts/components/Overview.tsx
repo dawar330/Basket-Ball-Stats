@@ -5,26 +5,40 @@ import { KTSVG } from "../../../../_metronic/helpers";
 import { ChartsWidget1 } from "../../../../_metronic/partials/widgets";
 import { useAuth } from "../../auth";
 
+import { loadStripe } from "@stripe/stripe-js";
 export function Overview() {
   const [PaymentMethodAdded, setPaymentMethodAdded] = useState(false);
   const { currentUser } = useAuth();
+
+  const stripePromise = loadStripe("your-publishable-key");
+
+  // const fetchSessionData = async (sessionId: String) => {
+  //   const stripe = await stripePromise;
+  //   const session = await stripe?.checkout?.sessions.retrieve(sessionId);
+  //   console.log(session);
+  //   // Process the session data here
+  // };
+
   return (
     <>
-      <div className="card mb-5 mb-xl-10" id="kt_profile_details_view">
-        <div className="card-header cursor-pointer">
+      <div className="card mb-5 mb-xl-10">
+        <div
+          className="card-header border-0 cursor-pointer"
+          role="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#kt_account_profile_detailss"
+          aria-expanded="true"
+          aria-controls="kt_account_profile_detailss"
+        >
           <div className="card-title m-0">
             <h3 className="fw-bolder m-0">Profile Details</h3>
           </div>
-
-          <Link
-            to="/account/settings"
-            className="btn btn-primary align-self-center"
-          >
-            Edit Profile
-          </Link>
         </div>
 
-        <div className="card-body p-9">
+        <div
+          id="kt_account_profile_detailss"
+          className=" card-body p-9 collapse show"
+        >
           <div className="row mb-7">
             <label className="col-lg-4 fw-bold text-muted">Full Name</label>
 
@@ -49,7 +63,29 @@ export function Overview() {
               <span className="fw-bolder fs-6 me-2">{currentUser?.email}</span>
             </div>
           </div>
+          <div className="row mb-7">
+            <label className="col-lg-4 fw-bold text-muted">
+              Available Game
+              <i
+                className="fas fa-exclamation-circle ms-1 fs-7"
+                data-bs-toggle="tooltip"
+                title="Phone number must be active"
+              ></i>
+            </label>
 
+            <div className="col-lg-8 d-flex align-items-center">
+              <span className="fw-bolder fs-6 me-2">
+                {currentUser?.AvailableGames.toString()}
+              </span>
+            </div>
+          </div>
+          <Link
+            to="/account/settings"
+            className="btn btn-primary align-self-center"
+            style={{ zIndex: 100 }}
+          >
+            Edit Profile
+          </Link>
           {/* <div className="row mb-7">
             <label className="col-lg-4 fw-bold text-muted">
               Country

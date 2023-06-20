@@ -27,6 +27,19 @@ import {
 import { Provider } from "react-redux";
 import store from "./Redux/store";
 const auth = getAuth();
+function handleStorageChange(event: any) {
+  client = new ApolloClient({
+    uri: "http://localhost:4000/graphql",
+    cache: new InMemoryCache({
+      dataIdFromObject: () => false,
+    }),
+    headers: {
+      bearer: auth ? auth?.api_token : "",
+    },
+    defaultOptions: defaultOptions,
+  });
+}
+window.addEventListener("storage", handleStorageChange);
 const defaultOptions: DefaultOptions = {
   watchQuery: {
     fetchPolicy: "no-cache",
@@ -37,7 +50,7 @@ const defaultOptions: DefaultOptions = {
     errorPolicy: "all",
   },
 };
-const client = new ApolloClient({
+let client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache({
     dataIdFromObject: () => false,

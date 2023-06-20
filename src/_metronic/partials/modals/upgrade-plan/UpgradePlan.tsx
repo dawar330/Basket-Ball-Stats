@@ -361,7 +361,7 @@ const UpgradePlan: FC = () => {
                 type="submit"
                 className="btn btn-primary"
                 onClick={() => {
-                  window.open("https://buy.stripe.com/test_cN2dSpf4Obzu6uA289");
+                  window.open("https://buy.stripe.com/test_4gw4hPf4O6fa6uA28a");
                 }}
               >
                 Upgrade Plan
