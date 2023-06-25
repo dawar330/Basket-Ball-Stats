@@ -62,12 +62,12 @@ let client = new ApolloClient({
 });
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
- * basic Metronic mocks and returns it.
+ * basic CourtIntel mocks and returns it.
  *
  * @see https://github.com/ctimmerm/axios-mock-adapter
  */
 /**
- * Inject Metronic interceptors for axios.
+ * Inject CourtIntel interceptors for axios.
  *
  * @see https://github.com/axios/axios#interceptors
  */

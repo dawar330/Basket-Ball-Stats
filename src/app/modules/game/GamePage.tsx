@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes, Outlet, useParams } from "react-router-dom";
 import { PageLink, PageTitle } from "../../../_metronic/layout/core";
 import { GameTable } from "../../../_metronic/partials/widgets/tables/GameTable";
@@ -9,12 +9,28 @@ import { GameLeaders } from "./GameLeaders";
 import { TeamStats } from "./TeamStats";
 import { CommentsPage } from "./CommentsPage";
 import { QuarterlyTable } from "../../../_metronic/partials/widgets/tables/QuarterlyTable";
-import { Settings } from "./components/settings/Settings";
 import { GameRules } from "./components/settings/cards/GameRules";
-
+import {
+  getGamePlay,
+  getGamePlaysByPlayer,
+  getGamePossession,
+  getGameTimeOuts,
+  getQuarterlyGamePlaysByPlayer,
+  getScoringGamePlay,
+} from "./core/request";
+import { useQuery } from "@apollo/client";
+import {
+  upsertPlayerPlays,
+  upsertPlays,
+  upsertPossessions,
+  upsertQuarterlyPlayerPlays,
+  upsertScoringGamePlay,
+  upsertTimeOuts,
+} from "../../../Redux/CurrectGame";
+import { useDispatch } from "react-redux";
 const GamePage: React.FC = () => {
-  const [Home, setHome] = useState("");
-  const [Away, setAway] = useState("");
+  const dispatch = useDispatch();
+  const [loading, setloading] = useState(true);
   const { id: game_ID } = useParams();
   const gameBreadCrumbs: Array<PageLink> = [
     {
@@ -24,13 +40,73 @@ const GamePage: React.FC = () => {
       isActive: false,
     },
   ];
+  useEffect(() => {
+    setloading(true);
+  }, [game_ID]);
+
+  useQuery(getGamePlaysByPlayer, {
+    variables: { gameID: game_ID },
+    onCompleted: ({ getGamePlaysByPlayer }) => {
+      dispatch(upsertPlayerPlays(getGamePlaysByPlayer));
+      setloading(false);
+    },
+  });
+
+  useQuery(getGameTimeOuts, {
+    variables: { gameID: game_ID },
+    onError: () => {},
+    onCompleted: ({ getGameTimeOuts }) => {
+      dispatch(upsertTimeOuts(getGameTimeOuts));
+    },
+  });
+  useQuery(getGamePossession, {
+    variables: { gameID: game_ID },
+    onError: () => {},
+    onCompleted: ({ getGamePossession }) => {
+      dispatch(upsertPossessions(getGamePossession));
+    },
+  });
+  useQuery(getQuarterlyGamePlaysByPlayer, {
+    variables: { gameID: game_ID },
+    onCompleted: ({ getQuarterlyGamePlaysByPlayer }) => {
+      dispatch(upsertQuarterlyPlayerPlays(getQuarterlyGamePlaysByPlayer));
+    },
+  });
+
+  useQuery(getGamePlay, {
+    variables: {
+      gameID: game_ID,
+    },
+
+    onCompleted: ({ getGamePlay }) => {
+      dispatch(upsertPlays(getGamePlay));
+    },
+  });
+  useQuery(getScoringGamePlay, {
+    variables: {
+      gameID: game_ID,
+    },
+    onCompleted: ({ getScoringGamePlay }) => {
+      dispatch(upsertScoringGamePlay(getScoringGamePlay));
+    },
+  });
   return (
     <Routes>
       <Route
         element={
           <>
             <GameHeader />
-            <Outlet />
+            {loading ? (
+              <>
+                <div className="page-loader">
+                  <span className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </span>
+                </div>{" "}
+              </>
+            ) : (
+              <Outlet />
+            )}
           </>
         }
       >

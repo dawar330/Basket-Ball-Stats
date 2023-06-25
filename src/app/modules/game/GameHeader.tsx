@@ -2,27 +2,10 @@
 import React, { useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
-import {
-  StartGame,
-  getGame,
-  getGamePlay,
-  getGamePlaysByPlayer,
-  getGamePossession,
-  getGameTimeOuts,
-  getQuarterlyGamePlaysByPlayer,
-  getScoringGamePlay,
-} from "./core/request";
+import { StartGame, getGame } from "./core/request";
 import { useMutation, useQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  upsertGame,
-  upsertPlayerPlays,
-  upsertPlays,
-  upsertPossessions,
-  upsertQuarterlyPlayerPlays,
-  upsertScoringGamePlay,
-  upsertTimeOuts,
-} from "../../../Redux/CurrectGame";
+import { upsertGame } from "../../../Redux/CurrectGame";
 import { useAuth } from "../auth";
 
 interface GameRouteParams extends Params {
@@ -43,51 +26,7 @@ const GameHeader: React.FC = () => {
       setGameActive(true);
     },
   });
-  useQuery(getGamePlaysByPlayer, {
-    variables: { gameID: game_ID },
-    onCompleted: ({ getGamePlaysByPlayer }) => {
-      dispatch(upsertPlayerPlays(getGamePlaysByPlayer));
-    },
-  });
 
-  useQuery(getGameTimeOuts, {
-    variables: { gameID: game_ID },
-    onError: () => {},
-    onCompleted: ({ getGameTimeOuts }) => {
-      dispatch(upsertTimeOuts(getGameTimeOuts));
-    },
-  });
-  useQuery(getGamePossession, {
-    variables: { gameID: game_ID },
-    onError: () => {},
-    onCompleted: ({ getGamePossession }) => {
-      dispatch(upsertPossessions(getGamePossession));
-    },
-  });
-  useQuery(getQuarterlyGamePlaysByPlayer, {
-    variables: { gameID: game_ID },
-    onCompleted: ({ getQuarterlyGamePlaysByPlayer }) => {
-      dispatch(upsertQuarterlyPlayerPlays(getQuarterlyGamePlaysByPlayer));
-    },
-  });
-
-  useQuery(getGamePlay, {
-    variables: {
-      gameID: game_ID,
-    },
-
-    onCompleted: ({ getGamePlay }) => {
-      dispatch(upsertPlays(getGamePlay));
-    },
-  });
-  useQuery(getScoringGamePlay, {
-    variables: {
-      gameID: game_ID,
-    },
-    onCompleted: ({ getScoringGamePlay }) => {
-      dispatch(upsertScoringGamePlay(getScoringGamePlay));
-    },
-  });
   useQuery(getGame, {
     variables: {
       gameID: game_ID,
@@ -119,7 +58,7 @@ const GameHeader: React.FC = () => {
               <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
                 <img
                   src={toAbsoluteUrl(CurrentGame?.homeTeam.Image)}
-                  alt="Metronic"
+                  alt="CourtIntel"
                 />
                 <div className="position-absolute translate-middle bottom-0 start-100 mb-6 bg-warning rounded-circle border border-4 border-white h-20px w-20px"></div>
               </div>
@@ -164,7 +103,7 @@ const GameHeader: React.FC = () => {
                 <div className="position-absolute translate-middle bottom-0  start-0 mb-6 bg-primary rounded-circle border border-4 border-white h-20px w-20px"></div>
                 <img
                   src={toAbsoluteUrl(CurrentGame?.awayTeam.Image)}
-                  alt="Metronic"
+                  alt="CourtIntel"
                 />
               </div>
             </div>

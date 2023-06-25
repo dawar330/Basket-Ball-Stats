@@ -18,13 +18,6 @@ interface TeamParams extends Params {
   id: string;
 }
 const TablesWidget10: React.FC<Props> = ({ className }) => {
-  const dispatch = useDispatch();
-
-  useQuery(getTeamsInfo, {
-    onCompleted: ({ getTeamsInfo }) => {
-      dispatch(upsertTeams(getTeamsInfo));
-    },
-  });
   const { id: TeamID } = useParams<TeamParams>();
   const [RemoveTeamPlayerF] = useMutation(RemoveTeamPlayer);
   const { teams } = useSelector((state: any) => state.Teams);

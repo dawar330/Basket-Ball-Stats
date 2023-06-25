@@ -59,7 +59,7 @@ const AccountHeader: React.FC = () => {
                     ? currentUser?.avatar
                     : toAbsoluteUrl("/media/avatars/blank.png")
                 }
-                alt="Metronic"
+                alt="CourtIntel"
               />
             </div>
           </div>
