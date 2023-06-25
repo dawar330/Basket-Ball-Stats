@@ -278,7 +278,7 @@ export const getGamePlaysByPlayer = gql`
 `;
 
 export const getQuarterlyGamePlaysByPlayer = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getQuarterlyGamePlaysByPlayer(gameID: $gameID) {
       homeTeam {
         Quarter1 {
@@ -441,7 +441,7 @@ export const getQuarterlyGamePlaysByPlayer = gql`
 `;
 
 export const getGames = gql`
-  query {
+  query @live {
     getGames {
       _id
       homeTeam {
@@ -475,7 +475,7 @@ export const getTeams = gql`
   }
 `;
 export const getTeamsInfo = gql`
-  query {
+  query @live {
     getTeamsInfo {
       _id
       teamName

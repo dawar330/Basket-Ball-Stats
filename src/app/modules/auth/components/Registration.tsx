@@ -9,7 +9,6 @@ import { PasswordMeterComponent } from "../../../../_metronic/assets/ts/componen
 import { useAuth } from "../core/Auth";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { getUserByToken, register } from "../core/requests";
-import { getTeam, getTeams } from "../../game/core/request";
 
 const initialValues = {
   firstname: "",
@@ -17,8 +16,7 @@ const initialValues = {
   email: "",
   password: "",
   changepassword: "",
-  Role: "Player",
-  Team: "",
+  Role: "Coach",
   acceptTerms: false,
 };
 
@@ -39,7 +37,6 @@ const registrationSchema = Yup.object().shape({
   Role: Yup.string()
     .oneOf(["Player", "Coach"])
     .required("Last name is required"),
-  Team: Yup.string(),
 
   password: Yup.string()
     .min(3, "Minimum 3 symbols")
@@ -88,17 +85,9 @@ export function Registration() {
               email: values.email,
               password: values.password,
               Role: values.Role,
-              Team: values.Team,
             },
           },
         });
-        // const { data: auth } = await register(
-        //   values.email,
-        //   values.firstname,
-        //   values.lastname,
-        //   values.password,
-        //   values.changepassword
-        // );
       } catch (error) {
         console.error(error);
         saveAuth(undefined);
@@ -112,22 +101,7 @@ export function Registration() {
   useEffect(() => {
     PasswordMeterComponent.bootstrap();
   }, []);
-  const [teams, setteams] = useState<
-    [
-      {
-        _id: string;
-        teamName: string;
-        teamCity: string;
-        Image: string;
-        Players: [string];
-      }
-    ]
-  >();
-  useQuery(getTeams, {
-    onCompleted: ({ getTeams }) => {
-      setteams(getTeams);
-    },
-  });
+
   return (
     <form
       className="form w-100 fv-plugins-bootstrap5 fv-plugins-framework"
@@ -357,39 +331,39 @@ export function Registration() {
       </div>
       {/* end::Form group */}
       <div className="fv-row mb-5">
-        <label className="form-label fw-bolder text-dark fs-6">Role</label>
+        <label className="form-label fw-bolder text-dark fs-6">
+          Sign Up As
+        </label>
         <div className="d-flex my-2 mb-5">
-          <select
-            className="form-select form-select-white form-select-sm w-100"
-            defaultValue="Player"
-            {...formik.getFieldProps("Role")}
-          >
-            <option value="">Select a role</option>
-            <option value="Player">Player</option>
-            <option value="Coach">Coach</option>
-          </select>
-        </div>
-      </div>
-      {formik.values.Role === "Player" && (
-        <div className="fv-row mb-5">
-          <label className="form-label fw-bolder text-dark fs-6">Team</label>
-          <div className="d-flex my-2 mb-5">
-            <select
-              className="form-select form-select-white form-select-sm w-100"
-              {...formik.getFieldProps("Team")}
-            >
-              <option></option>
-              {teams?.map((team) => {
-                return (
-                  <option key={team._id} value={team._id}>
-                    {team.teamName}
-                  </option>
-                );
-              })}
-            </select>
+          <div className="form-check me-2">
+            <input
+              type="radio"
+              id="playerRadio"
+              className="form-check-input"
+              value="Player"
+              name="Role"
+              onChange={formik.handleChange}
+            />
+            <label htmlFor="playerRadio" className="form-check-label">
+              Player
+            </label>
+          </div>
+          <div className="form-check">
+            <input
+              type="radio"
+              id="coachRadio"
+              className="form-check-input"
+              value="Coach"
+              name="Role"
+              onChange={formik.handleChange}
+              // {...formik.getFieldProps("Role")}
+            />
+            <label htmlFor="coachRadio" className="form-check-label">
+              Coach
+            </label>
           </div>
         </div>
-      )}
+      </div>
 
       {/* begin::Form group */}
       <div className="fv-row mb-10">

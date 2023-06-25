@@ -31,6 +31,7 @@ const GamesTab = () => {
   const auth = getAuth();
   useQuery(getGames, {
     onCompleted: ({ getGames }) => {
+      debugger;
       setgames(getGames);
     },
   });

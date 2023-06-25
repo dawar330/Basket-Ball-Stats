@@ -249,49 +249,29 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
       </>
     );
   }
-  const generatePDF = async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
 
-    // Emulate landscape orientation
-    await page.emulateMediaFeatures([
-      { name: "orientation", value: "landscape" },
-    ]);
+  const generatePDF = () => {
+    const report = new JsPDF();
+    const exportTable = document.querySelector(
+      "#exportTable"
+    ) as HTMLElement | null;
 
-    // Navigate to the HTML page
-    await page.goto("your_html_page.html", { waitUntil: "networkidle0" });
+    exportTable &&
+      html2canvas(exportTable).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
 
-    // Wait for the table element to be rendered
-    await page.waitForSelector("#exportTable");
+        // Adjust the PDF page size to match the canvas
+        const pdfWidth = report.internal.pageSize.getWidth();
+        const pdfHeight = report.internal.pageSize.getHeight();
+        const aspectRatio = canvas.width / canvas.height;
+        const pdfImgHeight = pdfWidth / aspectRatio;
 
-    // Get the dimensions of the table
-    const tableDimensions = await page.evaluate(() => {
-      const exportTable = document.querySelector("#exportTable");
-      if (!exportTable) return null; // Handle case when table element is not found
-      const { width, height } = exportTable.getBoundingClientRect();
-      return { width, height };
-    });
+        // Add the image of the component to the PDF
+        report.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfImgHeight);
 
-    // Check if table dimensions are available
-    if (tableDimensions) {
-      // Set the PDF page dimensions based on the table size
-      const pdfOptions = {
-        width: tableDimensions.width + "px",
-        height: tableDimensions.height + "px",
-        landscape: true,
-      };
-
-      // Generate the PDF
-      await page.pdf({
-        path: "exportedComponent.pdf",
-        printBackground: true,
-        ...pdfOptions,
+        // Save the PDF file
+        report.save("exportedComponent.pdf");
       });
-    } else {
-      console.error("Table element not found.");
-    }
-
-    await browser.close();
   };
 
   const [Time, setTime] = useState("04:00");
