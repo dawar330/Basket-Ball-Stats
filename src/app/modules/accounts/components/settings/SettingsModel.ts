@@ -63,7 +63,7 @@ export interface IDeactivateAccount {
   confirm: boolean;
 }
 export const teamDetailsInitValues: ITeamDetails = {
-  avatar: "/media/avatars/Blank.png",
+  avatar: "",
   teamName: "",
   homeTown: "string",
 };

@@ -26,7 +26,7 @@ const CreateTeamStepper = () => {
     );
   };
 
-  const [selectedImage, setselectedImage] = useState<string | null>();
+  const [selectedImage, setselectedImage] = useState("");
   const [createTeamF] = useMutation(createTeam, {
     onCompleted: ({ createTeam }) => {
       navigate("/account/teams");

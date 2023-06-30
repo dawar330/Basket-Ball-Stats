@@ -2,7 +2,7 @@ import React, { Dispatch, FC, SetStateAction, useRef } from "react";
 import { toAbsoluteUrl } from "../../../../../../_metronic/helpers";
 
 interface Props {
-  setselectedImage: Dispatch<SetStateAction<string | null | undefined>>;
+  setselectedImage: Dispatch<SetStateAction<string>>;
   selectedImage: string | null | undefined;
 }
 const CreateTeamStep2: FC<Props> = ({ setselectedImage, selectedImage }) => {

@@ -7,16 +7,10 @@ import {
 
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import {
-  getTeam,
-  getTeamsInfo,
-  updateTeamInfo,
-} from "../../../game/core/request";
+import { getTeam, updateTeamInfo } from "../../../game/core/request";
 import { useMutation, useQuery } from "@apollo/client";
 import { Params, useParams } from "react-router-dom";
 import { TablesWidget10 } from "../../../../../_metronic/partials/widgets";
-import { upsertTeams } from "../../../../../Redux/Team";
-import { useDispatch } from "react-redux";
 
 const teamDetailsSchema = Yup.object().shape({
   teamName: Yup.string().required().label("Team Name"),
@@ -72,6 +66,8 @@ const TeamDetails: React.FC = () => {
       });
     },
   });
+  console.log(data.avatar);
+
   const [loading, setLoading] = useState(false);
   const formik = useFormik<ITeamDetails>({
     initialValues,
@@ -128,16 +124,22 @@ const TeamDetails: React.FC = () => {
                     className="image-input image-input-outline"
                     data-kt-image-input="true"
                     style={{
-                      backgroundImage: selectedImage
-                        ? `url(${data.avatar})`
-                        : `url(${toAbsoluteUrl("/media/avatars/blank.png")}`,
+                      backgroundImage:
+                        selectedImage !== ""
+                          ? `url(${data.avatar})`
+                          : `url(${toAbsoluteUrl("/media/avatars/blank.png")}`,
                     }}
                     onClick={handleClick}
                   >
                     <div
                       className="image-input-wrapper w-125px h-125px"
                       style={{
-                        backgroundImage: `url(${toAbsoluteUrl(data.avatar)})`,
+                        backgroundImage:
+                          selectedImage !== ""
+                            ? `url(${data.avatar})`
+                            : `url(${toAbsoluteUrl(
+                                "/media/avatars/blank.png"
+                              )}`,
                       }}
                     ></div>
                     <input

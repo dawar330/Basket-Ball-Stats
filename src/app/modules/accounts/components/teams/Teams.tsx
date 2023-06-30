@@ -41,7 +41,6 @@ export function Teams() {
       </div>
       <div className="row g-6 g-xl-9">
         {teams &&
-          teams.length &&
           teams?.map((team: any, index: any) => (
             <div className="col-md-6 col-xxl-4" key={index}>
               <TeamCard
