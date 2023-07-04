@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
-import { StartGame, getGame } from "./core/request";
+import { StartGame, EndGame, getGame } from "./core/request";
 import { useMutation, useQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
 import { upsertGame } from "../../../Redux/CurrectGame";
@@ -15,16 +15,20 @@ interface GameRouteParams extends Params {
 const GameHeader: React.FC = () => {
   const dispatch = useDispatch();
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
+  console.log(CurrentGame);
 
   const { id: game_ID } = useParams<GameRouteParams>();
 
-  const [GameActive, setGameActive] = useState(false);
-  const [GameEnded, setGameEnded] = useState(false);
+  let GameEnded = CurrentGame.endTime ? true : false;
+  let GameStarted = CurrentGame.startTime ? true : false;
+  let GameActive = GameStarted && !GameEnded;
+
   let [startGame] = useMutation(StartGame, {
     variables: { gameID: game_ID },
-    onCompleted: () => {
-      setGameActive(true);
-    },
+  });
+
+  let [endGame] = useMutation(EndGame, {
+    variables: { gameID: game_ID },
   });
 
   useQuery(getGame, {
@@ -34,14 +38,6 @@ const GameHeader: React.FC = () => {
 
     onCompleted: async ({ getGame }) => {
       dispatch(upsertGame(getGame));
-      setGameActive(getGame.startTime ? true : false);
-      setGameEnded(
-        new Date().getTime() -
-          new Date(parseInt(getGame.startTime)).getTime() >=
-          48 * 60 * 1000
-          ? true
-          : false
-      );
     },
   });
 
@@ -57,10 +53,19 @@ const GameHeader: React.FC = () => {
             <div className="me-7 mb-4">
               <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
                 <img
-                  src={toAbsoluteUrl(CurrentGame?.homeTeam.Image)}
+                  src={
+                    CurrentGame?.homeTeam.Image !== ""
+                      ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
+                      : toAbsoluteUrl("/media/avatars/blank.png")
+                  }
                   alt="CourtIntel"
                 />
-                <div className="position-absolute translate-middle bottom-0 start-100 mb-6 bg-warning rounded-circle border border-4 border-white h-20px w-20px"></div>
+                <div
+                  className={`position-absolute translate-middle bottom-0 start-100 mb-6  rounded-circle border border-4 border-white h-20px w-20px`}
+                  style={{
+                    backgroundColor: CurrentGame?.homeTeam.Color,
+                  }}
+                ></div>
               </div>
             </div>
 
@@ -89,7 +94,7 @@ const GameHeader: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="fw-bold fs-6 text-gray-400">Points</div>
+                      <div className="fw-bold fs-6 text-dark">Points</div>
                     </div>
                   </div>
                 </div>
@@ -97,49 +102,60 @@ const GameHeader: React.FC = () => {
             </div>
           </div>
 
-          <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
-            <div className=" order-sm-1 order-md-2 mb-4">
-              <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                <div className="position-absolute translate-middle bottom-0  start-0 mb-6 bg-primary rounded-circle border border-4 border-white h-20px w-20px"></div>
-                <img
-                  src={toAbsoluteUrl(CurrentGame?.awayTeam.Image)}
-                  alt="CourtIntel"
-                />
-              </div>
-            </div>
-
-            <div className="flex-grow-1 mr-7">
-              <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                <div className="d-flex flex-column">
-                  <div className="d-flex align-items-center mb-2">
-                    <a
-                      href="#"
-                      className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
-                    >
-                      {CurrentGame?.awayTeam.teamName}
-                    </a>
-                  </div>
+          {CurrentGame.awayTeam._id !== "" && (
+            <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
+              <div className=" order-sm-1 order-md-2 mb-4">
+                <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                  <div
+                    className="position-absolute translate-middle bottom-0  start-0 mb-6  rounded-circle border border-4 border-white h-20px w-20px"
+                    style={{
+                      backgroundColor: CurrentGame?.awayTeam.Color,
+                    }}
+                  ></div>
+                  <img
+                    src={
+                      CurrentGame?.homeTeam.Image !== ""
+                        ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
+                        : toAbsoluteUrl("/media/avatars/blank.png")
+                    }
+                    alt="CourtIntel"
+                  />
                 </div>
               </div>
 
-              <div className="d-flex flex-wrap flex-stack mt-12">
-                <div className="d-flex flex-column flex-grow-1 pe-8">
-                  <div className="d-flex flex-wrap">
-                    <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4  mb-3">
-                      <div className="d-flex align-items-center">
-                        <div className="fs-2 fw-bolder">
-                          {" "}
-                          {CurrentGame?.awayTeam?.TotalScore}
+              <div className="flex-grow-1 mr-7">
+                <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                  <div className="d-flex flex-column">
+                    <div className="d-flex align-items-center mb-2">
+                      <a
+                        href="#"
+                        className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                      >
+                        {CurrentGame?.awayTeam.teamName}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="d-flex flex-wrap flex-stack mt-12">
+                  <div className="d-flex flex-column flex-grow-1 pe-8">
+                    <div className="d-flex flex-wrap">
+                      <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4  mb-3">
+                        <div className="d-flex align-items-center">
+                          <div className="fs-2 fw-bolder">
+                            {" "}
+                            {CurrentGame?.awayTeam?.TotalScore}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="fw-bold fs-6 text-gray-400">Points</div>
+                        <div className="fw-bold fs-6 text-dark">Points</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
         {!GameEnded && (
           <div
@@ -150,7 +166,7 @@ const GameHeader: React.FC = () => {
               className="btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100 mb-2"
               onClick={() => {
                 if (!GameActive) startGame();
-                else setGameEnded(true);
+                else endGame();
               }}
             >
               <KTSVG
@@ -169,7 +185,7 @@ const GameHeader: React.FC = () => {
             <li className="nav-item">
               <Link
                 className={
-                  `nav-link text-active-primary me-6 ` +
+                  `nav-link text-active-primary text-dark me-6 ` +
                   (location.pathname === `/game/${game_ID}/overview` &&
                     "active")
                 }
@@ -181,7 +197,7 @@ const GameHeader: React.FC = () => {
             <li className="nav-item">
               <Link
                 className={
-                  `nav-link text-active-primary me-6 ` +
+                  `nav-link text-active-primary text-dark me-6 ` +
                   (location.pathname === `/game/${game_ID}/gamesheet` &&
                     "active")
                 }
@@ -193,7 +209,7 @@ const GameHeader: React.FC = () => {
             <li className="nav-item">
               <Link
                 className={
-                  `nav-link text-active-primary me-6 ` +
+                  `nav-link text-active-primary text-dark me-6 ` +
                   (location.pathname === `/game/${game_ID}/quarterlysheet` &&
                     "active")
                 }
@@ -207,7 +223,7 @@ const GameHeader: React.FC = () => {
               <li className="nav-item">
                 <Link
                   className={
-                    `nav-link text-active-primary me-6 ` +
+                    `nav-link text-active-primary text-dark me-6 ` +
                     (location.pathname === `/game/${game_ID}/teamStats` &&
                       "active")
                   }
@@ -222,7 +238,7 @@ const GameHeader: React.FC = () => {
               <li className="nav-item">
                 <Link
                   className={
-                    `nav-link text-active-primary me-6 ` +
+                    `nav-link text-active-primary text-dark me-6 ` +
                     (location.pathname === `/game/${game_ID}/leaders` &&
                       "active")
                   }
@@ -235,7 +251,7 @@ const GameHeader: React.FC = () => {
             <li className="nav-item">
               <Link
                 className={
-                  `nav-link text-active-primary me-6 ` +
+                  `nav-link text-active-primary text-dark me-6 ` +
                   (location.pathname === `/game/${game_ID}/playerstats` &&
                     "active")
                 }
@@ -249,7 +265,7 @@ const GameHeader: React.FC = () => {
             <li className="nav-item">
               <Link
                 className={
-                  `nav-link text-active-primary me-6 ` +
+                  `nav-link text-active-primary text-dark me-6 ` +
                   (location.pathname === `/game/${game_ID}/Settings` &&
                     "active")
                 }
@@ -261,7 +277,7 @@ const GameHeader: React.FC = () => {
             <li className="nav-item">
               <Link
                 className={
-                  `nav-link text-active-primary me-6 ` +
+                  `nav-link text-active-primary text-dark me-6 ` +
                   (location.pathname === `/game/${game_ID}/comments` &&
                     "active")
                 }

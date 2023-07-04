@@ -7,10 +7,16 @@ import {
 
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { getTeam, updateTeamInfo } from "../../../game/core/request";
+import {
+  getTeam,
+  getTeamsInfo,
+  updateTeamInfo,
+} from "../../../game/core/request";
 import { useMutation, useQuery } from "@apollo/client";
 import { Params, useParams } from "react-router-dom";
 import { TablesWidget10 } from "../../../../../_metronic/partials/widgets";
+import { upsertCurrentTeam, upsertTeams } from "../../../../../Redux/Team";
+import { useDispatch } from "react-redux";
 
 const teamDetailsSchema = Yup.object().shape({
   teamName: Yup.string().required().label("Team Name"),
@@ -23,6 +29,7 @@ interface TeamParams extends Params {
 }
 
 const TeamDetails: React.FC = () => {
+  const { id: TeamID } = useParams<TeamParams>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -41,8 +48,6 @@ const TeamDetails: React.FC = () => {
     }
   };
 
-  const { id: TeamID } = useParams<TeamParams>();
-
   const [data, setData] = useState<ITeamDetails>(initialValues);
   const [selectedImage, setselectedImage] = useState<string | null>(
     data ? data?.avatar : ""
@@ -52,7 +57,7 @@ const TeamDetails: React.FC = () => {
     setData(updatedData);
   };
   const [updateTeamInfoF] = useMutation(updateTeamInfo);
-
+  const dispatch = useDispatch();
   useQuery(getTeam, {
     variables: {
       teamID: TeamID,
@@ -64,9 +69,9 @@ const TeamDetails: React.FC = () => {
         homeTown: getTeam.teamCity,
         avatar: getTeam.Image,
       });
+      dispatch(upsertCurrentTeam(getTeam));
     },
   });
-  console.log(data.avatar);
 
   const [loading, setLoading] = useState(false);
   const formik = useFormik<ITeamDetails>({

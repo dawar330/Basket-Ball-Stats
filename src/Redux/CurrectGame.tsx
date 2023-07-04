@@ -1,58 +1,73 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+const initialState = {
+  _id: "",
+  ShowTeamStats: true,
+  homeTeam: {
+    _id: "",
+    teamName: "",
+    teamCity: "",
+    Image: "",
+    Players: [],
+    QuarterScore: [],
+    ScoringGamePlays: [],
+    PlayerPlays: [],
+    QuarterlyPlayerPlays: [[], [], [], []],
+    TotalScore: 0,
+    TimeOuts: [],
+    Possessions: [],
+    Color: "",
+  },
+  awayTeam: {
+    _id: "",
+    teamName: "",
+    teamCity: "",
+    Image: "",
+    Players: [],
+    QuarterScore: [],
+    ScoringGamePlays: [],
+    PlayerPlays: [],
+    QuarterlyPlayerPlays: [[], [], [], []],
+    TotalScore: 0,
+    TimeOuts: [],
+    Possessions: [],
+    Color: "",
+  },
+  TimeOutLimit: 0,
+  FoulLimit: 0,
+  startTime: "",
+  endTime: "",
+  ScheduledDate: "",
+  TimeDistribution: 0,
+  TotalTime: 0,
+};
 export const CurrentGameSlice = createSlice({
   name: "CurrentGame",
 
-  initialState: {
-    _id: "",
-    ShowTeamStats: true,
-    homeTeam: {
-      _id: "",
-      teamName: "",
-      teamCity: "",
-      Image: "",
-      Players: [],
-      QuarterScore: [],
-      ScoringGamePlays: [],
-      PlayerPlays: [],
-      QuarterlyPlayerPlays: [[], [], [], []],
-      TotalScore: 0,
-      TimeOuts: [],
-      Possessions: [],
-    },
-    awayTeam: {
-      _id: "",
-      teamName: "",
-      teamCity: "",
-      Image: "",
-      Players: [],
-      QuarterScore: [],
-      ScoringGamePlays: [],
-      PlayerPlays: [],
-      QuarterlyPlayerPlays: [[], [], [], []],
-      TotalScore: 0,
-      TimeOuts: [],
-      Possessions: [],
-    },
-    TimeOutLimit: 0,
-    FoulLimit: 0,
-    startTime: "",
-  },
+  initialState: initialState,
   reducers: {
     upsertGame: (state, action) => {
       state._id = action.payload._id;
+      state.ScheduledDate = action.payload.ScheduledDate;
+      state.TimeDistribution = action.payload.TimeDistribution;
+      state.TotalTime = action.payload.TotalTime;
+
       state.homeTeam._id = action.payload.homeTeam._id;
       state.homeTeam.teamName = action.payload.homeTeam.teamName;
       state.homeTeam.teamCity = action.payload.homeTeam.teamCity;
       state.homeTeam.Image = action.payload.homeTeam.Image;
       state.homeTeam.Players = action.payload.homeTeam.Players;
-
-      state.awayTeam._id = action.payload.awayTeam._id;
-      state.awayTeam.teamName = action.payload.awayTeam.teamName;
-      state.awayTeam.teamCity = action.payload.awayTeam.teamCity;
-      state.awayTeam.Image = action.payload.awayTeam.Image;
-      state.awayTeam.Players = action.payload.awayTeam.Players;
+      state.homeTeam.Color = action.payload.homeTeam.Color;
+      state.awayTeam._id = "";
+      if (action.payload.awayTeam) {
+        state.awayTeam._id = action.payload.awayTeam._id;
+        state.awayTeam.teamName = action.payload.awayTeam.teamName;
+        state.awayTeam.teamCity = action.payload.awayTeam.teamCity;
+        state.awayTeam.Image = action.payload.awayTeam.Image;
+        state.awayTeam.Players = action.payload.awayTeam.Players;
+        state.awayTeam.Color = action.payload.awayTeam.Color;
+      }
       state.startTime = action.payload.startTime;
+      state.endTime = action.payload.endTime;
 
       state.TimeOutLimit = action.payload.TimeOutLimit;
       state.FoulLimit = action.payload.FoulLimit;
@@ -93,11 +108,16 @@ export const CurrentGameSlice = createSlice({
       state.homeTeam.QuarterlyPlayerPlays[1] = action.payload.homeTeam.Quarter2;
       state.homeTeam.QuarterlyPlayerPlays[2] = action.payload.homeTeam.Quarter3;
       state.homeTeam.QuarterlyPlayerPlays[3] = action.payload.homeTeam.Quarter4;
-
-      state.awayTeam.QuarterlyPlayerPlays[0] = action.payload.awayTeam.Quarter1;
-      state.awayTeam.QuarterlyPlayerPlays[1] = action.payload.awayTeam.Quarter2;
-      state.awayTeam.QuarterlyPlayerPlays[2] = action.payload.awayTeam.Quarter3;
-      state.awayTeam.QuarterlyPlayerPlays[3] = action.payload.awayTeam.Quarter4;
+      if (action.payload.awayTeam) {
+        state.awayTeam.QuarterlyPlayerPlays[0] =
+          action.payload.awayTeam.Quarter1;
+        state.awayTeam.QuarterlyPlayerPlays[1] =
+          action.payload.awayTeam.Quarter2;
+        state.awayTeam.QuarterlyPlayerPlays[2] =
+          action.payload.awayTeam.Quarter3;
+        state.awayTeam.QuarterlyPlayerPlays[3] =
+          action.payload.awayTeam.Quarter4;
+      }
     },
   },
 });

@@ -4,7 +4,9 @@ import React, { FC, useState } from "react";
 import { Field, ErrorMessage, useField } from "formik";
 import { getTeams } from "../core/request";
 import { useQuery } from "@apollo/client";
+import DatePicker from "react-datepicker";
 
+import "react-datepicker/dist/react-datepicker.css";
 const CreateGameStep1: FC = () => {
   const [teams, setteams] = useState<
     [
@@ -26,6 +28,9 @@ const CreateGameStep1: FC = () => {
   const [selectedAway, setselectedAway] = useState<string>();
   const [homeTeam] = useField("homeTeam");
   const [awayTeam] = useField("awayTeam");
+  const [vs] = useField("vs");
+  const [ScheduledDate] = useField("ScheduledDate");
+
   return (
     <div className="w-100">
       {" "}
@@ -66,31 +71,52 @@ const CreateGameStep1: FC = () => {
               <ErrorMessage name="homeTeam" />
             </div>
           </div>
+          {vs.value && (
+            <div className="fv-row mb-10">
+              <label className="form-label required">Away Team</label>
 
+              <Field
+                as="select"
+                name="awayTeam"
+                className="form-select form-select-lg form-select-solid"
+                onChange={(e: any) => {
+                  setselectedAway(e.target.value);
+                  awayTeam.onChange(e);
+                }}
+              >
+                <option></option>
+                {teams?.map((team) => {
+                  if (team._id !== selectedHome)
+                    return (
+                      <option key={team._id} value={team._id}>
+                        {team.teamName}
+                      </option>
+                    );
+                })}
+              </Field>
+              <div className="text-danger mt-2">
+                <ErrorMessage name="awayTeam" />
+              </div>
+            </div>
+          )}
           <div className="fv-row mb-10">
             <label className="form-label required">Away Team</label>
 
-            <Field
-              as="select"
-              name="awayTeam"
-              className="form-select form-select-lg form-select-solid"
-              onChange={(e: any) => {
-                setselectedAway(e.target.value);
-                awayTeam.onChange(e);
-              }}
-            >
-              <option></option>
-              {teams?.map((team) => {
-                if (team._id !== selectedHome)
-                  return (
-                    <option key={team._id} value={team._id}>
-                      {team.teamName}
-                    </option>
-                  );
-              })}
+            <Field name="ScheduledDate">
+              {({ field, form }: any) => (
+                <DatePicker
+                  {...field}
+                  onChange={(date) => {
+                    form.setFieldValue(field.name, date);
+                  }}
+                  selected={ScheduledDate.value}
+                  // onChange={handleChange}
+                />
+              )}
             </Field>
+
             <div className="text-danger mt-2">
-              <ErrorMessage name="awayTeam" />
+              <ErrorMessage name="ScheduledDate" component="div" />
             </div>
           </div>
         </div>

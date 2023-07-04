@@ -2,6 +2,7 @@
 import React, { FC } from "react";
 
 import { Field, ErrorMessage } from "formik";
+import { GithubPicker } from "react-color";
 
 const CreateTeamStep1: FC = () => {
   return (
@@ -48,6 +49,26 @@ const CreateTeamStep1: FC = () => {
             </Field>
             <div className="text-danger mt-2">
               <ErrorMessage name="homeTown" />
+            </div>
+          </div>
+          <div className="fv-row mb-10">
+            <label className="form-label required"> Color</label>
+            <Field name="color">
+              {({ field, form }: any) => (
+                <div>
+                  <GithubPicker
+                    color={field.value}
+                    onChange={(color) => {
+                      form.setFieldValue(field.name, color.hex);
+                      console.log(field);
+                    }}
+                  />
+                </div>
+              )}
+            </Field>
+
+            <div className="text-danger mt-2">
+              <ErrorMessage name="color" />
             </div>
           </div>
         </div>

@@ -69,12 +69,12 @@ const TablesWidget3: React.FC<Props> = ({ className, label }) => {
                         <td>
                           <a
                             href="#"
-                            className="text-muted text-hover-primary mb-1 fs-6"
+                            className="text-dark text-hover-primary mb-1 fs-6"
                           >
                             {Play.Player}
                           </a>
                         </td>
-                        <td className="text-end text-muted fw-semibold">
+                        <td className="text-end text-dark fw-semibold">
                           {stat}
                         </td>
                       </tr>

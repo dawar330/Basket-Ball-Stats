@@ -1,14 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../helpers";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Params, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  RemoveTeamPlayer,
-  getTeamsInfo,
-} from "../../../../app/modules/game/core/request";
-import { upsertTeams } from "../../../../Redux/Team";
+import { useMutation } from "@apollo/client";
+import { RemoveTeamPlayer } from "../../../../app/modules/game/core/request";
 import { InviteUsers } from "../../modals/invite-users/InviteUsers";
 
 type Props = {
@@ -20,7 +16,8 @@ interface TeamParams extends Params {
 const TablesWidget10: React.FC<Props> = ({ className }) => {
   const { id: TeamID } = useParams<TeamParams>();
   const [RemoveTeamPlayerF] = useMutation(RemoveTeamPlayer);
-  const { teams } = useSelector((state: any) => state.Teams);
+  const { currentTeam } = useSelector((state: any) => state.Teams);
+  console.log(currentTeam);
 
   return (
     <div className={`card ${className}`}>
@@ -69,57 +66,55 @@ const TablesWidget10: React.FC<Props> = ({ className }) => {
             {/* end::Table head */}
             {/* begin::Table body */}
             <tbody>
-              {teams
-                ?.filter((Team: any) => Team._id === TeamID)[0]
-                ?.Players?.map((Player: any, index: any) => {
-                  return (
-                    <tr key={index}>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <div className="symbol symbol-45px me-5">
-                            <img
-                              src={
-                                Player.avatar === ""
-                                  ? toAbsoluteUrl("/media/avatars/blank.png")
-                                  : Player.avatar
-                              }
-                              alt=""
-                            />
-                          </div>
-                          <div className="d-flex justify-content-start flex-column">
-                            <a
-                              href="#"
-                              className="text-dark fw-bold text-hover-primary fs-6"
-                            >
-                              {Player.fname + " " + Player.lname}
-                            </a>
-                          </div>
+              {currentTeam?.Players?.map((Player: any, index: any) => {
+                return (
+                  <tr key={index}>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <div className="symbol symbol-45px me-5">
+                          <img
+                            src={
+                              Player.avatar === ""
+                                ? toAbsoluteUrl("/media/avatars/blank.png")
+                                : Player.avatar
+                            }
+                            alt=""
+                          />
                         </div>
-                      </td>
-
-                      <td>
-                        <div className="d-flex justify-content-end flex-shrink-0">
+                        <div className="d-flex justify-content-start flex-column">
                           <a
-                            className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
-                            onClick={() => {
-                              RemoveTeamPlayerF({
-                                variables: {
-                                  teamID: TeamID,
-                                  PlayerID: Player._id,
-                                },
-                              });
-                            }}
+                            href="#"
+                            className="text-dark fw-bold text-hover-primary fs-6"
                           >
-                            <KTSVG
-                              path="/media/icons/duotune/general/gen027.svg"
-                              className="svg-icon-3"
-                            />
+                            {Player.fname + " " + Player.lname}
                           </a>
                         </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                      </div>
+                    </td>
+
+                    <td>
+                      <div className="d-flex justify-content-end flex-shrink-0">
+                        <a
+                          className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                          onClick={() => {
+                            RemoveTeamPlayerF({
+                              variables: {
+                                teamID: TeamID,
+                                PlayerID: Player._id,
+                              },
+                            });
+                          }}
+                        >
+                          <KTSVG
+                            path="/media/icons/duotune/general/gen027.svg"
+                            className="svg-icon-3"
+                          />
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
             {/* end::Table body */}
           </table>

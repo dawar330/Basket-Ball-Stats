@@ -60,31 +60,33 @@ const PlayerStats: React.FC<Props> = ({ className }) => {
                     : "Players Statistics"}
                 </span>
               </h3>
-              <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-                <label
-                  className={`form-check-label fs-3  me-4 ${
-                    !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
-                  }`}
-                >
-                  {CurrentGame?.homeTeam.teamName}
-                </label>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  name="notifications"
-                  onChange={(e) => {
-                    setTeamCheckBox(e.target.checked);
-                  }}
-                  defaultChecked={false}
-                />
-                <label
-                  className={`form-check-label fs-3  ms-4 ${
-                    TeamCheckBox ? "fw-bold text-primary" : " text-muted"
-                  }`}
-                >
-                  {CurrentGame?.awayTeam.teamName}
-                </label>
-              </div>
+              {CurrentGame.awayTeam._id !== "" && (
+                <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
+                  <label
+                    className={`form-check-label fs-3  me-4 ${
+                      !TeamCheckBox ? "fw-bold text-primary" : " text-muted"
+                    }`}
+                  >
+                    {CurrentGame?.homeTeam.teamName}
+                  </label>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="notifications"
+                    onChange={(e) => {
+                      setTeamCheckBox(e.target.checked);
+                    }}
+                    defaultChecked={false}
+                  />
+                  <label
+                    className={`form-check-label fs-3  ms-4 ${
+                      TeamCheckBox ? "fw-bold text-primary" : " text-muted"
+                    }`}
+                  >
+                    {CurrentGame?.awayTeam.teamName}
+                  </label>
+                </div>
+              )}
             </div>
             {/* end::Header */}
 

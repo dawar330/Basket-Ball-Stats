@@ -29,7 +29,7 @@ const CreateTeamStepper = () => {
   const [selectedImage, setselectedImage] = useState("");
   const [createTeamF] = useMutation(createTeam, {
     onCompleted: ({ createTeam }) => {
-      navigate("/account/teams");
+      navigate("/account/teams/editTeam/" + createTeam._id);
     },
   });
 
@@ -55,6 +55,7 @@ const CreateTeamStepper = () => {
         variables: {
           teamName: values.teamName,
           teamCity: values.homeTown,
+          Color: values.color,
           Image: selectedImage,
         },
       });

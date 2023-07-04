@@ -8,24 +8,33 @@ import {
   createPlayerSchemas,
   inits,
 } from "./CreatePlayerWizardHelper";
-import { useNavigate } from "react-router-dom";
+import { Params, useNavigate, useParams } from "react-router-dom";
 import { CreatePlayerStep1 } from "./steps/CreatePlayerStep1";
 import { CreatePlayerStep2 } from "./steps/CreatePlayerStep2";
 import { CreatePlayerCompleted } from "./steps/CreatePlayerCompleted";
 import { CreatePlayerStep3 } from "./steps/CreatePlayerStep3";
 import { log } from "console";
+import { useMutation } from "@apollo/client";
+import { registerNewPlayer } from "../../../auth/core/requests";
 
-const CreatePlayerStepper = () => {
+interface TeamParams extends Params {
+  id: string;
+}
+
+const CreatePlayerStepper = ({ setCreateNewPlayer }: any) => {
+  const { id: TeamID } = useParams<TeamParams>();
   const stepperRef = useRef<HTMLDivElement | null>(null);
   const stepper = useRef<StepperComponent | null>(null);
   const [currentSchema, setCurrentSchema] = useState(createPlayerSchemas[0]);
   const [initValues] = useState<ICreatePlayer>(inits);
+  const [selectedImage, setselectedImage] = useState("");
   const navigate = useNavigate();
   const loadStepper = () => {
     stepper.current = StepperComponent.createInsance(
       stepperRef.current as HTMLDivElement
     );
   };
+  const [registerNewPlayerF] = useMutation(registerNewPlayer);
 
   const prevStep = () => {
     if (!stepper.current) {
@@ -38,7 +47,6 @@ const CreatePlayerStepper = () => {
   };
 
   const submitStep = (values: ICreatePlayer, actions: FormikValues) => {
-    console.log(stepper);
     if (!stepper.current) {
       return;
     }
@@ -46,8 +54,16 @@ const CreatePlayerStepper = () => {
     if (stepper.current.currentStepIndex !== stepper.current.totatStepsNumber) {
       stepper.current.goNext();
     } else {
-      navigate("/account/teams");
-      // actions.resetForm();
+      registerNewPlayerF({
+        variables: {
+          avatar: selectedImage,
+          Team: TeamID,
+          ...values,
+        },
+        onCompleted: () => {
+          setCreateNewPlayer(false);
+        },
+      });
     }
 
     setCurrentSchema(createPlayerSchemas[stepper.current.currentStepIndex - 1]);
@@ -89,7 +105,7 @@ const CreatePlayerStepper = () => {
                   <h3 className="stepper-title">Player Details</h3>
 
                   <div className="stepper-desc fw-semibold">
-                    Setup Your Team Details
+                    Setup Your Player Details
                   </div>
                 </div>
                 {/* end::Label*/}
@@ -143,9 +159,9 @@ const CreatePlayerStepper = () => {
 
                 {/* begin::Label*/}
                 <div className="stepper-label">
-                  <h3 className="stepper-title">Player Team Info</h3>
+                  <h3 className="stepper-title">Player AAU Info</h3>
                   <div className="stepper-desc fw-semibold">
-                    Setup Your Player Team Info
+                    Setup Your AAU Info
                   </div>
                 </div>
                 {/* end::Label*/}
@@ -204,7 +220,10 @@ const CreatePlayerStepper = () => {
               </div>
 
               <div data-kt-stepper-element="content">
-                <CreatePlayerStep2 />
+                <CreatePlayerStep2
+                  setselectedImage={setselectedImage}
+                  selectedImage={selectedImage}
+                />
               </div>
               <div data-kt-stepper-element="content">
                 <CreatePlayerStep3 />
@@ -230,7 +249,16 @@ const CreatePlayerStepper = () => {
                 </div>
 
                 <div>
-                  <button type="submit" className="btn btn-lg btn-primary me-3">
+                  <button
+                    type="submit"
+                    className="btn btn-lg btn-primary me-3"
+                    data-bs-dismiss={
+                      stepper?.current?.currentStepIndex ===
+                      stepper?.current?.totatStepsNumber!
+                        ? "modal"
+                        : ""
+                    }
+                  >
                     <span className="indicator-label">
                       {stepper.current?.currentStepIndex !==
                         stepper.current?.totatStepsNumber! - 1 && "Continue"}

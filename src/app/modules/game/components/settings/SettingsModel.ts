@@ -25,6 +25,14 @@ export interface IUpdateFoulLimit {
   newFoulLimit: number;
   confirmPassword: string;
 }
+export interface IUpdateTotalTime {
+  newTotalTime: number;
+  confirmPassword: string;
+}
+export interface IUpdateTimeDistribution {
+  newTimeDistribution: number;
+  confirmPassword: string;
+}
 export interface IUpdateTimeOutLimit {
   newTimeOut: number;
   confirmPassword: string;

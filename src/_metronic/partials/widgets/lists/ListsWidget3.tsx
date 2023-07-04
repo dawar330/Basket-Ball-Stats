@@ -93,9 +93,12 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
 
                 {/* begin::Bullet */}
                 <span
-                  className={`bullet bullet-vertical h-40px ${
-                    isHome ? "bg-primary" : "bg-warning"
-                  } me-5`}
+                  className={`bullet bullet-vertical h-40px  me-5`}
+                  style={{
+                    backgroundColor: isHome
+                      ? CurrentGame.homeTeam.Color
+                      : CurrentGame.awayTeam.Color,
+                  }}
                 ></span>
                 {/* end::Bullet */}
 
@@ -118,13 +121,19 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
                   <div className="d-flex mb-2 justify-content-around">
                     <span
                       className="badge badge-warning fw-bold me-2 "
-                      style={{ fontSize: "1rem" }}
+                      style={{
+                        fontSize: "1rem",
+                        backgroundColor: CurrentGame.homeTeam.Color,
+                      }}
                     >
                       {CurrentGame.homeTeam.teamName.slice(0, 3).toUpperCase()}
                     </span>
                     <span
                       className="badge badge-primary fw-bold "
-                      style={{ fontSize: "1rem" }}
+                      style={{
+                        fontSize: "1rem",
+                        backgroundColor: CurrentGame.awayTeam.Color,
+                      }}
                     >
                       {CurrentGame.awayTeam.teamName.slice(0, 3).toUpperCase()}
                     </span>

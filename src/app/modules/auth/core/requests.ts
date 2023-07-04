@@ -71,3 +71,36 @@ export const UpdatePass = gql`
     UpdatePass(newPass: $newPass, PassWord: $PassWord)
   }
 `;
+export const registerNewPlayer = gql`
+  mutation registerNewPlayer(
+    $avatar: String!
+    $Team: String!
+    $PlayerName: String!
+    $PlayingLevel: String!
+    $Height: Int!
+    $Weight: Int!
+    $WingSpan: Int!
+    $Vertical: Int!
+    $CGPA: Int!
+    $AAU: Boolean!
+    $AAUTeamName: String
+    $AAUAgeLevel: String
+    $AAUState: String
+  ) {
+    registerNewPlayer(
+      avatar: $avatar
+      Team: $Team
+      PlayerName: $PlayerName
+      PlayingLevel: $PlayingLevel
+      Height: $Height
+      Weight: $Weight
+      WingSpan: $WingSpan
+      Vertical: $Vertical
+      CGPA: $CGPA
+      AAU: $AAU
+      AAUTeamName: $AAUTeamName
+      AAUAgeLevel: $AAUAgeLevel
+      AAUState: $AAUState
+    )
+  }
+`;

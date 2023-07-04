@@ -7,11 +7,12 @@ import {
   ICreateGame,
   createGameSchemas,
   inits,
-} from "./CreateTeamWizardHelper";
+} from "./CreateGameWizardHelper";
 import { useNavigate } from "react-router-dom";
 import { CreateGameCompleted } from "./steps/CreateGameCompleted";
 import { createGame } from "./core/request";
 import { useMutation } from "@apollo/client";
+import { CreateGameStepInital } from "./steps/CreateGameStepInital";
 
 const CreateGameStepper = () => {
   const stepperRef = useRef<HTMLDivElement | null>(null);
@@ -44,10 +45,15 @@ const CreateGameStepper = () => {
       stepper.current.goNext();
     } else {
       await createGameF({
-        variables: { CreateGameInput: { ...values } },
+        variables: {
+          CreateGameInput: { ...values },
+        },
+        onCompleted: ({ createGame }) => {
+          navigate(`/game/${createGame._id}/overview`);
+        },
       });
       //TODO NAVIGATE TO GAME
-      navigate("/account/teams");
+
       // actions.resetForm();
     }
 
@@ -87,6 +93,34 @@ const CreateGameStepper = () => {
 
                 {/* begin::Label*/}
                 <div className="stepper-label">
+                  <h3 className="stepper-title">Game Details</h3>
+
+                  <div className="stepper-desc fw-semibold">
+                    Setup Your Game Details
+                  </div>
+                </div>
+                {/* end::Label*/}
+              </div>
+              {/* end::Wrapper*/}
+
+              {/* begin::Line*/}
+              <div className="stepper-line h-40px"></div>
+              {/* end::Line*/}
+            </div>
+            {/* end::Step 1*/}
+            {/* begin::Step 1*/}
+            <div className="stepper-item " data-kt-stepper-element="nav">
+              {/* begin::Wrapper*/}
+              <div className="stepper-wrapper">
+                {/* begin::Icon*/}
+                <div className="stepper-icon w-40px h-40px">
+                  <i className="stepper-check fas fa-check"></i>
+                  <span className="stepper-number">2</span>
+                </div>
+                {/* end::Icon*/}
+
+                {/* begin::Label*/}
+                <div className="stepper-label">
                   <h3 className="stepper-title">Team Details</h3>
 
                   <div className="stepper-desc fw-semibold">
@@ -110,7 +144,7 @@ const CreateGameStepper = () => {
                 {/* begin::Icon*/}
                 <div className="stepper-icon w-40px h-40px">
                   <i className="stepper-check fas fa-check"></i>
-                  <span className="stepper-number">2</span>
+                  <span className="stepper-number">3</span>
                 </div>
                 {/* end::Icon*/}
 
@@ -146,6 +180,9 @@ const CreateGameStepper = () => {
               id="kt_create_account_form"
             >
               <div className="current" data-kt-stepper-element="content">
+                <CreateGameStepInital />
+              </div>
+              <div data-kt-stepper-element="content">
                 <CreateGameStep1 />
               </div>
 

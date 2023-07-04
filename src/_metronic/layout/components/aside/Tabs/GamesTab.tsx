@@ -4,37 +4,20 @@ import { getGames } from "../../../../../app/modules/game/core/request";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import { getAuth } from "../../../../../app/modules/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { upsertGames } from "../../../../../Redux/Games";
 
 const GamesTab = () => {
-  const [games, setgames] = useState<
-    [
-      {
-        image: string;
-        _id: string;
-        homeTeam: {
-          _id: string;
-          teamName: string;
-          teamCity: string;
-          Image: string;
-          Players: [string];
-        };
-        awayTeam: {
-          _id: string;
-          teamName: string;
-          teamCity: string;
-          Image: string;
-          Players: [string];
-        };
-      }
-    ]
-  >();
-  const auth = getAuth();
+  const dispatch = useDispatch();
   useQuery(getGames, {
     onCompleted: ({ getGames }) => {
       debugger;
-      setgames(getGames);
+      dispatch(upsertGames(getGames));
     },
   });
+  const { Games } = useSelector((state: any) => state.Games);
+  console.log(Games);
+
   return (
     <div className="m-0">
       {/*begin::Projects*/}
@@ -45,11 +28,13 @@ const GamesTab = () => {
 
         {/*begin::Items*/}
         <div className="mb-10 ">
-          {games?.length ? (
-            games?.map((p, index) => (
+          {Games?.map((Game: any, index: any) => {
+            let date = new Date(parseInt(Game.ScheduledDate)).toDateString();
+
+            return (
               <Link
                 key={index}
-                to={`game/${p._id}/overview`}
+                to={`game/${Game._id}/overview`}
                 className="custom-list d-flex align-items-center px-5 py-4 border-bottom "
               >
                 {/*begin::Symbol*/}
@@ -65,28 +50,19 @@ const GamesTab = () => {
                 <div className="d-flex flex-column flex-grow-1">
                   {/*begin::Title*/}
                   <h5 className="custom-list-title fw-bold text-gray-800 mb-1">
-                    {p.homeTeam.teamName}
+                    {Game.homeTeam.teamName}{" "}
+                    {Game.awayTeam && "VS " + Game.awayTeam.teamName}
                   </h5>
                   {/*end::Title*/}
 
                   {/*begin::Link*/}
-                  <span className="text-gray-400 fw-bold">
-                    VS {p.awayTeam.teamName}
-                  </span>
+                  <span className="text-gray-400 fw-bold">{date}</span>
                   {/*end::Link*/}
                 </div>
                 {/*begin::Description*/}
               </Link>
-            ))
-          ) : (
-            <div className="d-flex flex-column flex-grow-1">
-              {/*begin::Title*/}
-              <h5 className="custom-list-title fw-bold text-gray-800 mb-1">
-                No Games Yet
-              </h5>
-              {/*end::Title*/}
-            </div>
-          )}
+            );
+          })}
         </div>
         {/*end::Items*/}
       </div>

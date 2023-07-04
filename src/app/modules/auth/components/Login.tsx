@@ -37,7 +37,6 @@ export function Login() {
   const { saveAuth, setCurrentUser } = useAuth();
   const [getUser] = useLazyQuery(getUserByToken, {
     onCompleted: ({ getUserByToken }) => {
-      debugger;
       setCurrentUser(getUserByToken);
     },
   });

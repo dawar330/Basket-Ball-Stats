@@ -2,12 +2,18 @@
 import React, { useState } from "react";
 import { KTSVG } from "../../../../../../_metronic/helpers";
 import * as Yup from "yup";
-import { useFormik } from "formik";
-import { IUpdateTimeOutLimit, IUpdateFoulLimit } from "../SettingsModel";
+import { Field, useFormik } from "formik";
+import {
+  IUpdateTimeOutLimit,
+  IUpdateFoulLimit,
+  IUpdateTimeDistribution,
+  IUpdateTotalTime,
+} from "../SettingsModel";
 import { useDispatch, useSelector } from "react-redux";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   UpdateGameFoulLimit,
+  UpdateGameTimeDistribution,
   UpdateGameTimeOutLimit,
 } from "../../../core/request";
 import { upsertToggleTeamStats } from "../../../../../../Redux/CurrectGame";
@@ -21,7 +27,7 @@ const emailFormValidationSchema = Yup.object().shape({
     .required("Password is required"),
 });
 
-const passwordFormValidationSchema = Yup.object().shape({
+const TimeOutFormValidationSchema = Yup.object().shape({
   newTimeOut: Yup.number().required("TimeOut Limit is required"),
   confirmPassword: Yup.string()
     .min(3, "Minimum 3 symbols")
@@ -29,21 +35,42 @@ const passwordFormValidationSchema = Yup.object().shape({
     .required("Password is required"),
 });
 
+const TimeDistributionValidationSchema = Yup.object().shape({
+  newTimeDistribution: Yup.string().required("TimeOut Limit is required"),
+  confirmPassword: Yup.string()
+    .min(3, "Minimum 3 symbols")
+    .max(50, "Maximum 50 symbols")
+    .required("Password is required"),
+});
 const GameRules: React.FC = () => {
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
+  let GameStarted = CurrentGame.startTime ? true : false;
   const [FoulLimitUpdateData, setFoulLimitUpdateData] =
     useState<IUpdateFoulLimit>({
       newFoulLimit: CurrentGame.FoulLimit,
       confirmPassword: "",
     });
-  const [passwordUpdateData, setPasswordUpdateData] =
+  const [TimeOutLimitUpdateData, setTimeOutLimitUpdateData] =
     useState<IUpdateTimeOutLimit>({
       newTimeOut: CurrentGame.TimeOutLimit,
+      confirmPassword: "",
+    });
+  const [TimeDistributionUpdateData, setTimeDistributionUpdateData] =
+    useState<IUpdateTimeDistribution>({
+      newTimeDistribution: CurrentGame.TimeDistribution,
+      confirmPassword: "",
+    });
+  const [TotalTimeUpdateData, setTotalTimeUpdateData] =
+    useState<IUpdateTotalTime>({
+      newTotalTime: CurrentGame.TotalTime,
       confirmPassword: "",
     });
 
   const [showFoulLimitForm, setShowFoulLimitForm] = useState<boolean>(false);
   const [showTimeOutLimitForm, setTimeOutLimitForm] = useState<boolean>(false);
+  const [showTimeDistributionLimitForm, setTimeDistributionLimitForm] =
+    useState<boolean>(false);
+   const [showTotalTimeForm, setTotalTimeForm] = useState<boolean>(false);
 
   const [loading1, setLoading1] = useState(false);
 
@@ -80,9 +107,9 @@ const GameRules: React.FC = () => {
 
   const formik2 = useFormik<IUpdateTimeOutLimit>({
     initialValues: {
-      ...passwordUpdateData,
+      ...TimeOutLimitUpdateData,
     },
-    validationSchema: passwordFormValidationSchema,
+    validationSchema: TimeOutFormValidationSchema,
     onSubmit: (values) => {
       setLoading2(true);
       UpdateGameTimeOutLimitF({
@@ -104,6 +131,71 @@ const GameRules: React.FC = () => {
       });
     },
   });
+
+  const [loading3, setLoading3] = useState(false);
+  const [UpdateGameTimeDistributionF] = useMutation(UpdateGameTimeDistribution);
+
+  const formik3 = useFormik<IUpdateTimeDistribution>({
+    initialValues: {
+      ...TimeDistributionUpdateData,
+    },
+    validationSchema: TotalTimeUpdateData,
+    onSubmit: (values) => {
+      debugger;
+      setLoading3(true);
+      UpdateGameTimeDistributionF({
+        variables: {
+          gameID: CurrentGame._id,
+          PassWord: values.confirmPassword,
+          newLimit: values.newTimeDistribution,
+        },
+        onCompleted: ({ UpdateGameTimeDistribution }) => {
+          setLoading3(false);
+          UpdateGameTimeDistribution && setTimeDistributionLimitForm(false);
+          if (!UpdateGameTimeDistribution) {
+            formik3.errors.confirmPassword = "Invalid Password";
+          }
+        },
+        onError: () => {
+          setLoading3(false);
+        },
+      });
+    },
+  });
+
+  
+  const [loading4, setLoading4] = useState(false);
+  const [UpdateTotalTimeF] = useMutation(UpdateGameTimeDistribution);
+
+  const formik4 = useFormik<IUpdateTotalTime>({
+    initialValues: {
+      ...TotalTimeUpdateData,
+    },
+    validationSchema: TimeDistributionValidationSchema,
+    onSubmit: (values) => {
+      debugger;
+      setLoading3(true);
+      UpdateTotalTimeF({
+        variables: {
+          gameID: CurrentGame._id,
+          PassWord: values.confirmPassword,
+          newLimit: values.newTotalTime,
+        },
+        onCompleted: ({ UpdateGameTimeDistribution }) => {
+          setLoading4(false);
+          UpdateGameTimeDistribution && setTimeDistributionLimitForm(false);
+          if (!UpdateGameTimeDistribution) {
+            formik4.errors.confirmPassword = "Invalid Password";
+          }
+        },
+        onError: () => {
+          setLoading4(false);
+        },
+      });
+    },
+  });
+
+
   const [ShowTeamStats, setShowTeamStats] = useState(CurrentGame.ShowTeamStats);
   const dispatch = useDispatch();
   function handleChange(e: any) {
@@ -230,6 +322,7 @@ const GameRules: React.FC = () => {
                 onClick={() => {
                   setShowFoulLimitForm(true);
                 }}
+                disabled={GameStarted}
                 className="btn btn-light btn-active-light-primary"
               >
                 Change Limit
@@ -350,7 +443,134 @@ const GameRules: React.FC = () => {
                 onClick={() => {
                   setTimeOutLimitForm(true);
                 }}
+                disabled={GameStarted}
                 className="btn btn-light btn-active-light-primary"
+              >
+                Change Limit
+              </button>
+            </div>
+          </div>
+          <div className="separator separator-dashed my-6"></div>
+          <div className="d-flex flex-wrap align-items-center">
+            <div
+              id="kt_Time"
+              className={" " + (showTimeDistributionLimitForm && "d-none")}
+            >
+              <div className="fs-6 fw-bolder mb-1">Time Distribution</div>
+              <div className="fw-bold text-gray-600">
+                {CurrentGame.TimeDistribution}
+              </div>
+            </div>
+
+            <div
+              id="kt_FoulLimit_edit"
+              className={
+                "flex-row-fluid " + (!showTimeDistributionLimitForm && "d-none")
+              }
+            >
+              <form
+                onSubmit={formik3.handleSubmit}
+                id="kt_signin_change_email"
+                className="form"
+                noValidate
+              >
+                <div className="row mb-6">
+                  <div className="col-lg-6 mb-4 mb-lg-0">
+                    <div className="fv-row mb-0">
+                      <label
+                        htmlFor="emailaddress"
+                        className="form-label fs-6 fw-bolder mb-3"
+                      >
+                        Enter New Time Distribution
+                      </label>
+
+                      <select
+                        {...formik3.getFieldProps("newTimeDistribution")}
+                        className="form-select form-select-lg form-select-solid"
+                      >
+                        <option></option>
+                        <option value="Quatres">Quatres</option>
+                        <option value="Halves">Halves</option>
+                      </select>
+
+                      {formik3.touched.newTimeDistribution &&
+                        formik3.errors.newTimeDistribution && (
+                          <div className="fv-plugins-message-container">
+                            <div className="fv-help-block">
+                              {formik3.errors.newTimeDistribution}
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                  <div className="col-lg-6">
+                    <div className="fv-row mb-0">
+                      <label
+                        htmlFor="confirmemailpassword"
+                        className="form-label fs-6 fw-bolder mb-3"
+                      >
+                        Confirm Password
+                      </label>
+                      <input
+                        type="password"
+                        className="form-control form-control-lg form-control-solid"
+                        id="confirmemailpassword"
+                        {...formik3.getFieldProps("confirmPassword")}
+                      />
+                      {formik3.touched.confirmPassword &&
+                        formik3.errors.confirmPassword && (
+                          <div className="fv-plugins-message-container">
+                            <div className="fv-help-block">
+                              {formik3.errors.confirmPassword}
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                </div>
+                <div className="d-flex">
+                  <button
+                    id="kt_signin_submit"
+                    type="submit"
+                    className="btn btn-primary  me-2 px-6"
+                  >
+                    {!loading3 && "Update Limit"}
+                    {loading3 && (
+                      <span
+                        className="indicator-progress"
+                        style={{ display: "block" }}
+                      >
+                        Please wait...{" "}
+                        <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    id="kt_signin_cancel"
+                    type="button"
+                    onClick={() => {
+                      setTimeDistributionLimitForm(false);
+                    }}
+                    className="btn btn-color-gray-400 btn-active-light-primary px-6"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div
+              id="kt_signin_email_button"
+              className={
+                "ms-auto " + (showTimeDistributionLimitForm && "d-none")
+              }
+            >
+              <button
+                onClick={() => {
+                  setTimeDistributionLimitForm(true);
+                }}
+                className="btn btn-light btn-active-light-primary"
+                disabled={GameStarted}
               >
                 Change Limit
               </button>

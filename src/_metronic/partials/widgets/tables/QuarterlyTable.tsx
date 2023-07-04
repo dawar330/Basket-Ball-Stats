@@ -12,7 +12,6 @@ import {
 import { useAuth } from "../../../../app/modules/auth";
 import JsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import puppeteer from "puppeteer";
 type Props = {
   className: string;
 };
@@ -27,18 +26,10 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   const [PlayerID, setPlayerID] = useState("");
   const [PlayType, setPlayType] = useState("");
   const [quarter, setquarter] = useState(1);
-  const [GameStarted, setGameStarted] = useState(
-    CurrentGame.startTime ? true : false
-  );
-  const [GameEnded, setGameEnded] = useState(
-    new Date().getTime() -
-      new Date(parseInt(CurrentGame.startTime)).getTime() >=
-      48 * 60 * 1000
-      ? true
-      : false
-  );
-  const [GameActive, setGameActive] = useState(GameStarted && !GameEnded);
-  console.log(GameActive, GameStarted, GameEnded);
+
+  let GameEnded = CurrentGame.endTime ? true : false;
+  let GameStarted = CurrentGame.startTime ? true : false;
+  let GameActive = GameStarted && !GameEnded;
 
   const team = !TeamCheckBox ? "homeTeam" : "awayTeam";
   let FG3 = 0;
@@ -71,10 +62,20 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
     );
   }, [CurrentGame]);
   const auth = useAuth();
+  console.log(
+    "ACTIVE",
+    GameActive,
+    "STARTED",
+    GameStarted,
+    "ENDED",
+    GameEnded,
+    CurrentGame.startTime
+  );
+
   function table(player: any, index: any) {
     return (
       <>
-        <tr>
+        <tr key={index}>
           <td>
             <div className="d-flex align-items-center">
               <div className="d-flex justify-content-start flex-column">
@@ -90,7 +91,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -104,7 +105,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -118,7 +119,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -139,7 +140,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -153,7 +154,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>{" "}
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -174,7 +175,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -188,7 +189,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>{" "}
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -202,7 +203,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>{" "}
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -217,7 +218,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -231,7 +232,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>{" "}
           <td
-            data-bs-toggle="modal"
+            data-bs-toggle={GameActive ? "modal" : ""}
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -279,249 +280,255 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   return (
     <>
       {" "}
-      <div className="modal fade" tabIndex={-1} id="createPlay_modal">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Create {PlayType}</h5>
-              <div
-                className="btn btn-icon btn-sm btn-active-light-primary ms-2"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              >
-                <KTSVG
-                  path="/media/icons/duotune/arrows/arr061.svg"
-                  className="svg-icon svg-icon-2x"
-                />
-              </div>
-            </div>
-
-            <Formik initialValues={{}} onSubmit={() => {}}>
-              {() => (
-                <Form className="w-100" noValidate>
-                  <div className="modal-body">
-                    {CurrentGame.FoulLimit >
-                    CurrentGame[team]?.PlayerPlays?.find(
-                      (item: any) => item._id === PlayerID
-                    )?.PF ? (
-                      PlayType === "2-Point" ||
-                      PlayType === "3-Point" ||
-                      PlayType === "Free Throw" ? (
-                        <>
-                          {" "}
-                          <div
-                            data-bs-dismiss="modal"
-                            className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                            onClick={() => {
-                              createPlayF({
-                                variables: {
-                                  GameID: CurrentGame._id,
-                                  PlayerID: PlayerID,
-                                  TeamID: CurrentGame?.[team]._id,
-                                  PlayType: PlayType,
-                                  Missed: true,
-                                  Quarter: quarter,
-                                },
-                              });
-                            }}
-                          >
-                            <span className="btn-label text-danger">
-                              Missed
-                            </span>
-                          </div>
-                          <div
-                            data-bs-dismiss="modal"
-                            className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                            onClick={() => {
-                              createPlayF({
-                                variables: {
-                                  GameID: CurrentGame._id,
-                                  PlayerID: PlayerID,
-                                  TeamID: CurrentGame?.[team]._id,
-                                  PlayType: PlayType,
-                                  Missed: false,
-                                  Quarter: quarter,
-                                },
-                              });
-                            }}
-                          >
-                            <span className="btn-label text-primary">
-                              Basket
-                            </span>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          {" "}
-                          <div
-                            data-bs-dismiss="modal"
-                            className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                            onClick={() => {
-                              createPlayF({
-                                variables: {
-                                  GameID: CurrentGame._id,
-                                  PlayerID: PlayerID,
-                                  TeamID: CurrentGame?.[team]._id,
-                                  PlayType: PlayType,
-                                  Missed: false,
-                                  Quarter: quarter,
-                                },
-                              });
-                            }}
-                          >
-                            <span className="btn-label text-danger">
-                              {PlayType}
-                            </span>
-                          </div>
-                          {PlayType === "F" && (
-                            <div
-                              data-bs-dismiss="modal"
-                              className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                              onClick={() => {
-                                createPlayF({
-                                  variables: {
-                                    GameID: CurrentGame._id,
-                                    PlayerID: PlayerID,
-                                    TeamID: CurrentGame?.[team]._id,
-                                    PlayType: "TF",
-                                    Missed: false,
-                                    Quarter: quarter,
-                                  },
-                                });
-                              }}
-                            >
-                              <span className="btn-label text-danger">TF</span>
-                            </div>
-                          )}
-                        </>
-                      )
-                    ) : (
-                      <>Player has Reached Foul Limit</>
-                    )}
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </div>
-      </div>
-      <div className="modal fade" tabIndex={-1} id="createTimeOut_modal">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Create Time Out</h5>
-              <div
-                className="btn btn-icon btn-sm btn-active-light-primary ms-2"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              >
-                <KTSVG
-                  path="/media/icons/duotune/arrows/arr061.svg"
-                  className="svg-icon svg-icon-2x"
-                />
-              </div>
-            </div>
-
-            <Formik initialValues={{}} onSubmit={() => {}}>
-              {() => (
-                <Form className="w-100" noValidate>
-                  <div className="modal-body">
-                    <div
-                      data-bs-dismiss="modal"
-                      className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                      onClick={() => {
-                        createTimeOutsF({
-                          variables: {
-                            GameID: CurrentGame._id,
-                            TeamID: CurrentGame?.[team]._id,
-                            Secs: "30",
-                            Quarter: quarter,
-                          },
-                        });
-                      }}
-                    >
-                      <span className="btn-label text-danger">30 Sec</span>
-                    </div>
-                    <div
-                      data-bs-dismiss="modal"
-                      className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
-                      onClick={() => {
-                        createTimeOutsF({
-                          variables: {
-                            GameID: CurrentGame._id,
-                            TeamID: CurrentGame?.[team]._id,
-                            Secs: "60",
-                            Quarter: quarter,
-                          },
-                        });
-                      }}
-                    >
-                      <span className="btn-label text-primary">60 Sec</span>
-                    </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </div>
-      </div>
-      <div className="modal fade" tabIndex={-1} id="createPossesion_modal">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Create Possession</h5>
-              <div
-                className="btn btn-icon btn-sm btn-active-light-primary ms-2"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              >
-                <KTSVG
-                  path="/media/icons/duotune/arrows/arr061.svg"
-                  className="svg-icon svg-icon-2x"
-                />
-              </div>
-            </div>
-
-            <Formik initialValues={{}} onSubmit={() => {}}>
-              {() => (
-                <Form className="w-100" noValidate>
-                  <div className="modal-body">
-                    <input
-                      style={{
-                        backgroundColor: "primary",
-                        width: "100%",
-                      }}
-                      step="1800"
-                      type="time"
-                      onChange={(e) => {
-                        setTime(e.target.value);
-                      }}
-                      pattern="[0-9]*"
-                      value={Time}
+      {GameStarted && (
+        <>
+          <div className="modal fade" tabIndex={-1} id="createPlay_modal">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Create {PlayType}</h5>
+                  <div
+                    className="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <KTSVG
+                      path="/media/icons/duotune/arrows/arr061.svg"
+                      className="svg-icon svg-icon-2x"
                     />
-                    <div
-                      className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
-                      data-bs-dismiss="modal"
-                      onClick={() => {
-                        createPossessionF({
-                          variables: {
-                            GameID: CurrentGame._id,
-                            TeamID: CurrentGame?.[team]._id,
-                            Time: Time,
-                            Quarter: quarter,
-                          },
-                        });
-                      }}
-                    >
-                      <span className="btn-label">Save</span>
-                    </div>
                   </div>
-                </Form>
-              )}
-            </Formik>
+                </div>
+
+                <Formik initialValues={{}} onSubmit={() => {}}>
+                  {() => (
+                    <Form className="w-100" noValidate>
+                      <div className="modal-body">
+                        {CurrentGame.FoulLimit >
+                        CurrentGame[team]?.PlayerPlays?.find(
+                          (item: any) => item._id === PlayerID
+                        )?.PF ? (
+                          PlayType === "2-Point" ||
+                          PlayType === "3-Point" ||
+                          PlayType === "Free Throw" ? (
+                            <>
+                              {" "}
+                              <div
+                                data-bs-dismiss="modal"
+                                className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                                onClick={() => {
+                                  createPlayF({
+                                    variables: {
+                                      GameID: CurrentGame._id,
+                                      PlayerID: PlayerID,
+                                      TeamID: CurrentGame?.[team]._id,
+                                      PlayType: PlayType,
+                                      Missed: true,
+                                      Quarter: quarter,
+                                    },
+                                  });
+                                }}
+                              >
+                                <span className="btn-label text-danger">
+                                  Missed
+                                </span>
+                              </div>
+                              <div
+                                data-bs-dismiss="modal"
+                                className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                                onClick={() => {
+                                  createPlayF({
+                                    variables: {
+                                      GameID: CurrentGame._id,
+                                      PlayerID: PlayerID,
+                                      TeamID: CurrentGame?.[team]._id,
+                                      PlayType: PlayType,
+                                      Missed: false,
+                                      Quarter: quarter,
+                                    },
+                                  });
+                                }}
+                              >
+                                <span className="btn-label text-primary">
+                                  Basket
+                                </span>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              {" "}
+                              <div
+                                data-bs-dismiss="modal"
+                                className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                                onClick={() => {
+                                  createPlayF({
+                                    variables: {
+                                      GameID: CurrentGame._id,
+                                      PlayerID: PlayerID,
+                                      TeamID: CurrentGame?.[team]._id,
+                                      PlayType: PlayType,
+                                      Missed: false,
+                                      Quarter: quarter,
+                                    },
+                                  });
+                                }}
+                              >
+                                <span className="btn-label text-danger">
+                                  {PlayType}
+                                </span>
+                              </div>
+                              {PlayType === "F" && (
+                                <div
+                                  data-bs-dismiss="modal"
+                                  className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                                  onClick={() => {
+                                    createPlayF({
+                                      variables: {
+                                        GameID: CurrentGame._id,
+                                        PlayerID: PlayerID,
+                                        TeamID: CurrentGame?.[team]._id,
+                                        PlayType: "TF",
+                                        Missed: false,
+                                        Quarter: quarter,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <span className="btn-label text-danger">
+                                    TF
+                                  </span>
+                                </div>
+                              )}
+                            </>
+                          )
+                        ) : (
+                          <>Player has Reached Foul Limit</>
+                        )}
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+          <div className="modal fade" tabIndex={-1} id="createTimeOut_modal">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Create Time Out</h5>
+                  <div
+                    className="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <KTSVG
+                      path="/media/icons/duotune/arrows/arr061.svg"
+                      className="svg-icon svg-icon-2x"
+                    />
+                  </div>
+                </div>
+
+                <Formik initialValues={{}} onSubmit={() => {}}>
+                  {() => (
+                    <Form className="w-100" noValidate>
+                      <div className="modal-body">
+                        <div
+                          data-bs-dismiss="modal"
+                          className="flex-column-auto btn mb-4 btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                          onClick={() => {
+                            createTimeOutsF({
+                              variables: {
+                                GameID: CurrentGame._id,
+                                TeamID: CurrentGame?.[team]._id,
+                                Secs: "30",
+                                Quarter: quarter,
+                              },
+                            });
+                          }}
+                        >
+                          <span className="btn-label text-danger">30 Sec</span>
+                        </div>
+                        <div
+                          data-bs-dismiss="modal"
+                          className="flex-column-auto btn btn-bg-light btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-100"
+                          onClick={() => {
+                            createTimeOutsF({
+                              variables: {
+                                GameID: CurrentGame._id,
+                                TeamID: CurrentGame?.[team]._id,
+                                Secs: "60",
+                                Quarter: quarter,
+                              },
+                            });
+                          }}
+                        >
+                          <span className="btn-label text-primary">60 Sec</span>
+                        </div>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
+          </div>
+          <div className="modal fade" tabIndex={-1} id="createPossesion_modal">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Create Possession</h5>
+                  <div
+                    className="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <KTSVG
+                      path="/media/icons/duotune/arrows/arr061.svg"
+                      className="svg-icon svg-icon-2x"
+                    />
+                  </div>
+                </div>
+
+                <Formik initialValues={{}} onSubmit={() => {}}>
+                  {() => (
+                    <Form className="w-100" noValidate>
+                      <div className="modal-body">
+                        <input
+                          style={{
+                            backgroundColor: "primary",
+                            width: "100%",
+                          }}
+                          step="1800"
+                          type="time"
+                          onChange={(e) => {
+                            setTime(e.target.value);
+                          }}
+                          pattern="[0-9]*"
+                          value={Time}
+                        />
+                        <div
+                          className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+                          data-bs-dismiss="modal"
+                          onClick={() => {
+                            createPossessionF({
+                              variables: {
+                                GameID: CurrentGame._id,
+                                TeamID: CurrentGame?.[team]._id,
+                                Time: Time,
+                                Quarter: quarter,
+                              },
+                            });
+                          }}
+                        >
+                          <span className="btn-label">Save</span>
+                        </div>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
       <div className="d-flex w-100 justify-content-center my-5"> </div>
       <div className={`card ${className} `}>
         {/* begin::Header */}
@@ -576,7 +583,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
               Export{" "}
             </span>
           </div>
-          {CurrentGame.ShowTeamStats && (
+          {CurrentGame.ShowTeamStats && CurrentGame.awayTeam._id !== "" && (
             <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
               <label
                 className={`form-check-label fs-3  me-4 ${
@@ -599,7 +606,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   TeamCheckBox ? "fw-bold text-primary" : " text-muted"
                 }`}
               >
-                {CurrentGame.awayTeam.teamName}
+                {CurrentGame?.awayTeam?.teamName}
               </label>
             </div>
           )}
@@ -867,7 +874,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   {EmptyArray.map(() => {
                     return (
                       <td
-                        data-bs-toggle="modal"
+                        data-bs-toggle={GameActive ? "modal" : ""}
                         data-bs-target="#createTimeOut_modal"
                       >
                         <div className="text-end text-muted">
@@ -934,7 +941,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   })}
 
                   <td
-                    data-bs-toggle="modal"
+                    data-bs-toggle={GameActive ? "modal" : ""}
                     data-bs-target="#createPossesion_modal"
                   >
                     <div className="text-end text-muted">

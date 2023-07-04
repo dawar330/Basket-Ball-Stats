@@ -52,16 +52,15 @@ const GameOverview: React.FC = () => {
             svgIcon="/media/icons/duotune/general/gen014.svg"
             iconColor="primary"
             descriptionColor="primary"
-            title={new Date(parseInt(CurrentGame.startTime)).toLocaleDateString(
-              "en-US",
-              {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              }
-            )}
-            description="Start Date"
+            title={new Date(
+              parseInt(CurrentGame.ScheduledDate)
+            ).toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+            description="Scheduled Date"
           />
         </div>
 
@@ -71,9 +70,11 @@ const GameOverview: React.FC = () => {
             svgIcon="/media/icons/duotune/general/gen026.svg"
             iconColor="primary"
             descriptionColor="primary"
-            title={new Date(
-              parseInt(CurrentGame.startTime)
-            ).toLocaleTimeString()}
+            title={
+              CurrentGame.startTime
+                ? new Date(parseInt(CurrentGame.startTime)).toLocaleTimeString()
+                : "Up Coming"
+            }
             description="Start Time"
           />
         </div>
@@ -85,7 +86,7 @@ const GameOverview: React.FC = () => {
             iconColor="primary"
             descriptionColor="primary"
             title={getTimePassed(parseInt(CurrentGame.startTime))}
-            description="Match Time"
+            description="Fouls"
           />
         </div>
 
@@ -95,7 +96,16 @@ const GameOverview: React.FC = () => {
             svgIcon="/media/icons/duotune/general/gen012.svg"
             iconColor="primary"
             descriptionColor="primary"
-            title={getTimeLeft(parseInt(CurrentGame.startTime), 48)}
+            title={
+              CurrentGame.endTime
+                ? "Game Ended"
+                : CurrentGame.startTime
+                ? getTimeLeft(
+                    parseInt(CurrentGame.startTime),
+                    CurrentGame.TotalTime
+                  )
+                : "Up Coming"
+            }
             description="Remaining Time"
           />
         </div>

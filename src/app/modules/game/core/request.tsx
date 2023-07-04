@@ -10,7 +10,7 @@ export const createComment = gql`
   }
 `;
 export const getComments = gql`
-  query ($gameID: String!) @live {
+  query ($gameID: String!) {
     getComments(gameID: $gameID) {
       _id
       userID
@@ -21,7 +21,7 @@ export const getComments = gql`
   }
 `;
 export const getTeamStats = gql`
-  query ($teamID: String!) @live {
+  query ($teamID: String!) {
     getTeamStats(teamID: $teamID) {
       assists
       steals
@@ -34,15 +34,18 @@ export const getTeamStats = gql`
 export const createGame = gql`
   mutation ($CreateGameInput: CreateGameInput!) {
     createGame(CreateGameInput: $CreateGameInput) {
-      coach
+      _id
     }
   }
 `;
 export const StartGame = gql`
   mutation ($gameID: String!) {
-    StartGame(gameID: $gameID) {
-      coach
-    }
+    StartGame(gameID: $gameID)
+  }
+`;
+export const EndGame = gql`
+  mutation ($gameID: String!) {
+    EndGame(gameID: $gameID)
   }
 `;
 export const UpdateGameFoulLimit = gql`
@@ -63,14 +66,29 @@ export const UpdateGameTimeOutLimit = gql`
     )
   }
 `;
+export const UpdateGameTimeDistribution = gql`
+  mutation ($gameID: String!, $PassWord: String!, $newLimit: String!) {
+    UpdateGameTimeDistribution(
+      gameID: $gameID
+      PassWord: $PassWord
+      newLimit: $newLimit
+    )
+  }
+`;
 export const createTeam = gql`
-  mutation ($teamName: String!, $teamCity: String!, $Image: String!) {
-    createTeam(teamName: $teamName, teamCity: $teamCity, Image: $Image) {
+  mutation (
+    $teamName: String!
+    $teamCity: String!
+    $Image: String!
+    $Color: String!
+  ) {
+    createTeam(
+      teamName: $teamName
+      teamCity: $teamCity
+      Image: $Image
+      Color: $Color
+    ) {
       _id
-      teamName
-      teamCity
-      Image
-      Players
     }
   }
 `;
@@ -206,7 +224,7 @@ export const getGamePossession = gql`
 `;
 
 export const getGamePlay = gql`
-  query ($gameID: String!) @live {
+  query ($gameID: String!) {
     getGamePlay(gameID: $gameID) {
       awayTeam
       homeTeam
@@ -215,7 +233,7 @@ export const getGamePlay = gql`
 `;
 
 export const getScoringGamePlay = gql`
-  query ($gameID: String!) @live {
+  query ($gameID: String!) {
     getScoringGamePlay(gameID: $gameID) {
       homeTeam {
         PlayerID
@@ -233,7 +251,7 @@ export const getScoringGamePlay = gql`
   }
 `;
 export const getGamePlaysByPlayer = gql`
-  query ($gameID: String!) @live {
+  query ($gameID: String!) {
     getGamePlaysByPlayer(gameID: $gameID) {
       homeTeam {
         _id
@@ -278,7 +296,7 @@ export const getGamePlaysByPlayer = gql`
 `;
 
 export const getQuarterlyGamePlaysByPlayer = gql`
-  query ($gameID: String!) @live {
+  query ($gameID: String!) {
     getQuarterlyGamePlaysByPlayer(gameID: $gameID) {
       homeTeam {
         Quarter1 {
@@ -444,6 +462,7 @@ export const getGames = gql`
   query @live {
     getGames {
       _id
+      ScheduledDate
       homeTeam {
         _id
         teamName
@@ -475,7 +494,7 @@ export const getTeams = gql`
   }
 `;
 export const getTeamsInfo = gql`
-  query @live {
+  query {
     getTeamsInfo {
       _id
       teamName
@@ -493,14 +512,19 @@ export const getTeamsInfo = gql`
 `;
 
 export const getTeam = gql`
-  query ($teamID: String!) {
+  query ($teamID: String!) @live {
     getTeam(teamID: $teamID) {
       _id
       teamName
       teamCity
       Image
       Coach
-      Players
+      Players {
+        _id
+        avatar
+        fname
+        lname
+      }
     }
   }
 `;
@@ -515,15 +539,25 @@ export const getTeamPlayers = gql`
   }
 `;
 export const getGame = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getGame(gameID: $gameID) {
       _id
+      TimeOutLimit
+      FoulLimit
+      startTime
+      endTime
+      ScheduledDate
+      TimeDistribution
+      TotalTime
+
+      coach
       homeTeam {
         _id
         teamName
         teamCity
         Image
         Players
+        Color
       }
       awayTeam {
         _id
@@ -531,11 +565,8 @@ export const getGame = gql`
         teamCity
         Image
         Players
+        Color
       }
-      TimeOutLimit
-      FoulLimit
-      startTime
-      coach
     }
   }
 `;

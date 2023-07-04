@@ -30,24 +30,83 @@ const CreatePlayerStep1: FC = () => {
               <ErrorMessage name="PlayerName" />
             </div>
           </div>
+          <div className="mb-10 fv-row">
+            <label className=" required form-label mb-3"> Height (cm)</label>
 
+            <Field
+              type="number"
+              className="form-control form-control-lg form-control-solid"
+              name="Height"
+            />
+            <div className="text-danger mt-2">
+              <ErrorMessage name="Height" />
+            </div>
+          </div>
+          <div className="mb-10 fv-row">
+            <label className=" required form-label mb-3"> Weight (kg)</label>
+
+            <Field
+              type="number"
+              className="form-control form-control-lg form-control-solid"
+              name="Weight"
+            />
+            <div className="text-danger mt-2">
+              <ErrorMessage name="Weight" />
+            </div>
+          </div>
+          <div className="mb-10 fv-row">
+            <label className=" required form-label mb-3"> WingSpan (cm)</label>
+
+            <Field
+              type="number"
+              className="form-control form-control-lg form-control-solid"
+              name="WingSpan"
+            />
+            <div className="text-danger mt-2">
+              <ErrorMessage name="WingSpan" />
+            </div>
+          </div>
+          <div className="mb-10 fv-row">
+            <label className=" required form-label mb-3"> Vertical (cm)</label>
+
+            <Field
+              type="number"
+              className="form-control form-control-lg form-control-solid"
+              name="Vertical"
+            />
+            <div className="text-danger mt-2">
+              <ErrorMessage name="Vertical" />
+            </div>
+          </div>
+          <div className="mb-10 fv-row">
+            <label className=" required form-label mb-3"> CGPA</label>
+
+            <Field
+              type="number"
+              className="form-control form-control-lg form-control-solid"
+              name="CGPA"
+            />
+            <div className="text-danger mt-2">
+              <ErrorMessage name="CGPA" />
+            </div>
+          </div>
           <div className="fv-row mb-10">
-            <label className="form-label required">Player Home Town</label>
+            <label className="form-label required">Playing Level</label>
 
             <Field
               as="select"
-              name="homeTown"
+              name="PlayingLevel"
               className="form-select form-select-lg form-select-solid"
             >
               <option></option>
-              <option value="1">New York, NY</option>
-              <option value="2">Los Angeles, CA</option>
-              <option value="3">Chicago, IL</option>
-              <option value="4">Houston, TX</option>
-              <option value="5">Phoenix, AZ</option>
+              <option value="Elementary">Elementary</option>
+              <option value="Middle School">Middle School</option>
+              <option value=" High School"> High School</option>
+              <option value="College">College</option>
+              <option value="Pro">Pro</option>
             </Field>
             <div className="text-danger mt-2">
-              <ErrorMessage name="homeTown" />
+              <ErrorMessage name="PlayingLevel" />
             </div>
           </div>
         </div>
