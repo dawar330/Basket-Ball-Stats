@@ -75,6 +75,16 @@ export const UpdateGameTimeDistribution = gql`
     )
   }
 `;
+
+export const UpdateGameTotalTime = gql`
+  mutation ($gameID: String!, $PassWord: String!, $newLimit: Int!) {
+    UpdateGameTotalTime(
+      gameID: $gameID
+      PassWord: $PassWord
+      newLimit: $newLimit
+    )
+  }
+`;
 export const createTeam = gql`
   mutation (
     $teamName: String!

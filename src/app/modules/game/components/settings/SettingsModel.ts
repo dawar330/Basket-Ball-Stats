@@ -30,7 +30,7 @@ export interface IUpdateTotalTime {
   confirmPassword: string;
 }
 export interface IUpdateTimeDistribution {
-  newTimeDistribution: number;
+  newTimeDistribution: string;
   confirmPassword: string;
 }
 export interface IUpdateTimeOutLimit {
