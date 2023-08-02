@@ -29,7 +29,7 @@ import { Provider } from "react-redux";
 import store from "./Redux/store";
 const auth = getAuth();
 
-const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
+const httpLink = new HttpLink({ uri: "http://18.215.147.3:4000/graphql" });
 const authMiddleware = new ApolloLink((operation, forward) => {
   const auth = getAuth();
   const token = auth ? auth?.api_token : "";
