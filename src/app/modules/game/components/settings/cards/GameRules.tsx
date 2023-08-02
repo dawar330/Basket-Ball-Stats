@@ -148,7 +148,6 @@ const GameRules: React.FC = () => {
     },
     validationSchema: TimeDistributionValidationSchema,
     onSubmit: (values) => {
-      debugger;
       setLoading3(true);
       UpdateGameTimeDistributionF({
         variables: {

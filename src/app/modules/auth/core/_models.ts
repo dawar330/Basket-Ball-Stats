@@ -48,8 +48,19 @@ export interface UserSocialNetworksModel {
 }
 
 export interface UserModel {
+  PlayingLevel: string;
+  Height: string;
+  Weight: string;
+  WingSpan: string;
+  Vertical: string;
+  CGPA: string;
+  AAU: boolean;
+  AAUTeamName: string;
+  AAUAgeLevel: string;
+  AAUState: string;
+
   id: number;
-  password: string | undefined;
+
   email: string;
   fname: string;
   lname: string;

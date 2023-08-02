@@ -85,6 +85,7 @@ export function TeamStats() {
     homeSteal += play.STEAL;
     homeTO += play.TO;
     homeF += play.PF;
+    homeTF += play.TF;
   });
   CurrentGame["awayTeam"].PlayerPlays.forEach((play: any) => {
     awayFGCount += play.FGA3 + play.FGA2;
@@ -99,6 +100,7 @@ export function TeamStats() {
     awaySteal += play.STEAL;
     awayTO += play.TO;
     awayF += play.PF;
+    awayTF += play.TF;
   });
 
   return (

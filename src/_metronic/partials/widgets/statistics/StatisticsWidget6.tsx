@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 
 type Props = {
   className: string;
@@ -19,6 +20,8 @@ const StatisticsWidget6: React.FC<Props> = ({
   awayStat,
 }) => {
   let totalPercentage = homeStat + awayStat;
+  const CurrentGame = useSelector((state: any) => state.CurrentGame);
+
   return (
     <div className={`card  ${className}`}>
       {/* begin::Body */}
@@ -32,14 +35,19 @@ const StatisticsWidget6: React.FC<Props> = ({
 
         <div className="d-flex py-1 justify-content-between">
           <div>
-            <span className="text-dark fs-1 fw-bold me-2">{homeStat}</span>
+            <span className="text-dark fs-1 fw-bold me-2">
+              {homeStat.toFixed(1).toLocaleString()}
+            </span>
             <span className="fw-semibold text-muted fs-7">{Home}</span>
           </div>
-
-          <div>
-            <span className="fw-semibold text-muted fs-7">{Away}</span>
-            <span className="text-dark fs-1 fw-bold ms-2">{awayStat}</span>
-          </div>
+          {CurrentGame?.awayTeam?.teamName !== "" && (
+            <div>
+              <span className="fw-semibold text-muted fs-7">{Away}</span>
+              <span className="text-dark fs-1 fw-bold ms-2">
+                {awayStat.toFixed(1).toLocaleString()}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className={`progress h-7px bg-info  mt-7`}>

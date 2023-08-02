@@ -16,10 +16,12 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
   const [data, setdata] = React.useState<any>();
   useQuery(getRecentGamesStats, {
     onCompleted: ({ getRecentGamesStats }) => {
+      console.log(getRecentGamesStats);
+
       setdata(getRecentGamesStats);
     },
   });
-  console.log(data?.map((row: any) => row));
+  console.log(data);
 
   useEffect(() => {
     const chart = refreshChart();
@@ -32,7 +34,7 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
   }, [chartRef, mode, data]);
 
   const refreshChart = () => {
-    if (!chartRef.current) {
+    if (!chartRef.current || !data?.length) {
       return;
     }
 
@@ -43,7 +45,7 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
       getChartOptions(height, data)
     );
     if (chart) {
-      chart.render();
+      chart?.render();
     }
 
     return chart;

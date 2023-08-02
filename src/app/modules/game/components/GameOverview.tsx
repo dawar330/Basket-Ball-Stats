@@ -46,7 +46,7 @@ const GameOverview: React.FC = () => {
   return (
     <>
       <div className="row g-5 g-xl-8">
-        <div className="col-xl-3">
+        <div className="col-xl-6">
           <StatisticsWidget5
             className="card-xl-stretch mb-xl-8"
             svgIcon="/media/icons/duotune/general/gen014.svg"
@@ -64,7 +64,7 @@ const GameOverview: React.FC = () => {
           />
         </div>
 
-        <div className="col-xl-3">
+        <div className="col-xl-6">
           <StatisticsWidget5
             className="card-xl-stretch mb-xl-8"
             svgIcon="/media/icons/duotune/general/gen026.svg"
@@ -79,7 +79,7 @@ const GameOverview: React.FC = () => {
           />
         </div>
 
-        <div className="col-xl-3">
+        {/* <div className="col-xl-3">
           <StatisticsWidget5
             className="card-xl-stretch mb-xl-8"
             svgIcon="/media/icons/duotune/general/gen013.svg"
@@ -108,7 +108,7 @@ const GameOverview: React.FC = () => {
             }
             description="Remaining Time"
           />
-        </div>
+        </div> */}
       </div>
       <GameOverViewTable className="mb-5 mb-xl-8" />
       <div className="row ">

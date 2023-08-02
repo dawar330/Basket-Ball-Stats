@@ -26,6 +26,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   const [PlayerID, setPlayerID] = useState("");
   const [PlayType, setPlayType] = useState("");
   const [quarter, setquarter] = useState(1);
+  const [half, sethalf] = useState(1);
 
   let GameEnded = CurrentGame.endTime ? true : false;
   let GameStarted = CurrentGame.startTime ? true : false;
@@ -44,7 +45,6 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   let TO = 0;
   let BLOCK = 0;
   let STEAL = 0;
-  console.log(CurrentGame[team]);
 
   const [EmptyArray, setEmptyArray] = useState(
     Array.from({
@@ -91,7 +91,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -105,7 +107,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -119,7 +123,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -140,7 +146,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -154,7 +162,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>{" "}
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -175,7 +185,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -184,12 +196,18 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           >
             <div className="text-end text-muted">
               <div className="d-flex justify-content-start flex-column">
-                {player.PF}
+                {player.PF +
+                  CurrentGame[team]?.PlayerPlays?.find(
+                    (item: any) => item._id === player._id
+                  )?.TF *
+                    2}
               </div>
             </div>
           </td>{" "}
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -203,7 +221,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>{" "}
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -218,7 +238,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -232,7 +254,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
             </div>
           </td>{" "}
           <td
-            data-bs-toggle={GameActive ? "modal" : ""}
+            data-bs-toggle={
+              GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+            }
             data-bs-target="#createPlay_modal"
             onClick={() => {
               setPlayerID(player._id);
@@ -252,23 +276,38 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   }
 
   const generatePDF = () => {
-    const report = new JsPDF();
+    // const report = new JsPDF({ orientation: "landscape" });
+    const report = new JsPDF({ orientation: "landscape" });
     const exportTable = document.querySelector(
       "#exportTable"
     ) as HTMLElement | null;
 
     exportTable &&
-      html2canvas(exportTable).then((canvas) => {
+      html2canvas(exportTable).then((canvas: any) => {
         const imgData = canvas.toDataURL("image/png");
 
-        // Adjust the PDF page size to match the canvas
         const pdfWidth = report.internal.pageSize.getWidth();
         const pdfHeight = report.internal.pageSize.getHeight();
-        const aspectRatio = canvas.width / canvas.height;
-        const pdfImgHeight = pdfWidth / aspectRatio;
+        const imgProps = report.getImageProperties(imgData);
 
-        // Add the image of the component to the PDF
-        report.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfImgHeight);
+        const ratio = imgProps.width / imgProps.height;
+        const width = pdfWidth - 20; // Subtract margins
+        const height = width / ratio;
+
+        report.addImage(imgData, "PNG", 10, 10, width, height);
+
+        // const imgData = canvas.toDataURL("image/png");
+        // console.log(canvas);
+
+        // // Adjust the PDF page size to match the canvas
+        // const pdfWidth = report.internal.pageSize.getWidth();
+        // const pdfHeight = report.internal.pageSize.getHeight();
+        // const aspectRatio = canvas.width / canvas.height;
+        // const pdfImgHeight = pdfWidth / aspectRatio;
+
+        // // Add the image of the component to the PDF
+
+        // report.addImage(imgData, "PNG", 0, 0, pdfWidth);
 
         // Save the PDF file
         report.save("exportedComponent.pdf");
@@ -276,6 +315,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   };
 
   const [Time, setTime] = useState("04:00");
+  console.log(auth.auth?.Role === "Coach");
 
   return (
     <>
@@ -306,7 +346,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                         {CurrentGame.FoulLimit >
                         CurrentGame[team]?.PlayerPlays?.find(
                           (item: any) => item._id === PlayerID
-                        )?.PF ? (
+                        )?.PF +
+                          CurrentGame[team]?.PlayerPlays?.find(
+                            (item: any) => item._id === PlayerID
+                          )?.TF *
+                            2 ? (
                           PlayType === "2-Point" ||
                           PlayType === "3-Point" ||
                           PlayType === "Free Throw" ? (
@@ -323,7 +367,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                       TeamID: CurrentGame?.[team]._id,
                                       PlayType: PlayType,
                                       Missed: true,
-                                      Quarter: quarter,
+                                      Quarter:
+                                        CurrentGame.TimeDistribution ===
+                                        "Halves"
+                                          ? half
+                                          : quarter,
                                     },
                                   });
                                 }}
@@ -343,7 +391,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                       TeamID: CurrentGame?.[team]._id,
                                       PlayType: PlayType,
                                       Missed: false,
-                                      Quarter: quarter,
+                                      Quarter:
+                                        CurrentGame.TimeDistribution ===
+                                        "Halves"
+                                          ? half
+                                          : quarter,
                                     },
                                   });
                                 }}
@@ -367,7 +419,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                       TeamID: CurrentGame?.[team]._id,
                                       PlayType: PlayType,
                                       Missed: false,
-                                      Quarter: quarter,
+                                      Quarter:
+                                        CurrentGame.TimeDistribution ===
+                                        "Halves"
+                                          ? half
+                                          : quarter,
                                     },
                                   });
                                 }}
@@ -388,7 +444,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                         TeamID: CurrentGame?.[team]._id,
                                         PlayType: "TF",
                                         Missed: false,
-                                        Quarter: quarter,
+                                        Quarter:
+                                          CurrentGame.TimeDistribution ===
+                                          "Halves"
+                                            ? half
+                                            : quarter,
                                       },
                                     });
                                   }}
@@ -440,7 +500,10 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                 GameID: CurrentGame._id,
                                 TeamID: CurrentGame?.[team]._id,
                                 Secs: "30",
-                                Quarter: quarter,
+                                Quarter:
+                                  CurrentGame.TimeDistribution === "Halves"
+                                    ? half
+                                    : quarter,
                               },
                             });
                           }}
@@ -456,7 +519,10 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                 GameID: CurrentGame._id,
                                 TeamID: CurrentGame?.[team]._id,
                                 Secs: "60",
-                                Quarter: quarter,
+                                Quarter:
+                                  CurrentGame.TimeDistribution === "Halves"
+                                    ? half
+                                    : quarter,
                               },
                             });
                           }}
@@ -513,7 +579,10 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                 GameID: CurrentGame._id,
                                 TeamID: CurrentGame?.[team]._id,
                                 Time: Time,
-                                Quarter: quarter,
+                                Quarter:
+                                  CurrentGame.TimeDistribution === "Halves"
+                                    ? half
+                                    : quarter,
                               },
                             });
                           }}
@@ -529,44 +598,68 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
           </div>
         </>
       )}
-      <div className="d-flex w-100 justify-content-center my-5"> </div>
-      <div className={`card ${className} `}>
-        {/* begin::Header */}
-        <div className="card-header border-0 justify-content-center ">
-          <div
-            className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
-            onClick={() => {
-              setquarter(1);
-            }}
-          >
-            <span className="btn-label">Quarter 1</span>
-          </div>
-          <div
-            className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
-            onClick={() => {
-              setquarter(2);
-            }}
-          >
-            <span className="btn-label">Quarter 2</span>
-          </div>
-          <div
-            className=" px-5 btn btn-bg-light  btn-color-gray-600 align-self-center w-200px mb-2 me-2"
-            onClick={() => {
-              setquarter(3);
-            }}
-          >
-            <span className="btn-label">Quarter 3</span>
-          </div>
-          <div
-            className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
-            onClick={() => {
-              setquarter(4);
-            }}
-          >
-            <span className="btn-label">Quarter 4</span>
+      {CurrentGame.TimeDistribution === "Quatres" && (
+        <div className={`card ${className} `}>
+          {/* begin::Header */}
+          <div className="card-header border-0 justify-content-center ">
+            <div
+              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              onClick={() => {
+                setquarter(1);
+              }}
+            >
+              <span className="btn-label">Quarter 1</span>
+            </div>
+            <div
+              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              onClick={() => {
+                setquarter(2);
+              }}
+            >
+              <span className="btn-label">Quarter 2</span>
+            </div>
+            <div
+              className=" px-5 btn btn-bg-light  btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              onClick={() => {
+                setquarter(3);
+              }}
+            >
+              <span className="btn-label">Quarter 3</span>
+            </div>
+            <div
+              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              onClick={() => {
+                setquarter(4);
+              }}
+            >
+              <span className="btn-label">Quarter 4</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      {CurrentGame.TimeDistribution === "Halves" && (
+        <div className={`card ${className} `}>
+          {/* begin::Header */}
+          <div className="card-header border-0 justify-content-center ">
+            <div
+              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              onClick={() => {
+                sethalf(1);
+              }}
+            >
+              <span className="btn-label">First Half</span>
+            </div>
+            <div
+              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              onClick={() => {
+                sethalf(2);
+              }}
+            >
+              <span className="btn-label">Second Half</span>
+            </div>
+          </div>
+        </div>
+      )}
       <div className={`card ${className}`} id="exportTable">
         {/* begin::Header */}
         <div className="card-header border-0 pt-3">
@@ -575,7 +668,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
               Quarterly Statistics
             </span>
             <span className="card-label fw-light fs-5 mb-1">
-              Quarter {quarter} {GameActive.toString()}
+              {CurrentGame.TimeDistribution === "Halves"
+                ? "Half " + half
+                : "Quarter " + quarter}
             </span>
           </h3>
           <div className=" btn btn-bg-light  btn-color-gray-600 align-self-center">
@@ -656,7 +751,7 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   <th className="min-w-20px text-end text-primary border border-dashed border-gray-300">
                     TOT
                   </th>
-                  <th className="min-w-20px text-end">PF</th>
+                  <th className="min-w-20px text-end">F</th>
                   <th className="min-w-20px text-end">A</th>
                   <th className="min-w-20px text-end">TO</th>
                   <th className="min-w-20px text-end">BLOCK</th>
@@ -666,44 +761,61 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
               {/* end::Table head */}
               {/* begin::Table body */}
               <tbody>
-                {CurrentGame?.[team].QuarterlyPlayerPlays[quarter - 1] &&
-                  CurrentGame?.[team].QuarterlyPlayerPlays[quarter - 1].map(
-                    (player: any, index: any) => {
-                      if (
-                        !CurrentGame.ShowTeamStats &&
-                        auth.auth?.first_name + " " + auth.auth?.last_name ==
-                          player.Player
-                      ) {
-                        FG2 += player.FG2;
-                        FT += player.FT;
-                        FG3 += player.FG3;
-                        PTS += player.PTS;
-                        OFF += player.OFF;
-                        DEF += player.DEF;
-                        TO += player.TO;
-                        TOT += player.OFF + player.DEF;
-                        PF += player.PF;
-                        STEAL += player.STEAL;
-                        BLOCK += player.BLOCK;
-                        A += player.A;
-                        return table(player, index);
-                      } else if (CurrentGame.ShowTeamStats) {
-                        FG2 += player.FG2;
-                        FT += player.FT;
-                        FG3 += player.FG3;
-                        PTS += player.PTS;
-                        OFF += player.OFF;
-                        DEF += player.DEF;
-                        TO += player.TO;
-                        TOT += player.OFF + player.DEF;
-                        PF += player.PF;
-                        STEAL += player.STEAL;
-                        BLOCK += player.BLOCK;
-                        A += player.A;
-                        return table(player, index);
-                      }
+                {CurrentGame?.[team].QuarterlyPlayerPlays[
+                  (CurrentGame.TimeDistribution === "Halves" ? half : quarter) -
+                    1
+                ] &&
+                  CurrentGame?.[team].QuarterlyPlayerPlays[
+                    (CurrentGame.TimeDistribution === "Halves"
+                      ? half
+                      : quarter) - 1
+                  ].map((player: any, index: any) => {
+                    console.log(player, "asd");
+
+                    if (
+                      !CurrentGame.ShowTeamStats &&
+                      auth.auth?.first_name + " " + auth.auth?.last_name ==
+                        player.Player
+                    ) {
+                      FG2 += player.FG2;
+                      FT += player.FT;
+                      FG3 += player.FG3;
+                      PTS += player.PTS;
+                      OFF += player.OFF;
+                      DEF += player.DEF;
+                      TO += player.TO;
+                      TOT += player.OFF + player.DEF;
+                      PF +=
+                        player?.PF +
+                        CurrentGame[team]?.PlayerPlays?.find(
+                          (item: any) => item._id === player._id
+                        )?.TF *
+                          2;
+                      STEAL += player.STEAL;
+                      BLOCK += player.BLOCK;
+                      A += player.A;
+                      return table(player, index);
+                    } else if (CurrentGame.ShowTeamStats) {
+                      FG2 += player.FG2;
+                      FT += player.FT;
+                      FG3 += player.FG3;
+                      PTS += player.PTS;
+                      OFF += player.OFF;
+                      DEF += player.DEF;
+                      TO += player.TO;
+                      TOT += player.OFF + player.DEF;
+                      PF +=
+                        player.PF +
+                        CurrentGame[team]?.PlayerPlays?.find(
+                          (item: any) => item._id === player._id
+                        )?.TF *
+                          2;
+                      STEAL += player.STEAL;
+                      BLOCK += player.BLOCK;
+                      A += player.A;
+                      return table(player, index);
                     }
-                  )}
+                  })}
                 <tr className="text-primary">
                   <td style={{ borderBottomStyle: "hidden" }}>
                     <div className="d-flex align-items-center">
@@ -858,7 +970,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                     </div>
                   </td>
                   {CurrentGame[team]?.TimeOuts?.filter(
-                    (TimeOuts: any) => TimeOuts.Quarter === quarter
+                    (TimeOuts: any) =>
+                      TimeOuts.Quarter ===
+                      (CurrentGame.TimeDistribution === "Halves"
+                        ? half
+                        : quarter)
                   )?.map((TimeOuts: any) => {
                     return (
                       <td>
@@ -874,7 +990,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   {EmptyArray.map(() => {
                     return (
                       <td
-                        data-bs-toggle={GameActive ? "modal" : ""}
+                        data-bs-toggle={
+                          GameActive && auth.auth?.Role === "Coach"
+                            ? "modal"
+                            : ""
+                        }
                         data-bs-target="#createTimeOut_modal"
                       >
                         <div className="text-end text-muted">
@@ -927,7 +1047,11 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                     </div>
                   </td>
                   {CurrentGame[team]?.Possessions?.filter(
-                    (Possession: any) => Possession.Quarter === quarter
+                    (Possession: any) =>
+                      Possession.Quarter ===
+                      (CurrentGame.TimeDistribution === "Halves"
+                        ? half
+                        : quarter)
                   )?.map((Possession: any) => {
                     return (
                       <td>
@@ -941,7 +1065,9 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                   })}
 
                   <td
-                    data-bs-toggle={GameActive ? "modal" : ""}
+                    data-bs-toggle={
+                      GameActive && auth.auth?.Role === "Coach" ? "modal" : ""
+                    }
                     data-bs-target="#createPossesion_modal"
                   >
                     <div className="text-end text-muted">

@@ -195,7 +195,7 @@ export const addTeamPlayer = gql`
   }
 `;
 export const getGameTimeOuts = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getGameTimeOuts(gameID: $gameID) {
       homeTeam {
         Quarter
@@ -215,7 +215,7 @@ export const getGameTimeOuts = gql`
   }
 `;
 export const getGamePossession = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getGamePossession(gameID: $gameID) {
       homeTeam {
         Quarter
@@ -234,7 +234,7 @@ export const getGamePossession = gql`
 `;
 
 export const getGamePlay = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getGamePlay(gameID: $gameID) {
       awayTeam
       homeTeam
@@ -261,7 +261,7 @@ export const getScoringGamePlay = gql`
   }
 `;
 export const getGamePlaysByPlayer = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getGamePlaysByPlayer(gameID: $gameID) {
       homeTeam {
         _id
@@ -277,6 +277,7 @@ export const getGamePlaysByPlayer = gql`
         DEF
         TOT
         PF
+        TF
         A
         TO
         BLOCK
@@ -296,6 +297,7 @@ export const getGamePlaysByPlayer = gql`
         DEF
         TOT
         PF
+        TF
         A
         TO
         BLOCK
@@ -306,7 +308,7 @@ export const getGamePlaysByPlayer = gql`
 `;
 
 export const getQuarterlyGamePlaysByPlayer = gql`
-  query ($gameID: String!) {
+  query ($gameID: String!) @live {
     getQuarterlyGamePlaysByPlayer(gameID: $gameID) {
       homeTeam {
         Quarter1 {
@@ -467,11 +469,38 @@ export const getQuarterlyGamePlaysByPlayer = gql`
     }
   }
 `;
+export const getAllGames = gql`
+  query {
+    getAllGames {
+      _id
+      startTime
+      endTime
+      ScheduledDate
+      homeTeam {
+        _id
+        teamName
+        teamCity
+        Image
+        Players
+      }
+      awayTeam {
+        _id
+        teamName
+        teamCity
+        Image
+        Players
+      }
+      coach
+    }
+  }
+`;
 
 export const getGames = gql`
-  query @live {
+  query {
     getGames {
       _id
+      startTime
+      endTime
       ScheduledDate
       homeTeam {
         _id
@@ -522,7 +551,7 @@ export const getTeamsInfo = gql`
 `;
 
 export const getTeam = gql`
-  query ($teamID: String!) @live {
+  query ($teamID: String!) {
     getTeam(teamID: $teamID) {
       _id
       teamName
@@ -549,7 +578,7 @@ export const getTeamPlayers = gql`
   }
 `;
 export const getGame = gql`
-  query ($gameID: String!) @live {
+  query ($gameID: String!) {
     getGame(gameID: $gameID) {
       _id
       TimeOutLimit

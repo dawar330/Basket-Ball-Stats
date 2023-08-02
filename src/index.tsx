@@ -21,23 +21,26 @@ import {
   InMemoryCache,
   ApolloProvider,
   DefaultOptions,
+  HttpLink,
+  ApolloLink,
+  concat,
 } from "@apollo/client";
 import { Provider } from "react-redux";
 import store from "./Redux/store";
 const auth = getAuth();
-function handleStorageChange(event: any) {
-  client = new ApolloClient({
-    uri: "http://localhost:4000/graphql",
-    cache: new InMemoryCache({
-      dataIdFromObject: () => false,
-    }),
+
+const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
+const authMiddleware = new ApolloLink((operation, forward) => {
+  const auth = getAuth();
+  const token = auth ? auth?.api_token : "";
+  operation.setContext(({ headers = {} }) => ({
     headers: {
-      bearer: auth ? auth?.api_token : "",
+      ...headers,
+      bearer: token,
     },
-    defaultOptions: defaultOptions,
-  });
-}
-window.addEventListener("storage", handleStorageChange);
+  }));
+  return forward(operation);
+});
 const defaultOptions: DefaultOptions = {
   watchQuery: {
     fetchPolicy: "no-cache",
@@ -48,16 +51,15 @@ const defaultOptions: DefaultOptions = {
     errorPolicy: "all",
   },
 };
-let client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+const client = new ApolloClient({
+  link: concat(authMiddleware, httpLink),
   cache: new InMemoryCache({
     dataIdFromObject: () => false,
   }),
-  headers: {
-    bearer: auth ? auth?.api_token : "",
-  },
+
   defaultOptions: defaultOptions,
 });
+
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
  * basic CourtIntel mocks and returns it.

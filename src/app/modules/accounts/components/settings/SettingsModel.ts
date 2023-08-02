@@ -2,7 +2,21 @@ export interface IProfileDetails {
   avatar: string;
   fName: string;
   lName: string;
+
+  PlayingLevel: string;
+  Height: string;
+  Weight: string;
+  WingSpan: string;
+  Vertical: string;
+  CGPA: string;
 }
+export interface IAAUDetails {
+  AAU: boolean;
+  AAUTeamName: string;
+  AAUAgeLevel: string;
+  AAUState: string;
+}
+
 export interface ITeamDetails {
   avatar: string;
   teamName: string;
@@ -66,12 +80,6 @@ export const teamDetailsInitValues: ITeamDetails = {
   avatar: "",
   teamName: "",
   homeTown: "string",
-};
-
-export const profileDetailsInitValues: IProfileDetails = {
-  avatar: "/media/avatars/Blank.png",
-  fName: "Max",
-  lName: "Smith",
 };
 
 export const updateEmail: IUpdateEmail = {

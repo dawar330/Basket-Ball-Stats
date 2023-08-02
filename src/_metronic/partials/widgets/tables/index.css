@@ -1,0 +1,11 @@
+.Clock-Wrapper {
+  font-family: "Segment7Standard";
+  background-color: "primary";
+
+  height: 118px;
+}
+
+.Clock-Time-Front {
+  justify-content: center;
+  font-size: 70px;
+}

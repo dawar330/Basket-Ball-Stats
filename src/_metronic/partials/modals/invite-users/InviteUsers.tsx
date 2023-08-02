@@ -43,7 +43,7 @@ const InviteUsers: FC = () => {
     },
     onError: () => {},
   });
-  debugger;
+
   const [CreateNewPlayer, setCreateNewPlayer] = useState(false);
   return (
     <div className="modal fade" id="kt_modal_invite_friends" aria-hidden="true">

@@ -17,7 +17,6 @@ const TablesWidget10: React.FC<Props> = ({ className }) => {
   const { id: TeamID } = useParams<TeamParams>();
   const [RemoveTeamPlayerF] = useMutation(RemoveTeamPlayer);
   const { currentTeam } = useSelector((state: any) => state.Teams);
-  console.log(currentTeam);
 
   return (
     <div className={`card ${className}`}>

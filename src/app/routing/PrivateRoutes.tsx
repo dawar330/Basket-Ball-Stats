@@ -8,6 +8,7 @@ import { WithChildren } from "../../_metronic/helpers";
 import AccountPage from "../modules/accounts/AccountPage";
 import { CreateTeamStepper } from "../modules/accounts/components/teams/CreateTeamStepper";
 import { CreateGameStepper } from "../modules/game/CreateGameStepper";
+import SearchPage from "../modules/game/core/SearchPage";
 
 const PrivateRoutes = () => {
   const GamePage = lazy(() => import("../modules/game/GamePage"));
@@ -19,7 +20,6 @@ const PrivateRoutes = () => {
         <Route path="auth/*" element={<Navigate to="/account/overview" />} />
         {/* Pages */}
         <Route path="dashboard" element={<DashboardWrapper />} />
-
         <Route
           path="game/:id/*"
           element={
@@ -28,6 +28,15 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
+        <Route
+          path="Search"
+          element={
+            <SuspensedView>
+              <SearchPage />
+            </SuspensedView>
+          }
+        />
+        Search
         <Route
           path="account/*"
           element={

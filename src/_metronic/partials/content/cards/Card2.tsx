@@ -62,13 +62,14 @@ const Card2: FC<Props> = ({ icon, setSelectedPlayer, title, team }) => {
           </div>
           <div className=" min-w-90px py-3  mb-3">
             <div className="text-center fs-3 text-gray-800 fw-bolder">
-              {playerPlays
+              {(playerPlays
                 ? playerPlays?.FG2 !== 0 || playerPlays?.FG3 !== 0
                   ? ((playerPlays?.FG2 + playerPlays.FG3) /
                       (playerPlays?.FGA2 + playerPlays.FGA3)) *
                     100
                   : 0
-                : 0}
+                : 0
+              ).toFixed(1)}
             </div>
             <div className="text-center text-primary fs-7 fw-bold text-primary ">
               FG%

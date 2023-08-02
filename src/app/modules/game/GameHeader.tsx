@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
 import { StartGame, EndGame, getGame } from "./core/request";
@@ -7,15 +7,19 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
 import { upsertGame } from "../../../Redux/CurrectGame";
 import { useAuth } from "../auth";
+import Stopwatch from "../../../_metronic/partials/widgets/tables/StopWatch";
 
 interface GameRouteParams extends Params {
   id: string;
 }
+interface MyComponentProps {
+  setloading: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
+}
 
-const GameHeader: React.FC = () => {
+const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
   const dispatch = useDispatch();
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
-  console.log(CurrentGame);
 
   const { id: game_ID } = useParams<GameRouteParams>();
 
@@ -38,6 +42,7 @@ const GameHeader: React.FC = () => {
 
     onCompleted: async ({ getGame }) => {
       dispatch(upsertGame(getGame));
+      setloading(false);
     },
   });
 
@@ -101,6 +106,9 @@ const GameHeader: React.FC = () => {
               </div>
             </div>
           </div>
+          {auth.auth?.Role === "Coach" && !loading && (
+            <Stopwatch gameId={game_ID} />
+          )}
 
           {CurrentGame.awayTeam._id !== "" && (
             <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
@@ -157,7 +165,7 @@ const GameHeader: React.FC = () => {
             </div>
           )}
         </div>
-        {!GameEnded && (
+        {!GameEnded && auth.auth?.Role === "Coach" && (
           <div
             className="flex-column-auto pt-10"
             id="kt_aside_secondary_footer"
@@ -262,18 +270,20 @@ const GameHeader: React.FC = () => {
                   : "Player Statistics"}
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className={
-                  `nav-link text-active-primary text-dark me-6 ` +
-                  (location.pathname === `/game/${game_ID}/Settings` &&
-                    "active")
-                }
-                to={`/game/${game_ID}/Settings`}
-              >
-                Game Rules
-              </Link>
-            </li>
+            {auth.auth?.Role === "Coach" && (
+              <li className="nav-item">
+                <Link
+                  className={
+                    `nav-link text-active-primary text-dark me-6 ` +
+                    (location.pathname === `/game/${game_ID}/Settings` &&
+                      "active")
+                  }
+                  to={`/game/${game_ID}/Settings`}
+                >
+                  Game Rules
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
               <Link
                 className={

@@ -48,7 +48,6 @@ const GamePage: React.FC = () => {
     variables: { gameID: game_ID },
     onCompleted: ({ getGamePlaysByPlayer }) => {
       dispatch(upsertPlayerPlays(getGamePlaysByPlayer));
-      setloading(false);
     },
   });
 
@@ -95,7 +94,7 @@ const GamePage: React.FC = () => {
       <Route
         element={
           <>
-            <GameHeader />
+            <GameHeader setloading={setloading} loading={loading} />
             {loading ? (
               <>
                 <div className="page-loader">

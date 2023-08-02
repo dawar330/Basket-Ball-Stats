@@ -50,6 +50,7 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   };
 
   const logout = () => {
+    localStorage.clear();
     saveAuth(undefined);
     setCurrentUser(undefined);
   };

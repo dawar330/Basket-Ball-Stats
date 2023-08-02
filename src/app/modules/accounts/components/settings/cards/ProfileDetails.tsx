@@ -1,34 +1,70 @@
 import React, { useRef, useState } from "react";
 import { toAbsoluteUrl } from "../../../../../../_metronic/helpers";
-import { IProfileDetails } from "../SettingsModel";
+import { IAAUDetails, IProfileDetails } from "../SettingsModel";
 import * as Yup from "yup";
-import { useFormik } from "formik";
+import { Field, useFormik } from "formik";
 import { useAuth } from "../../../../auth";
 import { useMutation } from "@apollo/client";
-import { updateUserInfo } from "../../../../auth/core/requests";
+import {
+  updateUserAAUInfo,
+  updateUserInfo,
+} from "../../../../auth/core/requests";
 
 const profileDetailsSchema = Yup.object().shape({
   fName: Yup.string().required("First name is required"),
   lName: Yup.string().required("Last name is required"),
+
+  PlayingLevel: Yup.string().required("Playing Level is required"),
+  Height: Yup.number().required("Height is required"),
+  Weight: Yup.number().required("Weight is required"),
+  WingSpan: Yup.number().required("WingSpan is required"),
+  Vertical: Yup.number().required("Vertical is required"),
+  CGPA: Yup.number().required("CGPA is required"),
+});
+const AAUDetailsSchema = Yup.object().shape({
+  AAU: Yup.boolean().required("AAU is required"),
+  AAUTeamName: Yup.string().required("Team Name is required"),
+  AAUAgeLevel: Yup.string().required("Age Level is required"),
+  AAUState: Yup.string().required("State is required"),
 });
 
 const ProfileDetails: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, auth } = useAuth();
   const initialValues: IProfileDetails = {
     avatar: currentUser ? currentUser.avatar : "",
     fName: currentUser ? currentUser.fname : "",
     lName: currentUser ? currentUser.lname : "",
+
+    PlayingLevel: currentUser ? currentUser.PlayingLevel : "",
+    Height: currentUser ? currentUser.Height : "",
+    Weight: currentUser ? currentUser.Weight : "",
+    WingSpan: currentUser ? currentUser.WingSpan : "",
+    Vertical: currentUser ? currentUser.Vertical : "",
+    CGPA: currentUser ? currentUser.CGPA : "",
+  };
+  const initialValue: IAAUDetails = {
+    AAU: currentUser ? currentUser.AAU : false,
+    AAUTeamName: currentUser ? currentUser.AAUTeamName : "",
+    AAUAgeLevel: currentUser ? currentUser.AAUAgeLevel : "",
+    AAUState: currentUser ? currentUser.AAUState : "",
   };
   const [data, setData] = useState<IProfileDetails>(initialValues);
+  const [data2, setData2] = useState<IAAUDetails>(initialValue);
+
   const [selectedImage, setselectedImage] = useState<string | null>(
     currentUser ? currentUser.avatar : ""
   );
+
   const updateData = (fieldsToUpdate: Partial<IProfileDetails>): void => {
     const updatedData = Object.assign(data, fieldsToUpdate);
     setData(updatedData);
   };
   const [updateUserInfoF] = useMutation(updateUserInfo);
+  const [updateUserAAUInfoF] = useMutation(updateUserAAUInfo);
+
   const [loading, setLoading] = useState(false);
+  const [loadingAAU, setLoadingAAU] = useState(false);
+
   const formik = useFormik<IProfileDetails>({
     initialValues,
     validationSchema: profileDetailsSchema,
@@ -38,6 +74,12 @@ const ProfileDetails: React.FC = () => {
           fname: values.fName,
           lname: values.lName,
           avatar: values.avatar,
+          PlayingLevel: values.PlayingLevel,
+          Height: values.Height,
+          Weight: values.Weight,
+          WingSpan: values.WingSpan,
+          Vertical: values.WingSpan,
+          CGPA: values.CGPA,
         },
       });
 
@@ -50,6 +92,28 @@ const ProfileDetails: React.FC = () => {
     },
   });
 
+  const formikAAU = useFormik<IAAUDetails>({
+    initialValues: initialValue,
+    validationSchema: AAUDetailsSchema,
+    onSubmit: (values) => {
+      updateUserAAUInfoF({
+        variables: {
+          AAU: values.AAU,
+          AAUTeamName: values.AAU ? values.AAUTeamName : "",
+          AAUAgeLevel: values.AAU ? values.AAUAgeLevel : "",
+          AAUState: values.AAU ? values.AAUState : "",
+        },
+      });
+
+      setLoadingAAU(true);
+      setTimeout(() => {
+        const updatedData = Object.assign(data2, values);
+        setData2(updatedData);
+        setLoadingAAU(false);
+      }, 1000);
+    },
+  });
+  console.log(currentUser, formik);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -69,95 +133,264 @@ const ProfileDetails: React.FC = () => {
   };
 
   return (
-    <div className="card mb-5 mb-xl-10">
-      <div
-        className="card-header border-0 cursor-pointer"
-        role="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#kt_account_profile_details"
-        aria-expanded="true"
-        aria-controls="kt_account_profile_details"
-      >
-        <div className="card-title m-0">
-          <h3 className="fw-bolder m-0">Profile Details</h3>
+    <>
+      <div className="card mb-5 mb-xl-10">
+        <div
+          className="card-header border-0 cursor-pointer"
+          role="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#kt_account_profile_details"
+          aria-expanded="true"
+          aria-controls="kt_account_profile_details"
+        >
+          <div className="card-title m-0">
+            <h3 className="fw-bolder m-0">Profile Details</h3>
+          </div>
         </div>
-      </div>
 
-      <div id="kt_account_profile_details" className="collapse show">
-        <form onSubmit={formik.handleSubmit} noValidate className="form">
-          <div className="card-body border-top p-9">
-            <div className="row mb-6">
-              <label className="col-lg-4 col-form-label fw-bold fs-6">
-                Avatar
-              </label>
-              <div className="col-lg-8">
-                <div
-                  className="image-input image-input-outline"
-                  data-image-input="true"
-                  onClick={handleClick}
-                >
+        <div id="kt_account_profile_details" className="collapse show">
+          <form onSubmit={formik.handleSubmit} noValidate className="form">
+            <div className="card-body border-top p-9">
+              <div className="row mb-6">
+                <label className="col-lg-4 col-form-label fw-bold fs-6">
+                  Avatar
+                </label>
+                <div className="col-lg-8">
                   <div
-                    className="image-input-wrapper w-125px h-125px"
-                    style={{
-                      backgroundImage: `${
-                        selectedImage
-                          ? `url(${data.avatar})`
-                          : `url(${toAbsoluteUrl("/media/avatars/blank.png")}`
-                      }`,
-                    }}
-                  ></div>
-                </div>
-              </div>
-              <input
-                type="file"
-                style={{ display: "none" }}
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
-            </div>
-
-            <div className="row mb-6">
-              <label className="col-lg-4 col-form-label required fw-bold fs-6">
-                Full Name
-              </label>
-
-              <div className="col-lg-8">
-                <div className="row">
-                  <div className="col-lg-6 fv-row">
-                    <input
-                      type="text"
-                      className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                      placeholder="First name"
-                      {...formik.getFieldProps("fName")}
-                    />
-                    {formik.touched.fName && formik.errors.fName && (
-                      <div className="fv-plugins-message-container">
-                        <div className="fv-help-block">
-                          {formik.errors.fName}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="col-lg-6 fv-row">
-                    <input
-                      type="text"
-                      className="form-control form-control-lg form-control-solid"
-                      placeholder="Last name"
-                      {...formik.getFieldProps("lName")}
-                    />
-                    {formik.touched.lName && formik.errors.lName && (
-                      <div className="fv-plugins-message-container">
-                        <div className="fv-help-block">
-                          {formik.errors.lName}
-                        </div>
-                      </div>
-                    )}
+                    className="image-input image-input-outline"
+                    data-image-input="true"
+                    onClick={handleClick}
+                  >
+                    <div
+                      className="image-input-wrapper w-125px h-125px"
+                      style={{
+                        backgroundImage: `${
+                          selectedImage
+                            ? `url(${data.avatar})`
+                            : `url(${toAbsoluteUrl("/media/avatars/blank.png")}`
+                        }`,
+                      }}
+                    ></div>
                   </div>
                 </div>
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                />
               </div>
-            </div>
-            {/* 
+
+              <div className="row mb-6">
+                <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                  Full Name
+                </label>
+
+                <div className="col-lg-8">
+                  <div className="row">
+                    <div className="col-lg-6 fv-row">
+                      <input
+                        type="text"
+                        className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                        placeholder="First name"
+                        {...formik.getFieldProps("fName")}
+                      />
+                      {formik.touched.fName && formik.errors.fName && (
+                        <div className="fv-plugins-message-container">
+                          <div className="fv-help-block">
+                            {formik.errors.fName}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="col-lg-6 fv-row">
+                      <input
+                        type="text"
+                        className="form-control form-control-lg form-control-solid"
+                        placeholder="Last name"
+                        {...formik.getFieldProps("lName")}
+                      />
+                      {formik.touched.lName && formik.errors.lName && (
+                        <div className="fv-plugins-message-container">
+                          <div className="fv-help-block">
+                            {formik.errors.lName}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row mb-6">
+                <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                  {auth?.Role === "Player" ? "Playing Level" : "Coaching Level"}
+                </label>
+
+                <div className="col-lg-8">
+                  <div className="row">
+                    <div className="col-lg-6 fv-row">
+                      <select
+                        className="form-select form-select-lg form-select-solid"
+                        placeholder="Playing Level"
+                        {...formik.getFieldProps("PlayingLevel")}
+                      >
+                        <option></option>
+                        <option value="Elementary">Elementary</option>
+                        <option value="Middle School">Middle School</option>
+                        <option value=" High School"> High School</option>
+                        <option value="College">College</option>
+                        <option value="Pro">Pro</option>
+                      </select>
+
+                      {formik.touched.PlayingLevel &&
+                        formik.errors.PlayingLevel && (
+                          <div className="fv-plugins-message-container">
+                            <div className="fv-help-block">
+                              {formik.errors.PlayingLevel}
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {auth?.Role === "Player" && (
+                <>
+                  {" "}
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      Height
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <input
+                            type="number"
+                            className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                            placeholder="Height"
+                            {...formik.getFieldProps("Height")}
+                          />
+
+                          {formik.touched.Height && formik.errors.Height && (
+                            <div className="fv-plugins-message-container">
+                              <div className="fv-help-block">
+                                {formik.errors.Height}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      Weight
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <input
+                            type="number"
+                            className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                            placeholder="Weight"
+                            {...formik.getFieldProps("Weight")}
+                          />
+
+                          {formik.touched.Weight && formik.errors.Weight && (
+                            <div className="fv-plugins-message-container">
+                              <div className="fv-help-block">
+                                {formik.errors.Weight}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      Wing Span
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <input
+                            type="number"
+                            className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                            placeholder="Wing Span"
+                            {...formik.getFieldProps("WingSpan")}
+                          />
+
+                          {formik.touched.WingSpan && formik.errors.WingSpan && (
+                            <div className="fv-plugins-message-container">
+                              <div className="fv-help-block">
+                                {formik.errors.WingSpan}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      Vertical
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <input
+                            type="number"
+                            className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                            placeholder="Vertical"
+                            {...formik.getFieldProps("Vertical")}
+                          />
+
+                          {formik.touched.Vertical && formik.errors.Vertical && (
+                            <div className="fv-plugins-message-container">
+                              <div className="fv-help-block">
+                                {formik.errors.Vertical}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      CGPA
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <input
+                            type="number"
+                            className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                            placeholder="CGPA"
+                            {...formik.getFieldProps("CGPA")}
+                          />
+
+                          {formik.touched.CGPA && formik.errors.CGPA && (
+                            <div className="fv-plugins-message-container">
+                              <div className="fv-help-block">
+                                {formik.errors.CGPA}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              {/* 
             <div className="row mb-6">
               <label className="col-lg-4 col-form-label fw-bold fs-6">
                 <span className="required">Email</span>
@@ -455,7 +688,7 @@ const ProfileDetails: React.FC = () => {
               </div>
             </div> */}
 
-            {/* <div className="row mb-6">
+              {/* <div className="row mb-6">
               <label className="col-lg-4 col-form-label required fw-bold fs-6">
                 Language
               </label>
@@ -527,7 +760,7 @@ const ProfileDetails: React.FC = () => {
               </div>
             </div> */}
 
-            {/* <div className="row mb-6">
+              {/* <div className="row mb-6">
               <label className="col-lg-4 col-form-label required fw-bold fs-6">
                 Time Zone
               </label>
@@ -719,29 +952,188 @@ const ProfileDetails: React.FC = () => {
                 )}
               </div>
             </div> */}
-          </div>
+            </div>
 
-          <div className="card-footer d-flex justify-content-end py-6 px-9">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={loading}
-            >
-              {!loading && "Save Changes"}
-              {loading && (
-                <span
-                  className="indicator-progress"
-                  style={{ display: "block" }}
-                >
-                  Please wait...{" "}
-                  <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
-                </span>
-              )}
-            </button>
-          </div>
-        </form>
+            <div className="card-footer d-flex justify-content-end py-6 px-9">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {!loading && "Save Changes"}
+                {loading && (
+                  <span
+                    className="indicator-progress"
+                    style={{ display: "block" }}
+                  >
+                    Please wait...{" "}
+                    <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
+                  </span>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+      <div className="card mb-5 mb-xl-10">
+        <div
+          className="card-header border-0 cursor-pointer"
+          role="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#kt_account_aau_details"
+          aria-expanded="true"
+          aria-controls="kt_account_aau_details"
+        >
+          <div className="card-title m-0">
+            <h3 className="fw-bolder m-0">AAU Details</h3>
+          </div>
+        </div>
+
+        <div id="kt_account_aau_details" className="collapse show">
+          <form onSubmit={formikAAU.handleSubmit} noValidate className="form">
+            <div className="card-body border-top p-9">
+              <div className="row mb-6">
+                <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                  AAU
+                </label>
+
+                <div className="col-lg-8">
+                  <div className="row">
+                    <div className="col-lg-6 fv-row">
+                      <input
+                        type="checkbox"
+                        checked={formikAAU.values.AAU}
+                        className="form-check-input"
+                        {...formikAAU.getFieldProps("AAU")}
+                      ></input>
+
+                      {formikAAU.touched.AAU && formikAAU.errors.AAU && (
+                        <div className="fv-plugins-message-container">
+                          <div className="fv-help-block">
+                            {formikAAU.errors.AAU}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {formikAAU.values.AAU && (
+                <>
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      Team Name
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <input
+                            type="text"
+                            className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                            placeholder="Team Name"
+                            {...formikAAU.getFieldProps("AAUTeamName")}
+                          />
+
+                          {formikAAU.touched.AAUTeamName &&
+                            formikAAU.errors.AAUTeamName && (
+                              <div className="fv-plugins-message-container">
+                                <div className="fv-help-block">
+                                  {formikAAU.errors.AAUTeamName}
+                                </div>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      Age Level
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <select
+                            className="form-select form-select-lg form-select-solid"
+                            placeholder="Age Level"
+                            {...formikAAU.getFieldProps("AAUAgeLevel")}
+                          >
+                            <option></option>
+                            <option value="Elementary">Elementary</option>
+                            <option value="Middle School">Middle School</option>
+                            <option value=" High School"> High School</option>
+                            <option value="College">College</option>
+                            <option value="Pro">Pro</option>
+                          </select>
+
+                          {formikAAU.touched.AAUAgeLevel &&
+                            formikAAU.errors.AAUAgeLevel && (
+                              <div className="fv-plugins-message-container">
+                                <div className="fv-help-block">
+                                  {formikAAU.errors.AAUAgeLevel}
+                                </div>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row mb-6">
+                    <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                      State
+                    </label>
+
+                    <div className="col-lg-8">
+                      <div className="row">
+                        <div className="col-lg-6 fv-row">
+                          <input
+                            type="text"
+                            className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                            placeholder="State"
+                            {...formikAAU.getFieldProps("AAUState")}
+                          />
+
+                          {formikAAU.touched.AAUState &&
+                            formikAAU.errors.AAUState && (
+                              <div className="fv-plugins-message-container">
+                                <div className="fv-help-block">
+                                  {formikAAU.errors.AAUState}
+                                </div>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="card-footer d-flex justify-content-end py-6 px-9">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loadingAAU}
+              >
+                {!loadingAAU && "Save Changes"}
+                {loadingAAU && (
+                  <span
+                    className="indicator-progress"
+                    style={{ display: "block" }}
+                  >
+                    Please wait...{" "}
+                    <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
+                  </span>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 

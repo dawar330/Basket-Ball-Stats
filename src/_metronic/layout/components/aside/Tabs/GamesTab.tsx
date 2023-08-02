@@ -11,12 +11,10 @@ const GamesTab = () => {
   const dispatch = useDispatch();
   useQuery(getGames, {
     onCompleted: ({ getGames }) => {
-      debugger;
       dispatch(upsertGames(getGames));
     },
   });
   const { Games } = useSelector((state: any) => state.Games);
-  console.log(Games);
 
   return (
     <div className="m-0">
@@ -35,8 +33,13 @@ const GamesTab = () => {
               <Link
                 key={index}
                 to={`game/${Game._id}/overview`}
-                className="custom-list d-flex align-items-center px-5 py-4 border-bottom "
+                className="custom-list d-flex align-items-center px-5 py-4 border-bottom position-relative"
               >
+                {Game.startTime && !Game.endTime && (
+                  <div
+                    className={`position-absolute translate-middle bottom-0  end-0   mb-6  rounded-circle border border-5 border-danger h-20px w-20px`}
+                  ></div>
+                )}
                 {/*begin::Symbol*/}
                 <div className="symbol symbol-40px me-5">
                   <KTSVG
@@ -44,6 +47,7 @@ const GamesTab = () => {
                     className="svg-icon-primary svg-icon-2hx"
                   />
                 </div>
+
                 {/*end::Symbol*/}
 
                 {/*begin::Description*/}

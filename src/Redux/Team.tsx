@@ -11,7 +11,6 @@ export const TeamsSlice = createSlice({
       state.teams = action.payload;
     },
     upsertCurrentTeam: (state, action) => {
-      debugger;
       state.currentTeam = action.payload;
     },
   },

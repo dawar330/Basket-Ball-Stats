@@ -15,10 +15,20 @@ export const register = gql`
 export const getUserByToken = gql`
   query ($token: String!) {
     getUserByToken(token: $token) {
+      avatar
+      PlayingLevel
+      Height
+      Weight
+      WingSpan
+      Vertical
+      CGPA
+      AAU
+      AAUTeamName
+      AAUAgeLevel
+      AAUState
       fname
       lname
       email
-      avatar
       AvailableGames
     }
   }
@@ -55,12 +65,50 @@ export const login = gql`
   }
 `;
 export const updateUserInfo = gql`
-  mutation ($fname: String!, $lname: String!, $avatar: String!) {
-    updateUserInfo(fname: $fname, lname: $lname, avatar: $avatar) {
+  mutation (
+    $fname: String!
+    $lname: String!
+    $avatar: String!
+    $PlayingLevel: String!
+    $Height: Int!
+    $Weight: Int!
+    $WingSpan: Int!
+    $Vertical: Int!
+    $CGPA: Float!
+  ) {
+    updateUserInfo(
+      fname: $fname
+      lname: $lname
+      PlayingLevel: $PlayingLevel
+      Height: $Height
+      Weight: $Weight
+      WingSpan: $WingSpan
+      Vertical: $Vertical
+      CGPA: $CGPA
+      avatar: $avatar
+    ) {
       fname
     }
   }
 `;
+export const updateUserAAUInfo = gql`
+  mutation (
+    $AAU: Boolean!
+    $AAUTeamName: String
+    $AAUAgeLevel: String
+    $AAUState: String
+  ) {
+    updateUserAAUInfo(
+      AAU: $AAU
+      AAUTeamName: $AAUTeamName
+      AAUAgeLevel: $AAUAgeLevel
+      AAUState: $AAUState
+    ) {
+      AAU
+    }
+  }
+`;
+
 export const UpdateEmail = gql`
   mutation ($email: String!, $PassWord: String!) {
     UpdateEmail(email: $email, PassWord: $PassWord)
