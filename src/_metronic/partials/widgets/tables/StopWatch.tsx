@@ -94,17 +94,58 @@ function Stopwatch({ gameId }: any) {
 
   if (!currentTimer) {
     // Render a loading state or an error message when the game ID is not found
-    return <div>Loading...</div>;
+    return <div className='timer-led' >
+              <div className='poit-text'>
+                  <h6>Home</h6>
+                  <h6>away</h6>
+              </div>
+              <div className='timer-container'>
+                  <div className="pointer-wrap">00</div>
+                  <div className='time-wrap'>
+                      <div className="time-title">time</div>
+                      <div className="time-count">00:00</div>
+                      <div className="time-btn">
+                          <button className='btn btn-start'>Start</button>
+                          <button className='btn btn-stop'>Stop</button>
+                      </div>
+
+                  </div>
+                  <div className="pointer-wrap">00</div>
+              </div>
+          </div>;
   }
 
   return (
-    <div
+    <>
+      <div className='timer-led' >
+          <div className='poit-text'>
+              <h6>Home</h6>
+              <h6>away</h6>
+          </div>
+          <div className='timer-container'>
+              <div className="pointer-wrap">00</div>
+              <div className='time-wrap'>
+                  <div className="time-title">time</div>
+                  <div className="time-count">00:00</div>
+                  <div className="time-btn">
+                      <button className='btn btn-start'>Start</button>
+                      <button className='btn btn-stop'>Stop</button>
+                  </div>
+
+              </div>
+              <div className="pointer-wrap">00</div>
+          </div>
+      </div>
+
+
+    {/* <div
       className="card card-xl-stretch mb-5 mb-xl-8 card-dark bg-light"
       style={{
         background: "btn-color-gray",
       }}
     >
-      <div className="card-body">
+      
+      <div className="card-body"> */}
         {/* <p className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1">
           Time:{" "}
           {timerRefs.current[gameId].time > 59
@@ -112,7 +153,7 @@ function Stopwatch({ gameId }: any) {
             : timerRefs.current[gameId].time}{" "}
           {timerRefs.current[gameId].time > 59 ? "Minutes" : "Seconds"}
         </p> */}
-        <span className="text-gray-800 text-hover-primary fs-2 fw-bolder">
+        {/* <span className="text-gray-800 text-hover-primary fs-2 fw-bolder">
           Time
         </span>
         <div className="Clock-Wrapper">
@@ -136,7 +177,8 @@ function Stopwatch({ gameId }: any) {
           Pause
         </button>
       </div>
-    </div>
+    </div> */}
+    </>
   );
 }
 

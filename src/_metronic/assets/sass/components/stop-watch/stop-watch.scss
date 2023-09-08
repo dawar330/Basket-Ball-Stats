@@ -1,0 +1,119 @@
+@import './font/font';
+
+
+.timer-wrapper {
+    height: auto;
+    width: 100%;
+    border-radius: 0.5rem;
+    background: #FFF;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.20);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+@media (max-width:1080px) {
+    .timer-wrapper {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+}
+@media (max-width:500px) {
+    .timer{
+        padding: 20px 15px;
+    }
+}
+
+
+.timer-led{
+    height: min-content;
+    width: 430px;
+    background: linear-gradient(180deg, #434343 0%, #1F1F1F 100%);
+    border-radius: 1.5rem;
+    overflow: hidden;
+}
+.poit-text{
+    position: relative;
+    border-bottom: 3px solid #343434;
+    padding: 10px 45px 5px 45px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+.poit-text h6{
+    text-transform: uppercase;
+    margin-bottom: 0;
+    color: #FFF;
+    font-size: 19px;
+}
+.timer-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px 18px;
+    gap: 10px;
+}
+.pointer-wrap{
+    background-color: #151515;
+    padding: 17px 5px 6px;
+    color: #FFF72D;
+    font-size: 90px;
+    font-family: 'Dot Spot', sans-serif;
+    border-radius: 5px;    
+    height: 150px;
+}
+                        
+.time-wrap {
+    
+}
+.time-title{
+    text-transform: uppercase;
+    color: #fff;
+    width: 100%;
+    background-color: #151515;
+    border-radius: 6px;
+    padding: 4px 20px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.time-count{
+    background-color: #151515;
+    padding: 8px 16px 3px;
+    color: #D42230;
+    font-size: 40px;
+    font-family: 'Bazaronite V1', sans-serif;
+    border-radius: 5px;
+    text-align: center;
+    height: 50px;
+    margin-bottom: 5px;
+}
+.time-btn{
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+.btn-start{
+    color: #FFF72D;
+}
+.btn-stop{
+    color: #D42230;
+}
+
+.btn{
+    border-radius: 0.3rem;
+    border: none;
+    text-decoration: none;
+    outline: none;
+    padding: 0.2rem 0.8rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    background-color: #151515;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
