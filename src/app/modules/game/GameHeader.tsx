@@ -53,9 +53,9 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
   return (
     <div className="card mb-5 mb-xl-10">
       <div className="card-body pt-9 pb-0">
-        <div className="d-flex justify-content-between flex-sm-nowrap">
-          <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
-            <div className="me-7 mb-4">
+        <div className={`d-flex justify-content-between flex-sm-nowrap ${CurrentGame.awayTeam._id !== "" ? 'gap-3 flex-wrap': 'gap-3'}`}>
+          <div className="flex-wrap flex-sm-nowrap mb-3 order-1">
+            <div className="mb-4">
               <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
                 <img
                   src={
@@ -74,7 +74,7 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
               </div>
             </div>
 
-            <div className="flex-grow-1">
+            <div className="flex-grow-1 d-none">
               <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
                 <div className="d-flex flex-column">
                   <div className="d-flex align-items-center mb-2">
@@ -89,9 +89,9 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
               </div>
 
               <div className="d-flex flex-wrap flex-stack mt-12">
-                <div className="d-flex flex-column flex-grow-1 pe-8">
+                <div className="d-flex flex-column flex-grow-1">
                   <div className="d-flex flex-wrap">
-                    <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                    <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 mb-3">
                       <div className="d-flex align-items-center">
                         <div className="fs-2 fw-bolder">
                           {" "}
@@ -111,7 +111,7 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
           )}
 
           {CurrentGame.awayTeam._id !== "" && (
-            <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
+            <div className="d-flex flex-wrap flex-sm-nowrap mb-3 order-3">
               <div className=" order-sm-1 order-md-2 mb-4">
                 <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
                   <div
@@ -131,7 +131,7 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
                 </div>
               </div>
 
-              <div className="flex-grow-1 mr-7">
+              <div className="flex-grow-1 mr-7 d-none">
                 <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
                   <div className="d-flex flex-column">
                     <div className="d-flex align-items-center mb-2">

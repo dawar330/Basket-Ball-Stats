@@ -3,9 +3,9 @@
 
 .timer-wrapper {
     height: auto;
-    width: 100%;
+    width: min-content;
     border-radius: 0.5rem;
-    background: #FFF;
+    // background: var(--bs-aside-bg-color);
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.20);
     padding: 20px 40px;
     display: flex;
@@ -30,14 +30,15 @@
 
 .timer-led{
     height: min-content;
-    width: 430px;
-    background: linear-gradient(180deg, #434343 0%, #1F1F1F 100%);
+    // width: 430px;
+    // background: linear-gradient(180deg, var(--bs-gray-700) 0%, var(--bs-gray-900) 100%);
+    background-color: var(--bs-border-dashed-color);
     border-radius: 1.5rem;
     overflow: hidden;
 }
 .poit-text{
     position: relative;
-    border-bottom: 3px solid #343434;
+    border-bottom: 3px solid var(--bs-light);
     padding: 10px 45px 5px 45px;
     display: flex;
     justify-content: space-between;
@@ -46,7 +47,7 @@
 .poit-text h6{
     text-transform: uppercase;
     margin-bottom: 0;
-    color: #FFF;
+    // color: var(--bs-aside-bg-color);
     font-size: 19px;
 }
 .timer-container{
@@ -57,7 +58,7 @@
     gap: 10px;
 }
 .pointer-wrap{
-    background-color: #151515;
+    background-color: var(--bs-app-blank-bg);
     padding: 17px 5px 6px;
     color: #FFF72D;
     font-size: 90px;
@@ -71,9 +72,9 @@
 }
 .time-title{
     text-transform: uppercase;
-    color: #fff;
+    // color: var(--bs-aside-bg-color);
     width: 100%;
-    background-color: #151515;
+    background-color: var(--bs-app-blank-bg);
     border-radius: 6px;
     padding: 4px 20px;
     text-align: center;
@@ -81,8 +82,8 @@
 }
 
 .time-count{
-    background-color: #151515;
-    padding: 8px 16px 3px;
+    background-color: var(--bs-app-blank-bg);
+    padding: 1px 16px 3px;
     color: #D42230;
     font-size: 40px;
     font-family: 'Bazaronite V1', sans-serif;
@@ -114,6 +115,41 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    background-color: #151515;
+    background-color: var(--bs-app-blank-bg);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+// .stopwatch1{
+//         position: absolute;
+//     left: 50%;
+//     transform: translate(-50%, 0px);
+// }
+
+@media (max-width: 1330px){
+    .poit-text h6, .poit-text .h6 {
+        font-size: 13px;
+    }
+    .pointer-wrap {
+        padding: 3px 5px 6px;
+        font-size: 44px;
+        height: 66px;
+    }
+    .time-title {
+        font-size: 9px;
+        padding: 1px 14px;
+        margin-bottom: 5px;
+    }
+    .time-count {
+        font-size: 26px;
+        height: 32px;
+    }
+    .time-btn .btn{
+        padding: 2px 10px !important;
+        height: 23px;
+    }
+    .poit-text {
+        padding: 10px 25px 5px 20px;
+    }
+    .timer-container {
+        padding: 8px 7px 8px;
+    }
 }

@@ -94,49 +94,52 @@ function Stopwatch({ gameId }: any) {
 
   if (!currentTimer) {
     // Render a loading state or an error message when the game ID is not found
-    return <div className='timer-led' >
+    return <div className="w-100 d-flex justify-content-center align-items-center order-sm-2 order-4">
+          <div className='timer-led' >
               <div className='poit-text'>
                   <h6>Home</h6>
-                  <h6>away</h6>
+                  {/* <h6>away</h6> */}
               </div>
               <div className='timer-container'>
-                  <div className="pointer-wrap">00</div>
+                  <div className="pointer-wrap text-warning">00</div>
                   <div className='time-wrap'>
                       <div className="time-title">time</div>
-                      <div className="time-count">00:00</div>
+                      <div className="time-count text-danger">00:00</div>
                       <div className="time-btn">
-                          <button className='btn btn-start'>Start</button>
-                          <button className='btn btn-stop'>Stop</button>
+                          <button className='btn btn-start btn-warning'>Start</button>
+                          <button className='btn btn-stop btn-danger'>Stop</button>
                       </div>
 
                   </div>
-                  <div className="pointer-wrap">00</div>
+                  {/* <div className="pointer-wrap text-warning">00</div> */}
               </div>
+          </div>
           </div>;
   }
 
   return (
     <>
-      <div className='timer-led' >
+    <div className="w-100 d-flex justify-content-center align-items-center order-sm-2 order-4">
+      <div className='timer-led stopwatch1'>
           <div className='poit-text'>
               <h6>Home</h6>
               <h6>away</h6>
           </div>
           <div className='timer-container'>
-              <div className="pointer-wrap">00</div>
+              <div className="pointer-wrap text-warning">00</div>
               <div className='time-wrap'>
                   <div className="time-title">time</div>
-                  <div className="time-count">00:00</div>
+                  <div className="time-count text-danger">00:00</div>
                   <div className="time-btn">
-                      <button className='btn btn-start'>Start</button>
-                      <button className='btn btn-stop'>Stop</button>
+                          <button className='btn btn-start btn-warning'>Start</button>
+                          <button className='btn btn-stop btn-danger'>Stop</button>
                   </div>
 
               </div>
-              <div className="pointer-wrap">00</div>
+              <div className="pointer-wrap text-warning">00</div>
           </div>
       </div>
-
+  </div>
 
     {/* <div
       className="card card-xl-stretch mb-5 mb-xl-8 card-dark bg-light"
