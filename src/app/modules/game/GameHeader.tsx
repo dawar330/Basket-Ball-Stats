@@ -55,61 +55,60 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
   const auth = useAuth();
 
   const padding = useMedia(["(min-width: 1200px)"], ["1rem"], 0);
-  const Screen = useMedia(["(min-width: 992px)"], [true], false);
+  const Screen = useMedia(["(min-width: 1400px)"], [true], false);
 
   return (
     <div className="card mb-5 mb-xl-10">
       <div className="card-body pt-9 pb-0">
-        <div className="d-flex justify-content-between flex-sm-nowrap">
-          <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
-            <div className="d-flex flex justify-content-between w-100">
-              <div>
-                <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                  <img
-                    src={
-                      CurrentGame?.homeTeam.Image !== ""
-                        ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
-                        : toAbsoluteUrl("/media/avatars/blank.png")
-                    }
-                    alt="CourtIntel"
-                  />
-                  <div
-                    className={`position-absolute translate-middle bottom-0 start-100 mb-6  rounded-circle border border-4 border-white h-20px w-20px`}
-                    style={{
-                      backgroundColor: CurrentGame?.homeTeam.Color,
-                    }}
-                  ></div>
-                </div>
-              </div>
-
-              {!Screen && CurrentGame.awayTeam._id !== "" && (
-                <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
-                  <div className=" order-sm-1 order-md-2 mb-4">
-                    <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                      <div
-                        className="position-absolute translate-middle bottom-0  start-0 mb-6  rounded-circle border border-4 border-white h-20px w-20px"
-                        style={{
-                          backgroundColor: CurrentGame?.awayTeam.Color,
-                        }}
-                      ></div>
-                      <img
-                        src={
-                          CurrentGame?.homeTeam.Image !== ""
-                            ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
-                            : toAbsoluteUrl("/media/avatars/blank.png")
-                        }
-                        alt="CourtIntel"
-                      />
-                    </div>
+        <div className="d-flex justify-content-between flex-sm-nowrap center">
+          <div style={{ width: "100%" }}>
+            <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
+              <div className="d-flex flex justify-content-between w-100">
+                <div>
+                  <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                    <img
+                      src={
+                        CurrentGame?.homeTeam.Image !== ""
+                          ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
+                          : toAbsoluteUrl("/media/avatars/blank.png")
+                      }
+                      alt="CourtIntel"
+                    />
+                    <div
+                      className={`position-absolute translate-middle bottom-0 start-100 mb-6  rounded-circle border border-4 border-white h-20px w-20px`}
+                      style={{
+                        backgroundColor: CurrentGame?.homeTeam.Color,
+                      }}
+                    ></div>
                   </div>
                 </div>
-              )}
+
+                {CurrentGame.awayTeam._id !== "" && (
+                  <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
+                    <div className=" order-sm-1 order-md-2 ">
+                      <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                        <div
+                          className="position-absolute translate-middle bottom-0  start-0 mb-6  rounded-circle border border-4 border-white h-20px w-20px"
+                          style={{
+                            backgroundColor: CurrentGame?.awayTeam.Color,
+                          }}
+                        ></div>
+                        <img
+                          src={
+                            CurrentGame?.homeTeam.Image !== ""
+                              ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
+                              : toAbsoluteUrl("/media/avatars/blank.png")
+                          }
+                          alt="CourtIntel"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div
-              className="flex-grow-1 "
-              style={{ padding: `1rem ${padding}` }}
-            >
+            <div className="flex-grow-1 " style={{ padding: `${padding}` }}>
               {/* <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
                 <div>
                   <a
@@ -131,7 +130,7 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
 
               <div
                 className="d-flex flex-wrap flex-stack"
-                style={{ marginTop: padding }}
+                // style={{ marginTop: padding }}
               >
                 <div
                   className="d-flex flex-column flex-grow-1 "
@@ -141,12 +140,21 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
                     className="border border-gray-300 border-dashed rounded"
                     style={{
                       borderCollapse: "collapse",
-                      display: "table",
+                      display: "grid",
                       tableLayout: "fixed",
-                      width: Screen ? "100%" : "20rem",
+                      width: Screen ? "auto" : "20rem",
+                      background: "#5b5b5b75",
+                      boxShadow: "5px 10px 5px black",
                     }}
                   >
-                    <tr style={{ borderBottom: "1px solid #333" }}>
+                    <tr
+                      style={{
+                        borderBottom: "1px solid #333",
+                        verticalAlign: "baseline",
+                        justifyContent: "space-between",
+                        display: "flex",
+                      }}
+                    >
                       <td>
                         <p style={{ padding: "0.5rem" }}>
                           <a
@@ -171,7 +179,7 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
                         )}
                       </td>
                     </tr>
-                    <tr>
+                    <tr style={{ verticalAlign: "baseline" }}>
                       <td>
                         <div className="pt-3 px-4 me-6 mb-3">
                           <div
@@ -253,27 +261,8 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
             </div>
           </div>
 
-          {Screen && CurrentGame.awayTeam._id !== "" && (
+          {CurrentGame.awayTeam._id !== "" && (
             <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
-              <div className=" order-sm-1 order-md-2 mb-4">
-                <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                  <div
-                    className="position-absolute translate-middle bottom-0  start-0 mb-6  rounded-circle border border-4 border-white h-20px w-20px"
-                    style={{
-                      backgroundColor: CurrentGame?.awayTeam.Color,
-                    }}
-                  ></div>
-                  <img
-                    src={
-                      CurrentGame?.homeTeam.Image !== ""
-                        ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
-                        : toAbsoluteUrl("/media/avatars/blank.png")
-                    }
-                    alt="CourtIntel"
-                  />
-                </div>
-              </div>
-
               {/* <div className="flex-grow-1 mr-7">
                 <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
                   <div className="d-flex flex-column">

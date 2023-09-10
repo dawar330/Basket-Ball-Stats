@@ -102,7 +102,7 @@ function Stopwatch({ gameId }: any) {
     <div
       className="card card-xl-stretch mb-5 mb-xl-8"
       style={{
-        background: "btn-color-gray",
+        background: "transparent",
       }}
     >
       <div className="card-body p-0">
@@ -148,7 +148,14 @@ function Stopwatch({ gameId }: any) {
           <button
             onClick={startTimer}
             className="btn btn-bg-dark btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-40 mb-2 me-2"
-            style={{ width: "8rem" }}
+            style={{
+              width: "8rem",
+              background:
+                currentTimer.running && !currentTimer.paused
+                  ? "#FDC802"
+                  : "#4fc711",
+              color: "white",
+            }}
           >
             {currentTimer.running && !currentTimer.paused ? "Resume" : "Start"}
           </button>
@@ -156,7 +163,7 @@ function Stopwatch({ gameId }: any) {
             onClick={pauseTimer}
             disabled={!currentTimer.running || currentTimer.paused}
             className="btn btn-bg-dark btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-40 mb-2"
-            style={{ width: "8rem" }}
+            style={{ width: "8rem", background: "#ff0042", color: "white" }}
           >
             Pause
           </button>

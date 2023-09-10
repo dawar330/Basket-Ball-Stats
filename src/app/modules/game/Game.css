@@ -8,4 +8,12 @@
   background-color: "primary";
   font-size: 4rem;
   line-height: 5rem;
+  color: #ccc919;
+}
+
+@media screen and (max-width: 1400px) {
+  .center {
+    text-align: -webkit-center;
+    display: block !important;
+  }
 }

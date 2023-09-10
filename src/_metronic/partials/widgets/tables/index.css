@@ -6,6 +6,7 @@
 .Clock-Wrapper {
   font-family: "LEDfont";
   background-color: "primary";
+  color: red;
 
   height: 118px;
 }
