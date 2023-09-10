@@ -1,5 +1,10 @@
+@font-face {
+  font-family: LEDfont;
+  src: url(/public/Fonts/Digital-7.ttf);
+}
+
 .Clock-Wrapper {
-  font-family: "Segment7Standard";
+  font-family: "LEDfont";
   background-color: "primary";
 
   height: 118px;

@@ -1,0 +1,11 @@
+@font-face {
+  font-family: LedBold;
+  src: url(/public/Fonts/LedBold.TTF);
+}
+
+.LEDFontScore {
+  font-family: "LedBold";
+  background-color: "primary";
+  font-size: 4rem;
+  line-height: 5rem;
+}

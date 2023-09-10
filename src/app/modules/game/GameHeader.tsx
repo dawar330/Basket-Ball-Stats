@@ -8,7 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { upsertGame } from "../../../Redux/CurrectGame";
 import { useAuth } from "../auth";
 import Stopwatch from "../../../_metronic/partials/widgets/tables/StopWatch";
-
+import "./Game.css";
+import { Image } from "react-bootstrap";
+import LEDBackground from "./LEDBackground";
+import Points from "./Points";
+import useMedia from "./use-media";
 interface GameRouteParams extends Params {
   id: string;
 }
@@ -50,67 +54,206 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
 
   const auth = useAuth();
 
+  const padding = useMedia(["(min-width: 1200px)"], ["1rem"], 0);
+  const Screen = useMedia(["(min-width: 992px)"], [true], false);
+
   return (
     <div className="card mb-5 mb-xl-10">
       <div className="card-body pt-9 pb-0">
         <div className="d-flex justify-content-between flex-sm-nowrap">
           <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
-            <div className="me-7 mb-4">
-              <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                <img
-                  src={
-                    CurrentGame?.homeTeam.Image !== ""
-                      ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
-                      : toAbsoluteUrl("/media/avatars/blank.png")
-                  }
-                  alt="CourtIntel"
-                />
-                <div
-                  className={`position-absolute translate-middle bottom-0 start-100 mb-6  rounded-circle border border-4 border-white h-20px w-20px`}
-                  style={{
-                    backgroundColor: CurrentGame?.homeTeam.Color,
-                  }}
-                ></div>
-              </div>
-            </div>
-
-            <div className="flex-grow-1">
-              <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                <div className="d-flex flex-column">
-                  <div className="d-flex align-items-center mb-2">
-                    <a
-                      href="#"
-                      className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
-                    >
-                      {CurrentGame?.homeTeam.teamName}
-                    </a>
-                  </div>
+            <div className="d-flex flex justify-content-between w-100">
+              <div>
+                <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                  <img
+                    src={
+                      CurrentGame?.homeTeam.Image !== ""
+                        ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
+                        : toAbsoluteUrl("/media/avatars/blank.png")
+                    }
+                    alt="CourtIntel"
+                  />
+                  <div
+                    className={`position-absolute translate-middle bottom-0 start-100 mb-6  rounded-circle border border-4 border-white h-20px w-20px`}
+                    style={{
+                      backgroundColor: CurrentGame?.homeTeam.Color,
+                    }}
+                  ></div>
                 </div>
               </div>
 
-              <div className="d-flex flex-wrap flex-stack mt-12">
-                <div className="d-flex flex-column flex-grow-1 pe-8">
-                  <div className="d-flex flex-wrap">
-                    <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                      <div className="d-flex align-items-center">
-                        <div className="fs-2 fw-bolder">
-                          {" "}
-                          {CurrentGame?.homeTeam?.TotalScore}
-                        </div>
-                      </div>
-
-                      <div className="fw-bold fs-6 text-dark">Points</div>
+              {!Screen && CurrentGame.awayTeam._id !== "" && (
+                <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
+                  <div className=" order-sm-1 order-md-2 mb-4">
+                    <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                      <div
+                        className="position-absolute translate-middle bottom-0  start-0 mb-6  rounded-circle border border-4 border-white h-20px w-20px"
+                        style={{
+                          backgroundColor: CurrentGame?.awayTeam.Color,
+                        }}
+                      ></div>
+                      <img
+                        src={
+                          CurrentGame?.homeTeam.Image !== ""
+                            ? toAbsoluteUrl(CurrentGame?.homeTeam.Image)
+                            : toAbsoluteUrl("/media/avatars/blank.png")
+                        }
+                        alt="CourtIntel"
+                      />
                     </div>
                   </div>
+                </div>
+              )}
+            </div>
+
+            <div
+              className="flex-grow-1 "
+              style={{ padding: `1rem ${padding}` }}
+            >
+              {/* <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                <div>
+                  <a
+                    href="#"
+                    className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                  >
+                    {CurrentGame?.homeTeam.teamName}
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="#"
+                    className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                  >
+                    {CurrentGame?.awayTeam.teamName}
+                  </a>
+                </div>
+              </div> */}
+
+              <div
+                className="d-flex flex-wrap flex-stack"
+                style={{ marginTop: padding }}
+              >
+                <div
+                  className="d-flex flex-column flex-grow-1 "
+                  style={{ padding: padding, placeItems: "center" }}
+                >
+                  <table
+                    className="border border-gray-300 border-dashed rounded"
+                    style={{
+                      borderCollapse: "collapse",
+                      display: "table",
+                      tableLayout: "fixed",
+                      width: Screen ? "100%" : "20rem",
+                    }}
+                  >
+                    <tr style={{ borderBottom: "1px solid #333" }}>
+                      <td>
+                        <p style={{ padding: "0.5rem" }}>
+                          <a
+                            href="#"
+                            className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                          >
+                            {CurrentGame?.homeTeam.teamName}
+                          </a>
+                        </p>
+                      </td>
+                      {Screen ? <td></td> : <></>}
+                      <td>
+                        {CurrentGame.awayTeam._id !== "" && (
+                          <p style={{ padding: "0.5rem" }}>
+                            <a
+                              href="#"
+                              className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
+                            >
+                              {CurrentGame?.awayTeam.teamName}
+                            </a>
+                          </p>
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div className="pt-3 px-4 me-6 mb-3">
+                          <div
+                            className="d-flex align-items-center"
+                            style={{ position: "relative" }}
+                          >
+                            <Points Score={CurrentGame?.homeTeam?.TotalScore} />
+                          </div>
+                        </div>
+                      </td>
+                      {Screen ? (
+                        <td>
+                          <div
+                            className="pt-3 px-4"
+                            style={{ textAlign: "center", minWidth: "20rem" }}
+                          >
+                            <p
+                              style={{
+                                background: "black",
+                                padding: "0.5rem",
+                                textAlign: "center",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              TIME
+                            </p>
+                            {auth.auth?.Role === "Coach" && !loading && (
+                              <Stopwatch gameId={game_ID} />
+                            )}
+                          </div>
+                        </td>
+                      ) : (
+                        <></>
+                      )}
+                      <td>
+                        {CurrentGame.awayTeam._id !== "" && (
+                          <div className="py-3 px-4 me-6 mb-3">
+                            <div
+                              className="d-flex align-items-center"
+                              style={{ position: "relative" }}
+                            >
+                              <Points
+                                Score={CurrentGame?.awayTeam?.TotalScore}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
+                      {!Screen ? (
+                        <td>
+                          <div
+                            className="pt-3 px-4"
+                            style={{ textAlign: "center", minWidth: "20rem" }}
+                          >
+                            <p
+                              style={{
+                                background: "black",
+                                padding: "0.5rem",
+                                textAlign: "center",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              TIME
+                            </p>
+                            {auth.auth?.Role === "Coach" && !loading && (
+                              <Stopwatch gameId={game_ID} />
+                            )}
+                          </div>
+                        </td>
+                      ) : (
+                        <></>
+                      )}
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-          {auth.auth?.Role === "Coach" && !loading && (
-            <Stopwatch gameId={game_ID} />
-          )}
 
-          {CurrentGame.awayTeam._id !== "" && (
+          {Screen && CurrentGame.awayTeam._id !== "" && (
             <div className="d-flex flex-wrap flex-sm-nowrap mb-3">
               <div className=" order-sm-1 order-md-2 mb-4">
                 <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
@@ -131,7 +274,7 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
                 </div>
               </div>
 
-              <div className="flex-grow-1 mr-7">
+              {/* <div className="flex-grow-1 mr-7">
                 <div className="d-flex justify-content-between align-items-start flex-wrap mb-2">
                   <div className="d-flex flex-column">
                     <div className="d-flex align-items-center mb-2">
@@ -143,25 +286,25 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
                       </a>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
-                <div className="d-flex flex-wrap flex-stack mt-12">
+              {/* <div className="d-flex flex-wrap flex-stack mt-12">
                   <div className="d-flex flex-column flex-grow-1 pe-8">
                     <div className="d-flex flex-wrap">
-                      <div className="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4  mb-3">
-                        <div className="d-flex align-items-center">
-                          <div className="fs-2 fw-bolder">
-                            {" "}
-                            {CurrentGame?.awayTeam?.TotalScore}
-                          </div>
+                      <div className=" py-3 px-4 me-6 mb-3">
+                        <div
+                          className="d-flex align-items-center"
+                          style={{ position: "relative" }}
+                        >
+                          <Points Score={CurrentGame?.awayTeam?.TotalScore} />
                         </div>
-
-                        <div className="fw-bold fs-6 text-dark">Points</div>
                       </div>
+                      {auth.auth?.Role === "Coach" && !loading && (
+                        <Stopwatch gameId={game_ID} />
+                      )}
                     </div>
                   </div>
-                </div>
-              </div>
+                </div> */}
             </div>
           )}
         </div>

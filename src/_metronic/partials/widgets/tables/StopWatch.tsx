@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import "./index.css";
+import TimeLEDBg from "../../../../app/modules/game/TimeLEDBg";
 function Stopwatch({ gameId }: any) {
   const [CurrentGame] = useSelector((state: any) => [state.CurrentGame]);
 
@@ -99,12 +100,12 @@ function Stopwatch({ gameId }: any) {
 
   return (
     <div
-      className="card card-xl-stretch mb-5 mb-xl-8 card-dark bg-light"
+      className="card card-xl-stretch mb-5 mb-xl-8"
       style={{
         background: "btn-color-gray",
       }}
     >
-      <div className="card-body">
+      <div className="card-body p-0">
         {/* <p className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1">
           Time:{" "}
           {timerRefs.current[gameId].time > 59
@@ -112,29 +113,54 @@ function Stopwatch({ gameId }: any) {
             : timerRefs.current[gameId].time}{" "}
           {timerRefs.current[gameId].time > 59 ? "Minutes" : "Seconds"}
         </p> */}
-        <span className="text-gray-800 text-hover-primary fs-2 fw-bolder">
+        {/* <span className="text-gray-800 text-hover-primary fs-2 fw-bolder">
           Time
-        </span>
-        <div className="Clock-Wrapper">
-          <span id="DSEGClock" className="Clock-Time-Front">
-            {Math.floor(timerRefs.current[gameId].time / 60)}
-            <span className="fs-1">{timerRefs.current[gameId].time % 60}</span>
+        </span> */}
+        <div
+          className="Clock-Wrapper"
+          style={{
+            position: "relative",
+            lineHeight: 1,
+            boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.2)",
+            height: "fit-content",
+            width: "fit-content",
+            background: "#111000",
+            margin: "auto",
+          }}
+        >
+          <span
+            id="DSEGClock"
+            className="Clock-Time-Front"
+            style={{
+              position: "absolute",
+              padding: "0 1rem",
+              top: "-2px",
+              left: "-2px",
+            }}
+          >
+            {Math.floor(timerRefs.current[gameId].time / 60)}:
+            <span>{timerRefs.current[gameId].time % 60}</span>
           </span>
+          <TimeLEDBg />
         </div>
 
-        <button
-          onClick={startTimer}
-          className="btn btn-bg-dark btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-40 mb-2 me-2"
-        >
-          {currentTimer.running && !currentTimer.paused ? "Resume" : "Start"}
-        </button>
-        <button
-          onClick={pauseTimer}
-          disabled={!currentTimer.running || currentTimer.paused}
-          className="btn btn-bg-dark btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-40 mb-2"
-        >
-          Pause
-        </button>
+        <div style={{ paddingTop: "1rem" }}>
+          <button
+            onClick={startTimer}
+            className="btn btn-bg-dark btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-40 mb-2 me-2"
+            style={{ width: "8rem" }}
+          >
+            {currentTimer.running && !currentTimer.paused ? "Resume" : "Start"}
+          </button>
+          <button
+            onClick={pauseTimer}
+            disabled={!currentTimer.running || currentTimer.paused}
+            className="btn btn-bg-dark btn-color-gray-600 btn-flex btn-active-color-primary flex-center w-40 mb-2"
+            style={{ width: "8rem" }}
+          >
+            Pause
+          </button>
+        </div>
       </div>
     </div>
   );
