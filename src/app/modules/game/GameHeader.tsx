@@ -107,7 +107,7 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
             </div>
           </div>
           {auth.auth?.Role === "Coach" && !loading && (
-            <Stopwatch gameId={game_ID} />
+            <Stopwatch gameId={game_ID} CurrentGame={CurrentGame} />
           )}
 
           {CurrentGame.awayTeam._id !== "" && (

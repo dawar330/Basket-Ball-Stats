@@ -35,7 +35,7 @@ function Stopwatch({ gameId }: any) {
         time: timerMiliSecond,
       };
   }, [gameId, CurrentGame]);
-  console.log(timerRefs);
+
 
   const startTimer = () => {
     const timer = timerRefs.current[gameId];
@@ -98,7 +98,7 @@ function Stopwatch({ gameId }: any) {
           <div className='timer-led' >
               <div className='poit-text'>
                   <h6>Home</h6>
-                  {/* <h6>away</h6> */}
+                {CurrentGame.awayTeam._id !== "" && <h6>away</h6> }
               </div>
               <div className='timer-container'>
                   <div className="pointer-wrap text-warning">00</div>
@@ -106,12 +106,13 @@ function Stopwatch({ gameId }: any) {
                       <div className="time-title">time</div>
                       <div className="time-count text-danger">00:00</div>
                       <div className="time-btn">
-                          <button className='btn btn-start btn-warning'>Start</button>
-                          <button className='btn btn-stop btn-danger'>Stop</button>
+                          <button className='btn btn-start btn-warning' >Start</button>
+                          <button className='btn btn-stop btn-danger' >Stop</button>
                       </div>
 
-                  </div>
-                  {/* <div className="pointer-wrap text-warning">00</div> */}
+          </div>
+           {CurrentGame.awayTeam._id !== "" && <div className="pointer-wrap text-warning">00</div>  }
+                  
               </div>
           </div>
           </div>;
@@ -123,20 +124,22 @@ function Stopwatch({ gameId }: any) {
       <div className='timer-led stopwatch1'>
           <div className='poit-text'>
               <h6>Home</h6>
-              <h6>away</h6>
+                             {CurrentGame.awayTeam._id !== "" && <h6>away</h6> }
+
           </div>
           <div className='timer-container'>
               <div className="pointer-wrap text-warning">00</div>
               <div className='time-wrap'>
                   <div className="time-title">time</div>
-                  <div className="time-count text-danger">00:00</div>
+                  <div className="time-count text-danger">{Math.floor(timerRefs.current[gameId].time / 60)}:{timerRefs.current[gameId].time % 60}</div>
                   <div className="time-btn">
-                          <button className='btn btn-start btn-warning'>Start</button>
-                          <button className='btn btn-stop btn-danger'>Stop</button>
+                          <button className='btn btn-start btn-warning' onClick={startTimer}>Start</button>
+                          <button className='btn btn-stop btn-danger' onClick={stopTimer}>Stop</button>
                   </div>
 
               </div>
-              <div className="pointer-wrap text-warning">00</div>
+           {CurrentGame.awayTeam._id !== "" && <div className="pointer-wrap text-warning">00</div>  }
+
           </div>
       </div>
   </div>
