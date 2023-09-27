@@ -16,13 +16,9 @@ const ChartsWidget1: React.FC<Props> = ({ className }) => {
   const [data, setdata] = React.useState<any>();
   useQuery(getRecentGamesStats, {
     onCompleted: ({ getRecentGamesStats }) => {
-      console.log(getRecentGamesStats);
-
       setdata(getRecentGamesStats);
     },
   });
-  console.log(data);
-
   useEffect(() => {
     const chart = refreshChart();
 

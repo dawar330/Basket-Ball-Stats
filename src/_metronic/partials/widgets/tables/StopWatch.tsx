@@ -1,32 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import "./index.css";
-function Stopwatch({ gameId }: any) {
+function Stopwatch({ gameId, timerRefs }: any) {
   const [CurrentGame] = useSelector((state: any) => [state.CurrentGame]);
 
   const [time, setTime] = useState(0);
   const [timerMiliSecond, settimerMiliSecond] = useState(0);
-  const timerRefs = useRef<{
-    [key: number]: {
-      running: boolean;
-      paused: boolean;
-      timerId: number | null;
-      time: number;
-    };
-  }>({});
 
   useEffect(() => {
     const timerMiliSecond =
       (CurrentGame.TotalTime /
         (CurrentGame.TimeDistribution === "Halves" ? 2 : 4)) *
       60;
-    console.log(
-      CurrentGame.TotalTime,
-      CurrentGame.TimeDistribution,
-      CurrentGame.TotalTime /
-        (CurrentGame.TimeDistribution === "Halves" ? 2 : 4),
-      timerMiliSecond
-    );
+
     if (!timerRefs.current[gameId])
       timerRefs.current[gameId] = {
         running: false,
@@ -79,13 +65,19 @@ function Stopwatch({ gameId }: any) {
   const stopTimer = () => {
     const timer = timerRefs.current[gameId];
     if (timer) {
-      timer.running = false;
-      timer.paused = false;
       if (timer.timerId) {
         clearInterval(timer.timerId);
         timer.timerId = null;
       }
-      timer.time = timerMiliSecond;
+      timerRefs.current[gameId] = {
+        running: false,
+        paused: false,
+        timerId: null,
+        time:
+          (CurrentGame.TotalTime /
+            (CurrentGame.TimeDistribution === "Halves" ? 2 : 4)) *
+          60,
+      };
     }
   };
 

@@ -60,7 +60,6 @@ const CreateTeamStep1: FC = () => {
                     color={field.value}
                     onChange={(color) => {
                       form.setFieldValue(field.name, color.hex);
-                      console.log(field);
                     }}
                   />
                 </div>

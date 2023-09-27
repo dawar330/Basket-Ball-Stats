@@ -113,7 +113,6 @@ const ProfileDetails: React.FC = () => {
       }, 1000);
     },
   });
-  console.log(currentUser, formik);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {

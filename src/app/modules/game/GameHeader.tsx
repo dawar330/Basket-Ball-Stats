@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { KTSVG, toAbsoluteUrl } from "../../../_metronic/helpers";
 import { Link, useLocation, useParams, Params } from "react-router-dom";
 import { StartGame, EndGame, getGame } from "./core/request";
@@ -15,9 +15,21 @@ interface GameRouteParams extends Params {
 interface MyComponentProps {
   setloading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
+  timerRefs: React.MutableRefObject<{
+    [key: number]: {
+      running: boolean;
+      paused: boolean;
+      timerId: number | null;
+      time: number;
+    };
+  }>;
 }
 
-const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
+const GameHeader: React.FC<MyComponentProps> = ({
+  loading,
+  setloading,
+  timerRefs,
+}) => {
   const dispatch = useDispatch();
   const CurrentGame = useSelector((state: any) => state.CurrentGame);
 
@@ -107,8 +119,8 @@ const GameHeader: React.FC<MyComponentProps> = ({ loading, setloading }) => {
             </div>
           </div>
           {auth.auth?.Role === "Coach" && !loading && (
-            <Stopwatch gameId={game_ID} CurrentGame={CurrentGame} />
-          )}
+            <Stopwatch gameId={game_ID} timerRefs={timerRefs} />
+
 
           {CurrentGame.awayTeam._id !== "" && (
             <div className="d-flex flex-wrap flex-sm-nowrap mb-3 order-3">

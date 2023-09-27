@@ -5,7 +5,6 @@ import { Field, ErrorMessage, useField } from "formik";
 
 const CreatePlayerStep3: FC = () => {
   const [AAU] = useField("AAU");
-  console.log(AAU);
 
   return (
     <div className="w-100">

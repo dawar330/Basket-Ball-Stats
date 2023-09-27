@@ -71,8 +71,6 @@ const GameRules: React.FC = () => {
     confirmPassword: "",
   };
 
-  console.log(TotalTimeUpdateData);
-
   const [showFoulLimitForm, setShowFoulLimitForm] = useState<boolean>(false);
   const [showTimeOutLimitForm, setTimeOutLimitForm] = useState<boolean>(false);
   const [showTimeDistributionLimitForm, setTimeDistributionLimitForm] =

@@ -12,11 +12,21 @@ import {
 import { useAuth } from "../../../../app/modules/auth";
 import JsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { useLocation } from "react-router-dom";
+import { log } from "console";
 type Props = {
   className: string;
+  timerRefs: React.MutableRefObject<{
+    [key: number]: {
+      running: boolean;
+      paused: boolean;
+      timerId: number | null;
+      time: number;
+    };
+  }>;
 };
 
-const QuarterlyTable: React.FC<Props> = ({ className }) => {
+const QuarterlyTable: React.FC<Props> = ({ className, timerRefs }) => {
   const [createPlayF] = useMutation(createPlay);
   const [createTimeOutsF] = useMutation(createTimeOuts);
   const [createPossessionF] = useMutation(createPossession);
@@ -62,16 +72,15 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
     );
   }, [CurrentGame]);
   const auth = useAuth();
-  console.log(
-    "ACTIVE",
-    GameActive,
-    "STARTED",
-    GameStarted,
-    "ENDED",
-    GameEnded,
-    CurrentGame.startTime
-  );
+  setInterval(() => {
+    console.log("hit");
 
+    console.log(
+      Math.floor(timerRefs.current[CurrentGame._id].time / 60) +
+        " " +
+        (timerRefs.current[CurrentGame._id].time % 60)
+    );
+  }, 100000);
   function table(player: any, index: any) {
     return (
       <>
@@ -315,7 +324,6 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
   };
 
   const [Time, setTime] = useState("04:00");
-  console.log(auth.auth?.Role === "Coach");
 
   return (
     <>
@@ -362,6 +370,15 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                 onClick={() => {
                                   createPlayF({
                                     variables: {
+                                      time:
+                                        Math.floor(
+                                          timerRefs.current[CurrentGame._id]
+                                            .time / 60
+                                        ) +
+                                        " " +
+                                        (timerRefs.current[CurrentGame._id]
+                                          .time %
+                                          60),
                                       GameID: CurrentGame._id,
                                       PlayerID: PlayerID,
                                       TeamID: CurrentGame?.[team]._id,
@@ -386,6 +403,15 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                 onClick={() => {
                                   createPlayF({
                                     variables: {
+                                      time:
+                                        Math.floor(
+                                          timerRefs.current[CurrentGame._id]
+                                            .time / 60
+                                        ) +
+                                        " " +
+                                        (timerRefs.current[CurrentGame._id]
+                                          .time %
+                                          60),
                                       GameID: CurrentGame._id,
                                       PlayerID: PlayerID,
                                       TeamID: CurrentGame?.[team]._id,
@@ -414,6 +440,15 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                 onClick={() => {
                                   createPlayF({
                                     variables: {
+                                      time:
+                                        Math.floor(
+                                          timerRefs.current[CurrentGame._id]
+                                            .time / 60
+                                        ) +
+                                        " " +
+                                        (timerRefs.current[CurrentGame._id]
+                                          .time %
+                                          60),
                                       GameID: CurrentGame._id,
                                       PlayerID: PlayerID,
                                       TeamID: CurrentGame?.[team]._id,
@@ -439,6 +474,15 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                                   onClick={() => {
                                     createPlayF({
                                       variables: {
+                                        time:
+                                          Math.floor(
+                                            timerRefs.current[CurrentGame._id]
+                                              .time / 60
+                                          ) +
+                                          " " +
+                                          (timerRefs.current[CurrentGame._id]
+                                            .time %
+                                            60),
                                         GameID: CurrentGame._id,
                                         PlayerID: PlayerID,
                                         TeamID: CurrentGame?.[team]._id,
@@ -770,8 +814,6 @@ const QuarterlyTable: React.FC<Props> = ({ className }) => {
                       ? half
                       : quarter) - 1
                   ].map((player: any, index: any) => {
-                    console.log(player, "asd");
-
                     if (
                       !CurrentGame.ShowTeamStats &&
                       auth.auth?.first_name + " " + auth.auth?.last_name ==

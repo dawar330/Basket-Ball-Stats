@@ -16,8 +16,8 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
     CurrentGame?.awayTeam?.ScoringGamePlays
   );
   ScoringPlays.sort((a: any, b: any) => {
-    const timeA = parseInt(a.Time);
-    const timeB = parseInt(b.Time);
+    const timeA = parseInt(a.Time2);
+    const timeB = parseInt(b.Time2);
     return timeB - timeA;
   });
   let oldhome = CurrentGame?.homeTeam?.TotalScore;
@@ -82,9 +82,7 @@ const ListsWidget3: React.FC<Props> = ({ className }) => {
           return (
             <div className="d-flex align-items-center mb-8" key={index}>
               <div className="d-flex me-3">
-                <span>
-                  {new Date(parseInt(Play.Time)).toLocaleTimeString()}
-                </span>
+                <span>{Play.Time}</span>
               </div>
 
               {/* begin::Bullet */}
