@@ -13,7 +13,7 @@ type Props = {
 const TablesWidget5: React.FC<Props> = ({ className }) => {
   const { data } = useQuery(getAllGames);
   const { Games } = useSelector((state: any) => state.Games);
-  console.log(Games);
+
   const navigate = useNavigate();
   return (
     <div className={`card ${className}`}>

@@ -132,6 +132,7 @@ export const createPlay = gql`
     $Missed: Boolean!
     $GameID: String!
     $Quarter: Int!
+    $time: String!
   ) {
     createPlay(
       PlayerID: $PlayerID
@@ -140,6 +141,7 @@ export const createPlay = gql`
       Missed: $Missed
       GameID: $GameID
       Quarter: $Quarter
+      time: $time
     ) {
       PlayerID
       PlayType
@@ -249,6 +251,7 @@ export const getScoringGamePlay = gql`
         PlayerID
         PlayType
         Time
+        Time2
         Team
       }
       awayTeam {
@@ -256,6 +259,7 @@ export const getScoringGamePlay = gql`
         PlayType
         Time
         Team
+        Time2
       }
     }
   }

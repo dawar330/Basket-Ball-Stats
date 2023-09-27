@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Navigate, Route, Routes, Outlet, useParams } from "react-router-dom";
 import { PageLink, PageTitle } from "../../../_metronic/layout/core";
 import { GameTable } from "../../../_metronic/partials/widgets/tables/GameTable";
@@ -89,12 +89,24 @@ const GamePage: React.FC = () => {
       dispatch(upsertScoringGamePlay(getScoringGamePlay));
     },
   });
+  const timerRefs = useRef<{
+    [key: number]: {
+      running: boolean;
+      paused: boolean;
+      timerId: number | null;
+      time: number;
+    };
+  }>({});
   return (
     <Routes>
       <Route
         element={
           <>
-            <GameHeader setloading={setloading} loading={loading} />
+            <GameHeader
+              setloading={setloading}
+              loading={loading}
+              timerRefs={timerRefs}
+            />
             {loading ? (
               <>
                 <div className="page-loader">
@@ -134,7 +146,7 @@ const GamePage: React.FC = () => {
               <PageTitle breadcrumbs={gameBreadCrumbs}>
                 Quarterly Sheet
               </PageTitle>
-              <QuarterlyTable className="mb-5 mb-xl-8" />
+              <QuarterlyTable className="mb-5 mb-xl-8" timerRefs={timerRefs} />
             </>
           }
         />
