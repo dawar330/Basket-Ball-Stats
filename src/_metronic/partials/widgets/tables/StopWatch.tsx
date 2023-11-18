@@ -22,7 +22,6 @@ function Stopwatch({ gameId, timerRefs }: any) {
       };
   }, [gameId, CurrentGame]);
 
-
   const startTimer = () => {
     const timer = timerRefs.current[gameId];
     if (timer && !timer.running) {
@@ -48,14 +47,19 @@ function Stopwatch({ gameId, timerRefs }: any) {
           timerMiliSecond - (Date.now() - startTime) / 1000
         );
         setTime(Math.floor((Date.now() - startTime) / 1000));
+        if (timer.time === 0) {
+          // Reset the timer to 10
+          stopTimer();
+        }
       }, 1000);
     }
   };
+  console.log(timerRefs);
 
   const pauseTimer = () => {
     const timer = timerRefs.current[gameId];
     if (timer && timer.running && !timer.paused) {
-      timer.paused = true;
+      timerRefs.current[gameId].paused = true;
       if (timer.timerId) {
         clearInterval(timer.timerId);
       }
@@ -86,57 +90,85 @@ function Stopwatch({ gameId, timerRefs }: any) {
 
   if (!currentTimer) {
     // Render a loading state or an error message when the game ID is not found
-    return <div className="w-100 d-flex justify-content-center align-items-center order-sm-2 order-4">
-          <div className='timer-led' >
-              <div className='poit-text'>
-                  <h6>Home</h6>
-                {CurrentGame.awayTeam._id !== "" && <h6>away</h6> }
-              </div>
-              <div className='timer-container'>
-                  <div className="pointer-wrap text-warning">00</div>
-                  <div className='time-wrap'>
-                      <div className="time-title">time</div>
-                      <div className="time-count text-danger">00:00</div>
-                      <div className="time-btn">
-                          <button className='btn btn-start btn-warning' >Start</button>
-                          <button className='btn btn-stop btn-danger' >Stop</button>
-                      </div>
-
+    return (
+      <div className="w-100 d-flex justify-content-center align-items-center order-sm-2 order-4">
+        <div className="timer-led">
+          <div className="poit-text">
+            <h6> {CurrentGame?.homeTeam.teamName}</h6>
+            {CurrentGame.awayTeam._id !== "" && (
+              <h6> {CurrentGame?.awayTeam.teamName}</h6>
+            )}
           </div>
-           {CurrentGame.awayTeam._id !== "" && <div className="pointer-wrap text-warning">00</div>  }
-                  
+          <div className="timer-container">
+            <div className="pointer-wrap text-warning">00</div>
+            <div className="time-wrap">
+              <div className="time-title">time</div>
+              <div className="time-count text-danger">00:00</div>
+              <div className="time-btn">
+                <button className="btn btn-start btn-warning">Start</button>
+                <button className="btn btn-stop btn-danger"> Stop</button>
               </div>
+            </div>
+            {CurrentGame.awayTeam._id !== "" && (
+              <div className="pointer-wrap text-warning">00</div>
+            )}
           </div>
-          </div>;
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
-    <div className="w-100 d-flex justify-content-center align-items-center order-sm-2 order-4">
-      <div className='timer-led stopwatch1'>
-          <div className='poit-text'>
-              <h6>Home</h6>
-                             {CurrentGame.awayTeam._id !== "" && <h6>away</h6> }
+      <div className="w-100 d-flex justify-content-center align-items-center order-sm-2 order-4">
+        <div className="timer-led stopwatch1">
+          <div className="poit-text">
+            <h6> {CurrentGame?.homeTeam.teamName}</h6>
 
+            {CurrentGame.awayTeam._id !== "" && (
+              <h6>{CurrentGame?.awayTeam.teamName}</h6>
+            )}
           </div>
-          <div className='timer-container'>
-              <div className="pointer-wrap text-warning">00</div>
-              <div className='time-wrap'>
-                  <div className="time-title">time</div>
-                  <div className="time-count text-danger">{Math.floor(timerRefs.current[gameId].time / 60)}:{timerRefs.current[gameId].time % 60}</div>
-                  <div className="time-btn">
-                          <button className='btn btn-start btn-warning' onClick={startTimer}>Start</button>
-                          <button className='btn btn-stop btn-danger' onClick={stopTimer}>Stop</button>
-                  </div>
 
+          <div className="timer-container">
+            <div className="pointer-wrap text-warning">
+              {" "}
+              {CurrentGame?.homeTeam?.TotalScore.toString().padStart(2, "0")}
+            </div>
+            <div className="time-wrap">
+              <div className="time-title">time</div>
+              <div className="time-count text-danger">
+                {Math.floor(timerRefs.current[gameId].time / 60)}:
+                {timerRefs.current[gameId].time % 60}
               </div>
-           {CurrentGame.awayTeam._id !== "" && <div className="pointer-wrap text-warning">00</div>  }
-
+              <div className="time-btn">
+                <button
+                  className="btn btn-start btn-warning"
+                  onClick={startTimer}
+                >
+                  Start
+                </button>
+                <button
+                  className="btn btn-stop btn-danger"
+                  onClick={
+                    !timerRefs.current[gameId].running ? stopTimer : pauseTimer
+                  }
+                >
+                  {timerRefs.current[gameId].running ? "Pause" : "Stop"}
+                </button>
+              </div>
+            </div>
+            {CurrentGame.awayTeam._id !== "" && (
+              <div className="pointer-wrap text-warning">
+                {" "}
+                {CurrentGame?.awayTeam?.TotalScore.toString().padStart(2, "0")}
+              </div>
+            )}
           </div>
+        </div>
       </div>
-  </div>
 
-    {/* <div
+      {/* <div
       className="card card-xl-stretch mb-5 mb-xl-8 card-dark bg-light"
       style={{
         background: "btn-color-gray",
@@ -144,14 +176,14 @@ function Stopwatch({ gameId, timerRefs }: any) {
     >
       
       <div className="card-body"> */}
-        {/* <p className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1">
+      {/* <p className="text-gray-800 text-hover-primary fs-2 fw-bolder me-1">
           Time:{" "}
           {timerRefs.current[gameId].time > 59
             ? (timerRefs.current[gameId].time / 60).toFixed()
             : timerRefs.current[gameId].time}{" "}
           {timerRefs.current[gameId].time > 59 ? "Minutes" : "Seconds"}
         </p> */}
-        {/* <span className="text-gray-800 text-hover-primary fs-2 fw-bolder">
+      {/* <span className="text-gray-800 text-hover-primary fs-2 fw-bolder">
           Time
         </span>
         <div className="Clock-Wrapper">

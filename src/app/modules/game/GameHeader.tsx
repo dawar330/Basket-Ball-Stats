@@ -31,20 +31,46 @@ const GameHeader: React.FC<MyComponentProps> = ({
   timerRefs,
 }) => {
   const dispatch = useDispatch();
-  const CurrentGame = useSelector((state: any) => state.CurrentGame);
+  const [CurrentGame] = useSelector((state: any) => [state.CurrentGame]);
 
   const { id: game_ID } = useParams<GameRouteParams>();
+  const [GameEnded, setGameEnded] = useState(
+    CurrentGame.endTime !== null && CurrentGame.endTime !== "" ? true : false
+  );
+  const [GameStarted, setGameStarted] = useState(
+    CurrentGame.startTime !== null && CurrentGame.startTime !== ""
+      ? true
+      : false
+  );
+  React.useEffect(() => {
+    setGameEnded(
+      CurrentGame.endTime !== null && CurrentGame.endTime !== "" ? true : false
+    );
+    setGameStarted(
+      CurrentGame.startTime !== null && CurrentGame.startTime !== ""
+        ? true
+        : false
+    );
+    setGameActive(GameStarted && !GameEnded);
+  }, [CurrentGame]);
 
-  let GameEnded = CurrentGame.endTime ? true : false;
-  let GameStarted = CurrentGame.startTime ? true : false;
-  let GameActive = GameStarted && !GameEnded;
+  // let GameEnded = CurrentGame.endTime ? true : false;
+  // let GameStarted = CurrentGame.startTime ? true : false;
+  const [GameActive, setGameActive] = useState(GameStarted && !GameEnded);
 
   let [startGame] = useMutation(StartGame, {
     variables: { gameID: game_ID },
+    onCompleted: () => {
+      setGameActive(true);
+    },
   });
 
   let [endGame] = useMutation(EndGame, {
     variables: { gameID: game_ID },
+    onCompleted: () => {
+      setGameActive(false);
+      setGameEnded(true);
+    },
   });
 
   useQuery(getGame, {
@@ -65,7 +91,11 @@ const GameHeader: React.FC<MyComponentProps> = ({
   return (
     <div className="card mb-5 mb-xl-10">
       <div className="card-body pt-9 pb-0">
-        <div className={`d-flex justify-content-between flex-sm-nowrap ${CurrentGame.awayTeam._id !== "" ? 'gap-3 flex-wrap': 'gap-3'}`}>
+        <div
+          className={`d-flex justify-content-between flex-sm-nowrap ${
+            CurrentGame.awayTeam._id !== "" ? "gap-3 flex-wrap" : "gap-3"
+          }`}
+        >
           <div className="flex-wrap flex-sm-nowrap mb-3 order-1">
             <div className="mb-4">
               <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
@@ -120,7 +150,7 @@ const GameHeader: React.FC<MyComponentProps> = ({
           </div>
           {auth.auth?.Role === "Coach" && !loading && (
             <Stopwatch gameId={game_ID} timerRefs={timerRefs} />
-
+          )}
 
           {CurrentGame.awayTeam._id !== "" && (
             <div className="d-flex flex-wrap flex-sm-nowrap mb-3 order-3">

@@ -324,6 +324,7 @@ const QuarterlyTable: React.FC<Props> = ({ className, timerRefs }) => {
   };
 
   const [Time, setTime] = useState("04:00");
+  console.log(GameStarted && timerRefs.current[CurrentGame._id]);
 
   return (
     <>
@@ -647,7 +648,9 @@ const QuarterlyTable: React.FC<Props> = ({ className, timerRefs }) => {
           {/* begin::Header */}
           <div className="card-header border-0 justify-content-center ">
             <div
-              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              className={`px-5 btn btn-bg-${
+                quarter === 1 ? "warning" : "light"
+              } btn-color-gray-600 align-self-center w-200px mb-2 me-2`}
               onClick={() => {
                 setquarter(1);
               }}
@@ -655,7 +658,9 @@ const QuarterlyTable: React.FC<Props> = ({ className, timerRefs }) => {
               <span className="btn-label">Quarter 1</span>
             </div>
             <div
-              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              className={`px-5 btn btn-bg-${
+                quarter === 2 ? "warning" : "light"
+              } btn-color-gray-600 align-self-center w-200px mb-2 me-2`}
               onClick={() => {
                 setquarter(2);
               }}
@@ -663,7 +668,9 @@ const QuarterlyTable: React.FC<Props> = ({ className, timerRefs }) => {
               <span className="btn-label">Quarter 2</span>
             </div>
             <div
-              className=" px-5 btn btn-bg-light  btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              className={`px-5 btn btn-bg-${
+                quarter === 3 ? "warning" : "light"
+              } btn-color-gray-600 align-self-center w-200px mb-2 me-2`}
               onClick={() => {
                 setquarter(3);
               }}
@@ -671,7 +678,9 @@ const QuarterlyTable: React.FC<Props> = ({ className, timerRefs }) => {
               <span className="btn-label">Quarter 3</span>
             </div>
             <div
-              className=" px-5 btn btn-bg-light btn-color-gray-600 align-self-center w-200px mb-2 me-2"
+              className={`px-5 btn btn-bg-${
+                quarter === 4 ? "warning" : "light"
+              } btn-color-gray-600 align-self-center w-200px mb-2 me-2`}
               onClick={() => {
                 setquarter(4);
               }}

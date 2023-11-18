@@ -113,9 +113,9 @@ const GameOverview: React.FC = () => {
       <GameOverViewTable className="mb-5 mb-xl-8" />
       <div className="row ">
         <div className="col-xl-6">
-          <ListsWidget5 className="card-xxl-stretch mb-5 mb-xl-10" />
+          {/* <ListsWidget5 className="card-xxl-stretch mb-5 mb-xl-10" /> */}
         </div>
-        <div className="col-xl-6">
+        <div className="col-xl-12">
           <ListsWidget3 className="card-xl-stretch mb-5 mb-xl-8" />
         </div>
       </div>

@@ -100,7 +100,7 @@ const CreateGameStep1: FC = () => {
             </div>
           )}
           <div className="fv-row mb-10">
-            <label className="form-label required">Away Team</label>
+            <label className="form-label required">Scheduled Date</label>
 
             <Field name="ScheduledDate">
               {({ field, form }: any) => (
